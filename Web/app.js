@@ -27,6 +27,16 @@ app.get("/content", (req, res) => {
   res.render("content");
 });
 
+//testing tool  page
+app.get("/testingtool", (req, res) => {
+  res.render("testingtool");
+});
+
+//contact us  page
+app.get("/aboutus", (req, res) => {
+  res.render("aboutus");
+});
+
 //run
 app.listen(8088, function () {
   console.log("Listening at Port " + 8088);
