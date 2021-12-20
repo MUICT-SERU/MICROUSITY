@@ -1,30 +1,33 @@
 //import to use
-const express = require('express')
-const app = express()
-const dotenv = require('dotenv');
-
-
+const express = require("express");
+const app = express();
+const dotenv = require("dotenv");
 
 //setting
-app.use(express.static('public'))
+app.use(express.static("public"));
 
-app.use(express.json())
-app.use(express.urlencoded({
+app.use(express.json());
+app.use(
+  express.urlencoded({
     extended: true,
-}))
+  })
+);
 //Setting for ejs
-app.set('view engine', 'ejs')
-app.set('views', './views')
+app.set("view engine", "ejs");
+app.set("views", "./views");
 dotenv.config();
 
-
 //main home page
-app.get('/', (req, res) => {
-    res.render('home')
-})
+app.get("/", (req, res) => {
+  res.render("home");
+});
 
+//lesson  page
+app.get("/content", (req, res) => {
+  res.render("content");
+});
 
 //run
-app.listen(8088, function(){
-    console.log("Listening at Port " + 8088);
+app.listen(8088, function () {
+  console.log("Listening at Port " + 8088);
 });
