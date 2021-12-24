@@ -1289,9 +1289,9 @@ Services Style
   z-index: 0;
 }
 .contactus:after {
-  background-image: url(../Pic/about-bg.png);
-  width: 777px;
-  height: 1132px;
+  background-image: url(../Pic/teletubby.png);
+  width: 1000px;
+  height: 800px;
   content: "";
   position: absolute;
   background-repeat: no-repeat;
