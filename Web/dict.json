@@ -1,0 +1,10 @@
+{
+    "query": {
+        "match": {
+            "review": {
+                "query": "sdfsdf",
+                "operator": "or"
+            }
+        }
+    }
+}

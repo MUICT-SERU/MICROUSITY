@@ -2,7 +2,7 @@
 const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
-
+const fs = require('fs');
 //setting
 app.use(express.static("public"));
 
@@ -32,12 +32,26 @@ app.get("/testingtool", (req, res) => {
   res.render("testingtool");
 });
 
+//testing tool  page
+app.get("/save_json", (req, res) => {
+  fs.writeFile("dict.json", req.query.data, function (err) {
+    if (err) {
+      return console.log(err);
+    }
+
+    console.log("The file was saved!");
+    res.end("This message will be sent back to the client!");
+  });
+  var myData1 = req.query.data;
+  console.log(myData1);
+});
+
 //contact us  page
 app.get("/aboutus", (req, res) => {
   res.render("aboutus");
 });
 
 //run
-app.listen(8088, function () {
-  console.log("Listening at Port " + 8088);
+app.listen(8080, function () {
+  console.log("Listening at Port " + 8080);
 });
