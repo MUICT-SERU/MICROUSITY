@@ -18,7 +18,7 @@ app.set("views", "./views");
 dotenv.config();
 
 //main home page
-app.get("/", (req, res) => {
+app.get("/home", (req, res) => {
   res.render("home");
 });
 
@@ -32,6 +32,7 @@ app.get("/testingtool", (req, res) => {
   res.render("testingtool");
 });
 
+
 //testing tool  page
 app.get("/save_json", (req, res) => {
   fs.writeFile("dict.json", req.query.data, function (err) {
@@ -42,8 +43,8 @@ app.get("/save_json", (req, res) => {
     console.log("The file was saved!");
     res.end("This message will be sent back to the client!");
   });
-  var myData1 = req.query.data;
-  console.log(myData1);
+  var data = req.query.data;
+  console.log(data);
 });
 
 //contact us  page

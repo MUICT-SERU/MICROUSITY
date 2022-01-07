@@ -1,6 +1,34 @@
 <!DOCTYPE html>
 <html>
 
+
+    <head>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="This is the thesis project">
+        <meta name="author" content="Chansida Makaranond">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+          rel="stylesheet">
+      
+        <title>Microusity Home page</title>
+      
+        <!-- Bootstrap core CSS -->
+        <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      
+        <!--TemplateMo 570 Chain App Dev https://templatemo.com/tm-570-chain-app-dev-->
+      
+        <!-- Additional CSS Files -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+        <link rel="stylesheet" href="/css/templatemo-chain-app-dev.css">
+        <link rel="stylesheet" href="/css/animated.css">
+        <link rel="stylesheet" href="/css/owl.css">
+      
+      </head>
+
 <body>
 
     <script src="https://apis.google.com/js/api.js"></script>
@@ -12,103 +40,113 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 
-    <h2>HTML Forms</h2>
+    <!-- ***** Header Area Start ***** -->
+  <header class="header-area header-sticky wow slideInDown" data-wow-duration="0.75s" data-wow-delay="0s">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <nav class="main-nav">
+            <!-- ***** Logo Start ***** -->
+            <a href="/home" class="logo">
+              <img src="/Pic/mylogo.png" alt="Microusity">
+            </a>
 
-    <span id="span">Search: <input type="text" id="keyword"></span>
-    <div style="text-align:center;"><button id="btn-search" alt="Search">Search</button></div>
 
+            <!-- ***** Logo End ***** -->
+            <!-- ***** Menu Start ***** -->
+            <ul class="nav">
+              <li class="scroll-to-section"><a href="/home">Home</a></li>
+              <li class="scroll-to-section"><a href="/content">Content</a></li>
+              <li class="scroll-to-section"><a href="/testingtool" class="active">Testing tool</a></li>
+              <li class="scroll-to-section"><a href="/aboutus">About us</a></li>
+              <li>
+                <div class="gradient-button"><a id="modal_trigger" href="#modal"><i class="fa fa-sign-in-alt"></i> Sign
+                    In Now</a></div>
+              </li>
+            </ul>
+            <a class='menu-trigger'>
+              <span>Menu</span>
+            </a>
+            <!-- ***** Menu End ***** -->
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- ***** Header Area End ***** -->
+
+  <br><br><br><br><br><br><br>
+
+    <h2>Dictionary Config</h2>
+
+
+    <textarea id="dict" name="dict-input" rows=30 cols="50">
+            {
+                "restler_fuzzable_string": [
+
+                    "0612345678",
+                    "testtest@mail.com"
+                ],
+                "restler_fuzzable_string_unquoted": [],
+                "restler_fuzzable_datetime": [
+                    "2019-06-26T20:20:39+00:00"
+                ],
+                "restler_fuzzable_datetime_unquoted": [],
+                "restler_fuzzable_uuid4": [
+                    "566048da-ed19-4cd3-8e0a-b7e0e1ec4d72"
+                ],
+                "restler_fuzzable_uuid4_unquoted": [],
+                "restler_fuzzable_int": [
+
+                    "0",
+                    "123=AS",
+                    "123=2262"
+                ],
+                "restler_fuzzable_number": [
+                    "1.23"
+                ],
+                "restler_fuzzable_bool": [
+                    "true"
+                ],
+                "restler_fuzzable_object": [
+                    "{ \"fuzz\": false }"
+                ],
+                "restler_custom_payload": {},
+                "restler_custom_payload_unquoted": {},
+                "restler_custom_payload_uuid4_suffix": {}
+            }
+          </textarea>
+    <br><br>
+    <button id="btn-search" alt="Search">Search</button>
 
     <script>
 
         //to map the script with the html with id
         let btnSearch = $('#btn-search')
-        let inputKeyword = $('#keyword')
+        let inputDict = $('#dict')
         let resultList = $('#result-list')
 
         //function that tigger when clicking the search button
         btnSearch.on('click', function () {
-            let keyword = $('#keyword').val()
-            //search(keyword)
-            submit(keyword)
+            let dict = $('#dict').val()
+            submit(dict)
         })
 
-        function submit(keyword) {
-            let params = {
-                query: {
-                    match: {
-                        review: {
-                            query: keyword,
-                            operator: 'or'
-                        }
-                    }
-                }
-            }
-            console.log(params)
+        function submit(dict) {
+
+            console.log(dict)
+            var parseDict = JSON.parse(dict);
+            console.log(parseDict)
             $.ajax
                 ({
                     type: "GET",
                     dataType: 'json',
                     async: false,
                     url: 'http://localhost:8080/save_json',
-                    data: { data: JSON.stringify(params) },
-                    success: function () { alert("Thanks!"); },
-                    failure: function () { alert("Error!"); }
+                    data: { data: JSON.stringify(parseDict) },
+                    success: function () { alert("Success"); },
+                    failure: function () { alert("Error"); }
                 });
-
-        }
-
-        //search function
-        function search(keyword) {
-            resultList.html(`
-        <li>loading...</li>
-    `)
-
-            //parameter
-            let params = {
-                query: {
-                    match: {
-                        review: {
-                            query: keyword,
-                            operator: 'or'
-                        }
-                    }
-                }
-            }
-            $.ajax({
-                url: 'http://localhost:9200/drug/_search',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(params),
-                processData: false,
-                type: "POST",
-                success: function (data) {
-                    //clear result
-                    resultList.html('')
-
-                    //for loop for create and append the result
-                    let items = data.hits.hits
-                    for (let item of items) {
-                        let drugname = item._source.drugName
-                        let review = item._source.review
-                        let condition = item._source.condition
-                        let date = item._source.date
-                        let rating = item._source.rating
-                        let score = item._score
-                        resultList.append(`
-                    
-                    <li class="list-group-item"  style="background-color: lavender;">
-                        <h3>Name: ${drugname}</h3>
-                        <i><b>Date:</b> ${date} <b>Rating:</b> ${rating}</i><br>
-                        <b>Condition:</b> ${condition}<br>
-                        <b>Review:</b> ${review}<br>
-                        <i><b>Score: ${score}</b></i><br>
-                    </li>
-                `)
-
-                    }
-                }
-
-            })
 
         }
 
