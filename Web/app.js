@@ -33,9 +33,23 @@ app.get("/testingtool", (req, res) => {
 });
 
 
-//testing tool  page
-app.get("/save_json", (req, res) => {
+//save dict to file
+app.get("/saveDict_json", (req, res) => {
   fs.writeFile("dict.json", req.query.data, function (err) {
+    if (err) {
+      return console.log(err);
+    }
+
+    console.log("The file was saved!");
+    res.end("This message will be sent back to the client!");
+  });
+  var data = req.query.data;
+  console.log(data);
+});
+
+//save dyn to file
+app.get("/saveDyn_json", (req, res) => {
+  fs.writeFile("restler_user_settings.json", req.query.data, function (err) {
     if (err) {
       return console.log(err);
     }
