@@ -1,0 +1,19 @@
+{
+  "SwaggerSpecFilePath": [
+    "/Users/pattarakrit/Desktop/api-schema-master/spec.json"
+  ],
+  "GrammarOutputDirectoryPath": "/Users/pattarakrit/Desktop/restler_bin/restler/Compile3",
+  "CustomDictionaryFilePath": "/Users/pattarakrit/Desktop/resource/defaultDict.json",
+  "IncludeOptionalParameters": true,
+  "UseHeaderExamples": true,
+  "UseQueryExamples": true,
+  "UseBodyExamples": true,
+  "DiscoverExamples": false,
+  "ExamplesDirectory": "",
+  "DataFuzzing": true,
+  "ReadOnlyFuzz": false,
+  "ResolveQueryDependencies": true,
+  "ResolveBodyDependencies": true,
+  "UseRefreshableToken": true,
+  "AllowGetProducers": true
+}

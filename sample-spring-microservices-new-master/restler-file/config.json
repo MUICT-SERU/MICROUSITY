@@ -1,0 +1,19 @@
+{
+  "SwaggerSpecFilePath": [
+    "/Users/pattarakrit/Desktop/SP2021-TRITECH/sample-spring-microservices-new-master/Swagger/swagger-Organization.json"
+  ],
+  "GrammarOutputDirectoryPath": "/Users/pattarakrit/Desktop/sample/restler_bin/restler/Compile",
+  "CustomDictionaryFilePath": "/Users/pattarakrit/Desktop/SP2021-TRITECH/sample-spring-microservices-new-master/restler-file/dict.json",
+  "IncludeOptionalParameters": true,
+  "UseHeaderExamples": true,
+  "UseQueryExamples": true,
+  "UseBodyExamples": true,
+  "DiscoverExamples": false,
+  "ExamplesDirectory": "",
+  "DataFuzzing": true,
+  "ReadOnlyFuzz": false,
+  "ResolveQueryDependencies": true,
+  "ResolveBodyDependencies": true,
+  "UseRefreshableToken": true,
+  "AllowGetProducers": true
+}

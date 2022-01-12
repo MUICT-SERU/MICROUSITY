@@ -1,0 +1,14 @@
+{
+        "checkers": {
+        "invaliddynamicobject": {
+            "invalid_objects" : [
+                "someinvalidobject",
+                "valid-object/$*",
+                "valid-object=valid-object",
+                "valid-object=?valid-object",
+                "valid-object?valid-object",
+                "valid-object,valid-object"
+            ]
+        }
+    }
+}

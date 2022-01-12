@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://192.168.50.152:8060",
+            "url": "http://localhost:8060/department",
             "description": "Generated server url"
         }
     ],
