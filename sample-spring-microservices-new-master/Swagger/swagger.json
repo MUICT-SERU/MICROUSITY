@@ -1,0 +1,217 @@
+{
+  "basePath": "/",
+  "definitions": {
+    "Department": {
+      "properties": {
+        "employees": {
+          "items": {
+            "$ref": "#/definitions/Employee"
+          },
+          "type": "array"
+        },
+        "id": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Employee": {
+      "properties": {
+        "age": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "id": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Organization": {
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "departments": {
+          "items": {
+            "$ref": "#/definitions/Department"
+          },
+          "type": "array"
+        },
+        "employees": {
+          "items": {
+            "$ref": "#/definitions/Employee"
+          },
+          "type": "array"
+        },
+        "id": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "host": "localhost:8060",
+  "info": {
+    "description": "Documentation Organization API v1.0",
+    "title": "Organization API",
+    "version": "1.0"
+  },
+  "paths": {
+    "/organization/": {
+      "get": {
+        "operationId": "findAll",
+        "parameters": [],
+        "produces": [
+          "application/octet-stream"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/Organization"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "tags": [
+          "organization-controller"
+        ]
+      }
+    },
+    "/organization/{id}": {
+      "get": {
+        "operationId": "findById",
+        "parameters": [
+          {
+            "format": "int64",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/octet-stream"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Organization"
+            }
+          }
+        },
+        "tags": [
+          "organization-controller"
+        ]
+      }
+    },
+    "/organization/{id}/with-departments": {
+      "get": {
+        "operationId": "findByIdWithDepartments",
+        "parameters": [
+          {
+            "format": "int64",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/octet-stream"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Organization"
+            }
+          }
+        },
+        "tags": [
+          "organization-controller"
+        ]
+      }
+    },
+    "/organization/{id}/with-departments-and-employees": {
+      "get": {
+        "operationId": "findByIdWithDepartmentsAndEmployees",
+        "parameters": [
+          {
+            "format": "int64",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/octet-stream"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Organization"
+            }
+          }
+        },
+        "tags": [
+          "organization-controller"
+        ]
+      }
+    },
+    "/organization/{id}/with-employees": {
+      "get": {
+        "operationId": "findByIdWithEmployees",
+        "parameters": [
+          {
+            "format": "int64",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/octet-stream"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Organization"
+            }
+          }
+        },
+        "tags": [
+          "organization-controller"
+        ]
+      }
+    }
+  },
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "x-components": {}
+}

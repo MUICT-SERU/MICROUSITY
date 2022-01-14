@@ -1,6 +1,6 @@
 {
   "SwaggerSpecFilePath": [
-    "/Users/pattarakrit/Desktop/SP2021-TRITECH/sample-spring-microservices-new-master/Swagger/swagger-Organization.json"
+    "/Users/pattarakrit/Desktop/SP2021-TRITECH/sample-spring-microservices-new-master/Swagger/swagger.json"
   ],
   "GrammarOutputDirectoryPath": "/Users/pattarakrit/Desktop/sample/restler_bin/restler/Compile",
   "CustomDictionaryFilePath": "/Users/pattarakrit/Desktop/SP2021-TRITECH/sample-spring-microservices-new-master/restler-file/dict.json",

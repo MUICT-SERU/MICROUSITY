@@ -7,12 +7,12 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8060/organization",
+            "url": "http://localhost:8060",
             "description": "Generated server url"
         }
     ],
     "paths": {
-        "/": {
+        "/organization/": {
             "get": {
                 "tags": [
                     "organization-controller"
@@ -63,7 +63,7 @@
                 }
             }
         },
-        "/{id}": {
+        "/organization/{id}": {
             "get": {
                 "tags": [
                     "organization-controller"
@@ -94,7 +94,7 @@
                 }
             }
         },
-        "/{id}/with-employees": {
+        "/organization/{id}/with-employees": {
             "get": {
                 "tags": [
                     "organization-controller"
@@ -125,7 +125,7 @@
                 }
             }
         },
-        "/{id}/with-departments": {
+        "/organization/{id}/with-departments": {
             "get": {
                 "tags": [
                     "organization-controller"
@@ -156,7 +156,7 @@
                 }
             }
         },
-        "/{id}/with-departments-and-employees": {
+        "/organization/{id}/with-departments-and-employees": {
             "get": {
                 "tags": [
                     "organization-controller"
