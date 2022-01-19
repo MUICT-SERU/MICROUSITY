@@ -34,7 +34,7 @@ app.get("/testingtool", (req, res) => {
 
 app.get("/result", (req, res) => {
   const fs = require('fs')
-  fs.readFile('/Users/jdanceze/Desktop/hub/SP2021-TRITECH/example/output.json', 'utf8', (err, data) => {
+  fs.readFile('../example/output.json', 'utf8', (err, data) => {
     if (err) {
       return console.log("File read failed:", err)
     }

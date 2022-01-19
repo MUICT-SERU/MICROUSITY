@@ -26,7 +26,27 @@
     <link rel="stylesheet" href="/css/templatemo-chain-app-dev.css">
     <link rel="stylesheet" href="/css/animated.css">
     <link rel="stylesheet" href="/css/owl.css">
+    <style>
+        .status {
+            float: right;
+        }
 
+        .name {
+            float: left;
+        }
+
+        .btn-danger {
+            color: #fff;
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-warning {
+            color: #000;
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+    </style>
 </head>
 
 <body>
@@ -82,35 +102,73 @@
 
         <!--Result list-->
 
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Backend For Frontend (BFF)</h5>
+                        <p class="card-text" style="color:black;">Error code count</p>
+                        <button type="button" class="btn btn-danger"><b>4XX:</b>
+                            <%=main4xxs %>
+                        </button>
+                        <a class="btn btn-warning"><b>5XX:</b>
+                            <%=main5xxs %>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Microservice API</h5>
+                        <p class="card-text" style="color:black;">Error code count</p>
+                        <button type="button" class="btn btn-danger"><b>4XX:</b>
+                            <%=sub4xxs %>
+                        </button>
+                        <a class="btn btn-warning"><b>5XX:</b>
+                            <%=sub5xxs %>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        main4xx: <%=main4xxs %><br>
-        main5xx: <%=main5xxs %><br>
-        sub4xx: <%=sub4xxs %><br>
-        sub5xx: <%=sub5xxs %><br>
-
-
+        <br>
 
         <ul class="list-group">
 
             <% for(let result of results){ %>
                 <% for(let trackId of trackIds){ %>
                     <% if(result.request.subrequest==trackId.id){ %>
-                        <li class="list-group-item active">
-                            <h5>Request: <%= result.request.uri %></h5>   
+                        <li class="list-group-item list-group-item-action list-group-item-danger">
+                            <div class="main">
+                                <h5>
+                                    <span class="name">Request: <%= result.request.method %>
+                                            <%= result.request.uri %></span>
+                                    <span class="status">
+                                        <%= result.request.status_code %>
+                                    </span>
+                                </h5>
+                            </div>
                         </li>
 
                         <% for(let subrequest of result.subrequest){ %>
                             <li class="list-group-item">
-                                Subrequest: <%= subrequest.uri %>
-                                
+                                <div class="sub">
+                                    <span class="name">Subrequest: <%= subrequest.method %>
+                                            <%= subrequest.uri %></span>
+                                    <span class="status">
+                                        <%= subrequest.status_code %>
+                                    </span>
+                                </div>
                             </li>
-                            
-                        <% } %>
-                            <br>
-                    <% } %>
-                <% } %>
-            <% } %>
-                          
+
+                            <% } %>
+                                <br>
+                                <% } %>
+                                    <% } %>
+                                        <% } %>
+
         </ul>
 
 
