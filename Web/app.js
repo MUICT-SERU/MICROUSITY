@@ -79,7 +79,40 @@ app.post('/login', (req, res) => {
 
 
   });
+
+})
+
+//registerpage
+app.get("/register", (req, res) => {
+  res.render("register", {
+    Uinvalid: req.query['Uinvalid'] || false,
+    fromUrl: req.query['fromUrl'] || '/register'});
+});
+
+//When click register
+app.post('/register', (req, res) => {
+
+  let fname = req.body['fname']
+  let lname = req.body['lname']
+  let email = req.body['email']
+  let password = req.body['password']
+  var myobj = { fname: fname, lname: lname, email: email, password: password };
   
+  collection.find({ email: email }).toArray(function (err, users) {
+    if (err || users.length !== 0) {
+      
+      res.redirect('/register?Uinvalid=1');
+      
+    } else{
+      collection.insertOne(myobj, function(err) {
+        if (err) throw err;
+        console.log("1 user inserted");
+        res.redirect('/login')
+      });
+    }
+
+  });
+
 })
 
 //lesson page
