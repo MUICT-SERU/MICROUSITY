@@ -4,24 +4,26 @@
     "description": "",
     "main": "app.js",
     "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
-      "axios": "^0.24.0",
-      "dotenv": "^8.2.0",
-      "ejs": "^3.0.2",
-      "express": "^4.17.1",
-      "express-session": "^1.17.1",
-      "js-base64": "^2.5.2",
-      "md5": "^2.2.1",
-      "moment": "^2.24.0",
-      "mysql": "^2.18.1",
-      "password-hash": "^1.2.2",
-      "querystring": "^0.2.0"
+        "axios": "^0.24.0",
+        "dotenv": "^8.2.0",
+        "ejs": "^3.0.2",
+        "express": "^4.17.1",
+        "express-session": "^1.17.2",
+        "js-base64": "^2.5.2",
+        "md5": "^2.2.1",
+        "moment": "^2.24.0",
+        "mongodb": "^4.3.1",
+        "mysql": "^2.18.1",
+        "password-hash": "^1.2.2",
+        "querystring": "^0.2.0",
+        "session": "^0.1.0"
     },
     "devDependencies": {
-      "nodemon": "^2.0.3"
+        "nodemon": "^2.0.3"
     }
-  }
+}

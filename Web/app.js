@@ -3,24 +3,84 @@ const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
 const fs = require('fs');
+const session = require('express-session')
+
+//const
+const SESSION_AUTH_USER = 'session-auth-user'
+
 //setting
 app.use(express.static("public"));
-
 app.use(express.json());
 app.use(
   express.urlencoded({
     extended: true,
   })
 );
+
+app.use(session({
+  secret: 'my-session',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}))
+
+
+const { MongoClient } = require('mongodb');
+const uri = "mongodb+srv://micro1:micro1@cluster0.u4edv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const db = client.db("userDB");
+const collection = db.collection("user");
+client.connect(err => {
+
+  if (err) console.error(err)
+  else console.log('Connected successfully to server');
+
+});
+
+
+
 //Setting for ejs
 app.set("view engine", "ejs");
 app.set("views", "./views");
 dotenv.config();
 
+//Set user function
+function setUser(req, user) {
+  req.session[SESSION_AUTH_USER] = user
+}
+
 //main home page
+app.get("/", (req, res) => {
+  res.render("home");
+});
 app.get("/home", (req, res) => {
   res.render("home");
 });
+
+//login page
+app.get('/login', (req, res) => {
+  res.render('login', {
+    invalid: req.query['invalid'] || false,
+    fromUrl: req.query['fromUrl'] || '/login'
+  })
+})
+
+//When click login
+app.post('/login', (req, res) => {
+  let { username, password, fromUrl } = req.body
+  collection.find({ email: username, password: password }).toArray(function (err, users) {
+    if (err || users.length != 1) {
+      return res.redirect('/login?invalid=1')
+    }
+    let user = users[0]
+    delete user.password
+    setUser(req, user)
+    res.redirect('/result')
+
+
+  });
+  
+})
 
 //lesson page
 app.get("/content", (req, res) => {
@@ -43,17 +103,17 @@ app.get("/result", (req, res) => {
     var main4xx = 0;
     var sub5xx = 0;
     var sub4xx = 0;
-    
+
     var trackId = [];
-    
+
 
     for (let result of resultList) {
       if (result.request.status_code >= 400 && result.request.status_code < 500) {
         main4xx += 1;
       } else if (result.request.status_code >= 500 && result.request.status_code < 600) {
         main5xx += 1;
-        trackId.push({id: result.request.subrequest});
-        
+        trackId.push({ id: result.request.subrequest });
+
       }
       for (let subrequest of result.subrequest) {
         if (subrequest.status_code >= 400 && subrequest.status_code < 500) {
@@ -61,7 +121,7 @@ app.get("/result", (req, res) => {
         }
         else if (subrequest.status_code >= 500 && subrequest.status_code < 600) {
           sub5xx += 1;
-          trackId.push({id: result.request.subrequest});
+          trackId.push({ id: result.request.subrequest });
         }
       }
     }
@@ -105,6 +165,11 @@ app.get("/saveDyn_json", (req, res) => {
   });
   var data = req.query.data;
   console.log(data);
+});
+
+//print page
+app.get("/print", (req, res) => {
+  res.render("print");
 });
 
 //contact us  page
