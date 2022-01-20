@@ -1,6 +1,5 @@
 {
   "restler_fuzzable_string": [
-
     "0612345678",
     "testtest@mail.com"
   ],
@@ -14,7 +13,6 @@
   ],
   "restler_fuzzable_uuid4_unquoted": [],
   "restler_fuzzable_int": [
-
     "0",
     "1",
     "2262",

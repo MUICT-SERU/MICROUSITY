@@ -1,0 +1,64 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ConfigApplication<config-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "pl.piomin.services.config.ConfigApplication",
+            "projectName": "config-service",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-DiscoveryApplication<discovery-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "pl.piomin.services.discovery.DiscoveryApplication",
+            "projectName": "discovery-service",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-OrganizationApplication<organization-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "pl.piomin.services.organization.OrganizationApplication",
+            "projectName": "organization-service",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-DepartmentApplication<department-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "pl.piomin.services.department.DepartmentApplication",
+            "projectName": "department-service",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-EmployeeApplication<employee-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "pl.piomin.services.employee.EmployeeApplication",
+            "projectName": "employee-service",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-GatewayApplication<gateway-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "pl.piomin.services.gateway.GatewayApplication",
+            "projectName": "gateway-service",
+            "args": ""
+        }
+    ]
+}
