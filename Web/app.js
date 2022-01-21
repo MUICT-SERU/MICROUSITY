@@ -3,7 +3,8 @@ const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
 const fs = require('fs');
-const session = require('express-session')
+const session = require('express-session');
+const qureystring = require('querystring');
 
 //const
 const SESSION_AUTH_USER = 'session-auth-user'
@@ -49,6 +50,33 @@ function setUser(req, user) {
   req.session[SESSION_AUTH_USER] = user
 }
 
+//Get user function
+function getUser(req) {
+  return req.session[SESSION_AUTH_USER] || null
+}
+
+//Clear user function
+function clearUser(req) {
+  setUser(req, null)
+}
+
+//Function to check if the user login or not
+function isLogin(req) {
+  return getUser(req) != null
+}
+
+//Function when we know that the user is not login yet
+function notauth(req, res) {
+  if (!isLogin(req)) {
+    let query = qureystring.stringify({
+      fromUrl: req.originalUrl,
+    })
+    res.redirect('/')
+    return true
+  }
+  return false
+}
+
 //main home page
 app.get("/", (req, res) => {
   res.render("home");
@@ -77,16 +105,16 @@ app.post('/login', (req, res) => {
     setUser(req, user)
     res.redirect('/result')
 
-
   });
 
 })
 
-//registerpage
+//register page
 app.get("/register", (req, res) => {
   res.render("register", {
     Uinvalid: req.query['Uinvalid'] || false,
-    fromUrl: req.query['fromUrl'] || '/register'});
+    fromUrl: req.query['fromUrl'] || '/register'
+  });
 });
 
 //When click register
@@ -97,14 +125,14 @@ app.post('/register', (req, res) => {
   let email = req.body['email']
   let password = req.body['password']
   var myobj = { fname: fname, lname: lname, email: email, password: password };
-  
+
   collection.find({ email: email }).toArray(function (err, users) {
     if (err || users.length !== 0) {
-      
+
       res.redirect('/register?Uinvalid=1');
-      
-    } else{
-      collection.insertOne(myobj, function(err) {
+
+    } else {
+      collection.insertOne(myobj, function (err) {
         if (err) throw err;
         console.log("1 user inserted");
         res.redirect('/login')
@@ -122,10 +150,16 @@ app.get("/content", (req, res) => {
 
 //testing tool page
 app.get("/testingtool", (req, res) => {
-  res.render("testingtool");
+  if (notauth(req, res)) return;
+  let user = getUser(req)
+  res.render('testingtool', {
+    user,
+  });
 });
 
 app.get("/result", (req, res) => {
+  if (notauth(req, res)) return;
+  let user = getUser(req)
   const fs = require('fs')
   fs.readFile('../example/output.json', 'utf8', (err, data) => {
     if (err) {
@@ -165,7 +199,8 @@ app.get("/result", (req, res) => {
       main5xxs: main5xx,
       sub4xxs: sub4xx,
       sub5xxs: sub5xx,
-      trackIds: trackId
+      trackIds: trackId,
+      user
     })
     //console.log(data)
   });
@@ -209,6 +244,14 @@ app.get("/print", (req, res) => {
 app.get("/aboutus", (req, res) => {
   res.render("aboutus");
 });
+
+//When logout
+app.get('/logout', (req, res) => {
+  
+  clearUser(req)
+  res.redirect('/home')
+  
+})
 
 //run
 app.listen(8080, function () {
