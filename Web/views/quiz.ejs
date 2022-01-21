@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<style>
+    html {
+        font-family: 'Helvetica Neue', Helvetica, Arial, serif;
+    }
+
+    body {
+        min-width: 820px;
+        margin: 0 auto;
+    }
+
+    .card {
+        padding: 8px;
+        background-color: #fff;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+        -webkit-box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.15);
+        -moz-box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.15);
+    }
+
+    #quiz-result {
+        display: none;
+        margin-bottom: 10px;
+
+        text-align: center;
+        font-family: 'Helvetica Neue', Helvetica, Arial, serif;
+        font-size: 16px;
+        color: #fff;
+    }
+
+    input[type="text"] {
+        margin-left: 20px;
+    }
+
+    button {
+        margin-top: 10px;
+        padding: 4px;
+
+        cursor: pointer;
+
+        font-family: 'Helvetica Neue', Helvetica, Arial, serif;
+        font-size: 16px;
+        color: #fff;
+
+        background-color: #2196f3;
+        border: none;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+        -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.3);
+        -moz-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.3);
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    button:hover {
+        background-color: #1e88e5;
+    }
+
+    button:active {
+        -webkit-box-shadow: 0 1px 3px 2px rgba(0, 0, 0, 0.3);
+        -moz-box-shadow: 0 1px 3px 2px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 1px 3px 2px rgba(0, 0, 0, 0.3);
+    }
+</style>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <!-- <script type="text/javascript" src="scripts/quizlib.1.0.1.min.js"></script> -->
+    <script type="text/javascript" src="/js/quizlib.js"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="styles/quizlib.min.css" media="screen"> -->
+    <link rel="stylesheet" type="text/css" src="/css/quizlib.css" media="screen">
+    <!-- <link rel="stylesheet" type="text/css" href="styles/stylesheet.css" media="screen"> -->
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="This is the thesis project">
+    <meta name="author" content="Chansida Makaranond">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Bootstrap core CSS -->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--TemplateMo 570 Chain App Dev https://templatemo.com/tm-570-chain-app-dev-->
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/templatemo-chain-app-dev.css">
+    <link rel="stylesheet" href="/css/animated.css">
+    <link rel="stylesheet" href="/css/owl.css">
+    <title>Quiz</title>
+</head>
+
+<body>
+
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <div class="container">
+
+        <!-- ***** Header Area Start ***** -->
+        <header class="header-area header-sticky wow slideInDown" data-wow-duration="0.75s" data-wow-delay="0s">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <nav class="main-nav">
+                            <!-- ***** Logo Start ***** -->
+                            <a href="/home" class="logo">
+                                <img src="/Pic/mylogo.png" alt="Microusity">
+                            </a>
+
+
+                            <!-- ***** Logo End ***** -->
+                            <!-- ***** Menu Start ***** -->
+                            <ul class="nav">
+                                <li class="scroll-to-section"><a href="/home">Home</a></li>
+                                <li class="scroll-to-section"><a href="/content">Content</a></li>
+                                <li class="scroll-to-section"><a href="/quiz" class="active">Quiz</a></li>
+                                <li class="scroll-to-section"><a href="/testingtool">Testing tool</a>
+                                </li>
+                                <li class="scroll-to-section"><a href="/aboutus">About us</a></li>
+                                <li>
+                                    <div class="gradient-button"><a id="modal_trigger" href="/logout">Log Out</a></div>
+                                </li>
+                            </ul>
+                            <a class='menu-trigger'>
+                                <span>Menu</span>
+                            </a>
+                            <!-- ***** Menu End ***** -->
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- ***** Header Area End ***** -->
+
+        <br><br><br><br>
+
+        
+            <div class="row mt-5">
+                <div class="col-md-6 offset-md-3">
+                    <!-- Quiz Results -->
+                    <div id="quiz-result" class="card">
+                        You Scored <span id="quiz-percent"></span>% - <span id="quiz-score"></span>/<span
+                            id="quiz-max-score"></span><br />
+                    </div>
+
+                    <!-- Quiz Container -->
+                    <div id="quiz">
+                        <!-- Question 1 -->
+                        <div class="card quizlib-question">
+                            <div class="quizlib-question-title">1. What is the answer to life, the universe and
+                                everything?
+                            </div>
+                            <div class="quizlib-question-answers">
+                                <input type="text" name="q1">
+                            </div>
+                        </div>
+                        <!-- Question 2 -->
+                        <div class="card quizlib-question">
+                            <div class="quizlib-question-title">2. Your enemy's father...</div>
+                            <div class="quizlib-question-answers">
+                                <ul>
+                                    <li><label><input type="radio" name="q2" value="a"> is a hamster</label></li>
+                                    <li><label><input type="radio" name="q2" value="b"> smells of elderberries</label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Question 3 -->
+                        <div class="card quizlib-question">
+                            <div class="quizlib-question-title">3. Which factors will contribute to the end of humanity
+                                as
+                                we know
+                                it?
+                            </div>
+                            <div class="quizlib-question-answers">
+                                <ul>
+                                    <li><label><input type="checkbox" name="q3" value="a"> Global warming</label></li>
+                                    <li><label><input type="checkbox" name="q3" value="b"> The release of Linux
+                                            4.1.15</label></li>
+                                    <li><label><input type="checkbox" name="q3" value="c"> Cats</label></li>
+                                    <li><label><input type="checkbox" name="q3" value="d"> Advancements in artificial
+                                            intelligence</label></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Answer Button -->
+                        <button type="button" onclick="showResults();">Check Answers</button>
+                    </div>
+                </div>
+            </div>
+        
+    </div>
+    <script>
+        var quiz;
+
+        function showResults() {
+            // Check answers and continue if all questions have been answered
+            if (quiz.checkAnswers()) {
+                var quizScorePercent = quiz.result.scorePercentFormatted; // The unformatted percentage is a decimal in range 0 - 1
+                var quizResultElement = document.getElementById('quiz-result');
+                quizResultElement.style.display = 'block';
+                document.getElementById('quiz-score').innerHTML = quiz.result.score.toString();
+                document.getElementById('quiz-max-score').innerHTML = quiz.result.totalQuestions.toString();
+                document.getElementById('quiz-percent').innerHTML = quizScorePercent.toString();
+
+                // Change background colour of results div according to score percent
+                if (quizScorePercent >= 75) quizResultElement.style.backgroundColor = '#4caf50';
+                else if (quizScorePercent >= 50) quizResultElement.style.backgroundColor = '#ffc107';
+                else if (quizScorePercent >= 25) quizResultElement.style.backgroundColor = '#ff9800';
+                else if (quizScorePercent >= 0) quizResultElement.style.backgroundColor = '#f44336';
+
+                // Highlight questions according to whether they were correctly answered. The callback allows us to highlight/show the correct answer
+                quiz.highlightResults(handleAnswers);
+            }
+        }
+
+        /** Callback for Quiz.highlightResults. Highlights the correct answers of incorrectly answered questions 
+         * Parameters are: the quiz object, the question element, question number, correctly answered flag
+         */
+        function handleAnswers(quiz, question, no, correct) {
+            if (!correct) {
+                var answers = question.getElementsByTagName('input');
+                for (var i = 0; i < answers.length; i++) {
+                    if (answers[i].type === "checkbox" || answers[i].type === "radio") {
+                        // If the current input element is part of the correct answer, highlight it
+                        if (quiz.answers[no].indexOf(answers[i].value) > -1) {
+                            answers[i].parentNode.classList.add(Quiz.Classes.CORRECT);
+                        }
+                    } else {
+                        // If the input is anything other than a checkbox or radio button, show the correct answer next to the element
+                        var correctAnswer = document.createElement('span');
+                        correctAnswer.classList.add(Quiz.Classes.CORRECT);
+                        correctAnswer.classList.add(Quiz.Classes.TEMP); // quiz.checkAnswers will automatically remove elements with the temp class
+                        correctAnswer.innerHTML = quiz.answers[no];
+                        correctAnswer.style.marginLeft = '10px';
+                        answers[i].parentNode.insertBefore(correctAnswer, answers[i].nextSibling);
+                    }
+                }
+            }
+        }
+
+        window.onload = function () {
+            quiz = new Quiz('quiz', [
+                '42',
+                'b',
+                ['b', 'c', 'd']
+            ]);
+        };
+    </script>
+</body>
+
+</html>

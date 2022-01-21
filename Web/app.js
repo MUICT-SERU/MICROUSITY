@@ -240,6 +240,15 @@ app.get("/print", (req, res) => {
   res.render("print");
 });
 
+//print page
+app.get("/quiz", (req, res) => {
+  if (notauth(req, res)) return;
+  let user = getUser(req)
+  res.render('quiz', {
+    user,
+  });
+});
+
 //contact us  page
 app.get("/aboutus", (req, res) => {
   res.render("aboutus");
