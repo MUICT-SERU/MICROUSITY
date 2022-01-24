@@ -150,6 +150,13 @@
         
             <div class="row mt-5">
                 <div class="col-md-6 offset-md-3">
+                    <!-- Certificate -->
+                    
+                    <% if(user.pass == "TRUE"||pass == "TRUE"){ %>
+                        <div class="alert alert-primary" role="alert">
+                            You have passed the quiz, <a href="#" class="alert-link">get your certificate </a>now.
+                          </div>
+                        <% } %>
                     <!-- Quiz Results -->
                     <div id="quiz-result" class="card">
                         You Scored <span id="quiz-percent"></span>% - <span id="quiz-score"></span>/<span
@@ -217,7 +224,18 @@
                 document.getElementById('quiz-percent').innerHTML = quizScorePercent.toString();
 
                 // Change background colour of results div according to score percent
-                if (quizScorePercent >= 75) quizResultElement.style.backgroundColor = '#4caf50';
+                if (quizScorePercent >= 70){
+                    quizResultElement.style.backgroundColor = '#4caf50';
+                    $.ajax
+                    ({
+                        type: "GET",
+                        dataType: 'json',
+                        async: false,
+                        url: 'http://localhost:8080/pdf',
+                        success: function () { alert("Success"); },
+                        failure: function () { alert("Error"); }
+                    });
+                } 
                 else if (quizScorePercent >= 50) quizResultElement.style.backgroundColor = '#ffc107';
                 else if (quizScorePercent >= 25) quizResultElement.style.backgroundColor = '#ff9800';
                 else if (quizScorePercent >= 0) quizResultElement.style.backgroundColor = '#f44336';
