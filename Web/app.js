@@ -271,7 +271,7 @@ app.get("/pdf", (req, res) => {
   const name = fname + " " + lname;
 
   // Pipe the PDF into an name.pdf file
-  doc.pipe(fs.createWriteStream(`${name}.pdf`));
+  doc.pipe(fs.createWriteStream(`public/certificate/certificate.pdf`));
 
   // Draw the certificate image
   doc.image("public/Pic/certificate.PNG", 0, 0, { width: 842 });
@@ -290,7 +290,7 @@ app.get("/pdf", (req, res) => {
   doc.end();
   console.log("The certificate was created!");
   
-  //res.end("This message will be sent back to the client!");
+  res.end("This message will be sent back to the client!");
   
 
 });
