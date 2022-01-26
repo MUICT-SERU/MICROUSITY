@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const fs = require('fs');
 const session = require('express-session');
 const qureystring = require('querystring');
+const md5 = require('md5')
 
 //const
 const SESSION_AUTH_USER = 'session-auth-user'
@@ -96,7 +97,7 @@ app.get('/login', (req, res) => {
 //When click login
 app.post('/login', (req, res) => {
   let { username, password, fromUrl } = req.body
-  collection.find({ email: username, password: password }).toArray(function (err, users) {
+  collection.find({ email: username, password: md5(password) }).toArray(function (err, users) {
     if (err || users.length != 1) {
       return res.redirect('/login?invalid=1')
     }
@@ -124,7 +125,7 @@ app.post('/register', (req, res) => {
   let lname = req.body['lname']
   let email = req.body['email']
   let password = req.body['password']
-  var myobj = { fname: fname, lname: lname, email: email, password: password, pass: "FALSE" };
+  var myobj = { fname: fname, lname: lname, email: email, password: md5(password), pass: "FALSE" };
 
   collection.find({ email: email }).toArray(function (err, users) {
     if (err || users.length !== 0) {
