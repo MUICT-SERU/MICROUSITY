@@ -6,3 +6,9 @@
 
 # Log file
 *.log
+
+# restler binary
+bin
+
+# restler compiled files
+Compile
