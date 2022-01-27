@@ -1,14 +1,14 @@
 #! /bin/sh
 (
     trap 'kill 0' SIGINT # kill all process in one go
-    # (
-    #     cd ../zeek
-    #     zeek -i lo0 track.zeek
-    # ) &
-    # ZEEKPID=$!
-    # source start.sh &
-    # P1=$!
-    # sleep 60
+    (
+        cd ../zeek
+        zeek -i lo0 track.zeek
+    ) &
+    ZEEKPID=$!
+    source start.sh &
+    P1=$!
+    sleep 60
     (
         cd ../..
         dotnet bin/restler/Restler.dll compile \

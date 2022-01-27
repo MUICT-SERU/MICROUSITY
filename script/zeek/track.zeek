@@ -16,7 +16,7 @@ redef record HTTP::Info += {
 };
 
 event http_request(c: connection, method: string, original_uri: string, unescaped_uri: string, version: string) {
-    if(c$id$resp_p == 3000/tcp) {
+    if(c$id$resp_p == 8601/tcp) {
         request = request + 1;
         c$http$subrequest = request;
     }
