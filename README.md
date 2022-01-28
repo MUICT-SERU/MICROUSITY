@@ -1,20 +1,24 @@
 # SP2021-TRITECH
-A repo for the Tritech team.
+
+Hi A repo for the Tritech team.
 
 All web application component are in the Web directory
 
 ## How to run web
+
 1. Clone the repo
 2. cd to Web directory
 3. type `npm i`
 4. type `node app.js`
 
 ## How to run sample project
+
 https://github.com/piomin/sample-spring-microservices-new
 
 https://piotrminkowski.com/2018/04/26/quick-guide-to-microservices-with-spring-boot-2-0-eureka-and-spring-cloud/
 
 - req: Jdk 17 with maven
+
 1. Start the config service first (8088)
 2. Start discovery service (8061)
 3. Start Organization service
