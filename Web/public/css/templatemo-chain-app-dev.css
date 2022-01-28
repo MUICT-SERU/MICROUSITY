@@ -1,9 +1,6 @@
 /*
-
 TemplateMo 570 Chain App Dev
-
 https://templatemo.com/tm-570-chain-app-dev
-
 */
 
 /* ---------------------------------------------
@@ -21,7 +18,6 @@ Table of contents
 10. preloader
 11. search
 12. portfolio
-
 --------------------------------------------- */
 /* 
 ---------------------------------------------
@@ -1026,9 +1022,85 @@ Banner Style
 }
 
 .main-banner .left-content .white-button a {
-  background-color: #3b566e;
+  background-color: #0364b9;
   color: #fff !important;
 }
+
+/* 
+---------------------------------------------
+Banner for content Style
+--------------------------------------------- 
+*/
+
+
+
+.main-banner2 {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  padding: 150px 120px 150px 120px;
+  position: relative;
+  overflow: hidden;
+}
+
+.main-banner2:after {
+  content: "";
+  background-image: url(../Pic/contentslider-left-main.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 100px;
+  width: 100%;
+  height: 105%;
+  z-index: 1;
+}
+
+.main-banner2 .left-content {
+  margin-right: 15px;
+}
+
+.main-banner2 .left-content h2 {
+  z-index: 2;
+  position: relative;
+  font-weight: 700;
+  line-height: 70px;
+  font-size: 50px;
+  margin-bottom: 20px;
+}
+
+.main-banner2 .left-content p {
+  margin-bottom: 45px;
+  color: #2a2a2a;
+  font-weight: 400;
+}
+
+.main-banner2 .left-content .first-button {
+  margin-right: 15px;
+}
+
+.main-banner2 .left-content .white-button {
+  display: inline-block;
+}
+
+.main-banner2 .right-image {
+  text-align: center;
+  position: relative;
+  left: 160px;
+  margin-left: 10%;
+  z-index: 20;
+}
+
+.main-banner2 .right-image img {
+  max-width: 710px;
+}
+
+.main-banner2 .left-content .white-button a {
+  background-color: #7f03b9;
+  color: #fff !important;
+}
+
 
 /* 
 ---------------------------------------------
@@ -1064,18 +1136,6 @@ Services Style
   z-index: 0;
 }
 
-.services:before {
-  content: "";
-  background-image: url(../Pic/services-right-dec1.png);
-
-  background-repeat: no-repeat;
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 1136px;
-  height: 244px;
-  z-index: 0;
-}
 
 .services .section-heading {
   text-align: center;
@@ -1316,6 +1376,8 @@ Services Style
   margin-top: 10px;
   margin-left: 18%;
   margin-right: 18%;
+  font-size: 20px;
+  color: #666;
 }
 .the-clients .naccs {
   position: relative;
@@ -1388,12 +1450,13 @@ Services Style
   height: 62px;
 }
 .the-clients .nacc .thumb .client-content {
-  padding: 60px 30px;
-  background-image: url(../images/client-bg.png);
+  padding: 80px 80px;
+  background-image: url(../Pic/quote.PNG);
   background-size: cover;
   border-radius: 50px;
-  width: 100%;
+  width: 120%;
   height: auto;
+  margin-right: 5%;
   background-repeat: no-repeat;
 }
 .the-clients .nacc .thumb .client-content p {
@@ -1650,7 +1713,7 @@ Services Style
 
 
 footer {
-  background-image: url(../images/footer-bg.png);
+  background-image: url(/Pic/footer.png);
 
   background-position: center top;
   background-repeat: no-repeat;
@@ -1660,7 +1723,7 @@ footer {
   padding-bottom: 60px;
 }
 footer .section-heading {
-  margin-bottom: 45px;
+  margin-bottom: 105px;
 }
 
 footer .section-heading h4 {
@@ -1668,6 +1731,7 @@ footer .section-heading h4 {
   color: #fff;
   margin-left: 13%;
   margin-right: 13%;
+  margin-top: 50%;
   text-align: center;
 }
 footer #search {
@@ -1703,7 +1767,7 @@ footer #search button:hover {
   color: #4b8ef1;
 }
 .footer-widget .logo img {
-  max-width: 96px;
+  max-width: 200px;
   margin-bottom: 30px;
 }
 .footer-widget h4 {
@@ -2243,4 +2307,3 @@ a.btn_red {
   form#contact {
     padding: 30px;
   }
-}
