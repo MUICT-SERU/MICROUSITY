@@ -1286,7 +1286,7 @@ Services Style
 
 
 .about-us2 {
-  padding-top: 130px;
+  padding-top: 40px;
   position: relative;
 }
 .about-us2 .section-heading {
@@ -1407,9 +1407,11 @@ Services Style
   z-index: 0;
 }
 .contactus:after {
-  background-image: url(../Pic/teletubby.png);
-  width: 1000px;
-  height: 800px;
+  background-image: url(../Pic/team2.png);
+  width: 50px;
+  height: 50px;
+  padding-left: 60%;
+  padding-bottom: 20%;
   content: "";
   position: absolute;
   background-repeat: no-repeat;
@@ -1699,6 +1701,169 @@ Services Style
   text-decoration: line-through;
 }
 .pricing-item-pro .border-button {
+  position: relative;
+  z-index: 1;
+  margin-top: 40px;
+
+}
+
+<!-- *****  Pricing 2 Start ***** -->
+
+.pricing2-tables {
+  padding-top: 90px;
+}
+.pricing2-tables .section-heading {
+  text-align: center;
+  margin-bottom: 100px;
+}
+.pricing2-tables .section-heading p {
+  margin-top: 50px;
+  margin-left: 18%;
+  margin-right: 18%;
+}
+.pricing2-item-regular {
+  margin-top: 30px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.07);
+  border-radius: 50px;
+  padding: 90px 30px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+.pricing2-item-regular:before {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  background-image: url(../images/regular-table-top.png);
+  z-index: 0;
+  content: "";
+  width: 100px;
+  height: 100px;
+  max-width: fit-content;
+  max-height: fit-content;
+}
+.pricing2-item-regular:after {
+  position: absolute;
+  bottom: 100px;
+  right: 0;
+  background-image: url(../images/regular-table-bottom.png);
+  z-index: 0;
+  content: "";
+  width: 100px;
+  height: 100px;
+  max-width: fit-content;
+  max-height: fit-content;
+  
+
+}
+.pricing2-item-regular span.price {
+  font-size: 40px;
+
+  color: #fff;
+  position: absolute;
+  font-weight: 700;
+  z-index: 1;
+  left: 500px;
+  top: 500px;
+}
+.pricing2-item-regular h4 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+.pricing2-item-regular .icon img {
+  width: 120px;
+  height: 106px;
+  margin-bottom: 30px;
+}
+.pricing2-item-regular ul li {
+  color: #00c975;
+  font-size: 15px;
+  margin-bottom: 15px;
+}
+.pricing2-item-regular ul li:last-child {
+  margin-bottom: 0px;
+}
+
+.pricing2-item-regular ul li.non-function {
+  color: #afafaf;
+  text-decoration: line-through;
+}
+.pricing2-item-regular .border-button {
+  position: relative;
+  z-index: 1;
+  margin-top: 40px;
+}
+.pricing2-item-pro {
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.07);
+  border-radius: 50px;
+  padding: 120px 30px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+.pricing2-item-pro:before {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  background-image: url(../images/pro-table-top.png);
+  z-index: 0;
+  content: "";
+  width: 100px;
+  height: 100px;
+}
+.pricing2-item-pro:after {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url(../images/pro-table-bottom.png);
+  z-index: 0;
+  content: "";
+  width: 100px;
+  height: 100px;
+  max-width: fit-content;
+  max-height: fit-content;
+}
+.pricing2-item-pro span.price {
+  font-size: 40px;
+
+  color: #fff;
+  position: absolute;
+  font-weight: 700;
+  z-index: 1;
+  left: 100px;
+  top: 100px;
+}
+.pricing2-item-pro h4 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+.pricing2-item-pro .icon img {
+  width: 120px;
+  height: 106px;
+  margin-bottom: 30px;
+}
+.pricing2-item-pro ul li {
+  color: #0bd36f;
+  font-size: 15px;
+  margin-bottom: 15px;
+}
+.pricing2-item-pro ul li:last-child {
+  margin-bottom: 0px;
+}
+
+.pricing2-item-pro ul li.non-function {
+  color: #afafaf;
+  text-decoration: line-through;
+}
+.pricing2-item-pro .border-button {
   position: relative;
   z-index: 1;
   margin-top: 40px;
@@ -2365,3 +2530,4 @@ a.btn_red {
   form#contact {
     padding: 30px;
   }
+}
