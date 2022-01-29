@@ -33,6 +33,9 @@
         font-size: 16px;
         color: #fff;
     }
+    #certi {
+        display: none;
+    }
 
     input[type="text"] {
         margin-left: 20px;
@@ -161,6 +164,10 @@
                         You have passed the quiz, <a href="/certificate/certificate.pdf" download class="alert-link">get
                             your certificate </a>now.
                     </div>
+                    <!-- <div class="alert alert-primary" role="alert">
+                        You have passed the quiz, <a href="/certificate" class="alert-link">get
+                            your certificate </a>now.
+                    </div> -->
                     <% } %>
 
 
@@ -497,6 +504,11 @@
                                 You Scored <span id="quiz-percent"></span>% - <span id="quiz-score"></span>/<span
                                     id="quiz-max-score"></span><br />
                             </div>
+                            <!-- Quiz Certificate -->
+                            <div id="certi" class="alert alert-primary" role="alert">
+                                You have passed the quiz, <a href="/certificate/certificate.pdf" download class="alert-link">get
+                                    your certificate </a>now.
+                            </div>
                             <!-- Answer Button -->
                             <button type="button" onclick="showResults();">Submit Answers</button>
                           
@@ -515,6 +527,7 @@
             if (quiz.checkAnswers()) {
                 var quizScorePercent = quiz.result.scorePercentFormatted; // The unformatted percentage is a decimal in range 0 - 1
                 var quizResultElement = document.getElementById('quiz-result');
+                var certi = document.getElementById('certi');
                 quizResultElement.style.display = 'block';
                 document.getElementById('quiz-score').innerHTML = quiz.result.score.toString();
                 document.getElementById('quiz-max-score').innerHTML = quiz.result.totalQuestions.toString();
@@ -532,6 +545,7 @@
                             success: function () { alert("Success"); },
                             failure: function () { alert("Error"); }
                         });
+                        certi.style.display = 'block';
                 }
                 else if (quizScorePercent >= 50) quizResultElement.style.backgroundColor = '#ffc107';
                 else if (quizScorePercent >= 25) quizResultElement.style.backgroundColor = '#ff9800';

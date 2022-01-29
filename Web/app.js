@@ -269,6 +269,7 @@ app.get("/print", (req, res) => {
   res.render("print2");
 });
 
+
 app.get("/pdf", (req, res) => {
   if (notauth(req, res)) return;
   let user = getUser(req);
@@ -285,7 +286,7 @@ app.get("/pdf", (req, res) => {
     }, function (err) {
       if (err) throw err;
       console.log("Updated Status");
-      
+
     });
 
 
@@ -318,9 +319,9 @@ app.get("/pdf", (req, res) => {
   // Finalize the PDF and end the stream
   doc.end();
   console.log("The certificate was created!");
-  
+
   res.end("This message will be sent back to the client!");
-  
+  //res.redirect('/quiz')
 
 });
 
@@ -329,9 +330,41 @@ app.get("/pdf", (req, res) => {
 app.get("/quiz", (req, res) => {
   if (notauth(req, res)) return;
   let user = getUser(req)
+  let fname = user.fname;
+  let lname = user.lname;
   collection.find({ email: user.email, pass: "TRUE" }).toArray(function (err, users) {
     if (err || users.length !== 0) {
+      const fs = require("fs");
+      const moment = require("moment");
+      const PDFDocument = require("pdfkit");
+      // Create the PDF document
+      const doc = new PDFDocument({
+        layout: "landscape",
+        size: "A4",
+      });
 
+      // The name
+      const name = fname + " " + lname;
+
+      // Pipe the PDF into an name.pdf file
+      doc.pipe(fs.createWriteStream(`public/certificate/certificate.pdf`));
+
+      // Draw the certificate image
+      doc.image("public/Pic/certificate.PNG", 0, 0, { width: 842 });
+
+      // Draw the name
+      doc.fontSize(60).text(name, 90, 320, {
+        align: "center"
+      });
+
+      // Draw the date
+      doc.fontSize(15).text(moment().format("MMMM Do YYYY"), 175, 420, {
+        align: "center"
+      });
+
+      // Finalize the PDF and end the stream
+      doc.end();
+      console.log("The certificate was created!");
       res.render('quiz', {
         user,
         pass: "TRUE"
