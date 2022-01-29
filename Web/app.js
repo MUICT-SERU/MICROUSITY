@@ -325,7 +325,7 @@ app.get("/pdf", (req, res) => {
 });
 
 
-//print page
+//quiz page
 app.get("/quiz", (req, res) => {
   if (notauth(req, res)) return;
   let user = getUser(req)
