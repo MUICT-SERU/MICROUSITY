@@ -72,7 +72,19 @@ function notauth(req, res) {
     let query = qureystring.stringify({
       fromUrl: req.originalUrl,
     })
-    res.redirect('/')
+    res.redirect('/login')
+    return true
+  }
+  return false
+}
+
+//Function when we know that the user is not login yet
+function notauthHome(req, res) {
+  if (!isLogin(req)) {
+    let query = qureystring.stringify({
+      fromUrl: req.originalUrl,
+    })
+    res.redirect('/homein')
     return true
   }
   return false
@@ -80,10 +92,22 @@ function notauth(req, res) {
 
 //main home page
 app.get("/", (req, res) => {
-  res.render("home");
+  if (notauthHome(req, res)) return;
+  let user = getUser(req)
+  res.render('home', {
+    user,
+  });
 });
 app.get("/home", (req, res) => {
-  res.render("home");
+  if (notauthHome(req, res)) return;
+  let user = getUser(req)
+  res.render('home', {
+    user,
+  });
+});
+
+app.get("/homein", (req, res) => {
+  res.render('homeNotAuth')
 });
 
 //login page
@@ -146,7 +170,11 @@ app.post('/register', (req, res) => {
 
 //lesson page
 app.get("/content", (req, res) => {
-  res.render("content");
+  if (notauth(req, res)) return;
+  let user = getUser(req)
+  res.render('content', {
+    user,
+  });
 });
 
 //testing tool page
