@@ -128,7 +128,7 @@ app.post('/login', (req, res) => {
     let user = users[0]
     delete user.password
     setUser(req, user)
-    res.redirect('/result')
+    res.redirect('/home')
 
   });
 
