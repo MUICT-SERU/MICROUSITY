@@ -7,6 +7,8 @@ const session = require('express-session');
 const qureystring = require('querystring');
 const spawn = require('child_process').spawn;
 const fork = require('child_process').fork;
+const md5 = require('md5')
+
 //const
 const SESSION_AUTH_USER = 'session-auth-user'
 
@@ -73,7 +75,19 @@ function notauth(req, res) {
     let query = qureystring.stringify({
       fromUrl: req.originalUrl,
     })
-    res.redirect('/')
+    res.redirect('/login')
+    return true
+  }
+  return false
+}
+
+//Function when we know that the user is not login yet
+function notauthHome(req, res) {
+  if (!isLogin(req)) {
+    let query = qureystring.stringify({
+      fromUrl: req.originalUrl,
+    })
+    res.redirect('/homein')
     return true
   }
   return false
@@ -81,10 +95,22 @@ function notauth(req, res) {
 
 //main home page
 app.get("/", (req, res) => {
-  res.render("home");
+  if (notauthHome(req, res)) return;
+  let user = getUser(req)
+  res.render('home', {
+    user,
+  });
 });
 app.get("/home", (req, res) => {
-  res.render("home");
+  if (notauthHome(req, res)) return;
+  let user = getUser(req)
+  res.render('home', {
+    user,
+  });
+});
+
+app.get("/homein", (req, res) => {
+  res.render('homeNotAuth')
 });
 
 app.get("/launch", async (req, res) => {
@@ -118,14 +144,14 @@ app.get('/login', (req, res) => {
 //When click login
 app.post('/login', (req, res) => {
   let { username, password, fromUrl } = req.body
-  collection.find({ email: username, password: password }).toArray(function (err, users) {
+  collection.find({ email: username, password: md5(password) }).toArray(function (err, users) {
     if (err || users.length != 1) {
       return res.redirect('/login?invalid=1')
     }
     let user = users[0]
     delete user.password
     setUser(req, user)
-    res.redirect('/result')
+    res.redirect('/home')
 
   });
 
@@ -146,7 +172,7 @@ app.post('/register', (req, res) => {
   let lname = req.body['lname']
   let email = req.body['email']
   let password = req.body['password']
-  var myobj = { fname: fname, lname: lname, email: email, password: password, pass: "FALSE" };
+  var myobj = { fname: fname, lname: lname, email: email, password: md5(password), pass: "FALSE" };
 
   collection.find({ email: email }).toArray(function (err, users) {
     if (err || users.length !== 0) {
@@ -167,7 +193,11 @@ app.post('/register', (req, res) => {
 
 //lesson page
 app.get("/content", (req, res) => {
-  res.render("content");
+  if (notauth(req, res)) return;
+  let user = getUser(req)
+  res.render('content', {
+    user,
+  });
 });
 
 //testing tool page
@@ -264,6 +294,7 @@ app.get("/print", (req, res) => {
   res.render("print2");
 });
 
+
 app.get("/pdf", (req, res) => {
   if (notauth(req, res)) return;
   let user = getUser(req);
@@ -315,18 +346,50 @@ app.get("/pdf", (req, res) => {
   console.log("The certificate was created!");
 
   res.end("This message will be sent back to the client!");
-
+  //res.redirect('/quiz')
 
 });
 
 
-//print page
+//quiz page
 app.get("/quiz", (req, res) => {
   if (notauth(req, res)) return;
   let user = getUser(req)
+  let fname = user.fname;
+  let lname = user.lname;
   collection.find({ email: user.email, pass: "TRUE" }).toArray(function (err, users) {
     if (err || users.length !== 0) {
+      const fs = require("fs");
+      const moment = require("moment");
+      const PDFDocument = require("pdfkit");
+      // Create the PDF document
+      const doc = new PDFDocument({
+        layout: "landscape",
+        size: "A4",
+      });
 
+      // The name
+      const name = fname + " " + lname;
+
+      // Pipe the PDF into an name.pdf file
+      doc.pipe(fs.createWriteStream(`public/certificate/certificate.pdf`));
+
+      // Draw the certificate image
+      doc.image("public/Pic/certificate.PNG", 0, 0, { width: 842 });
+
+      // Draw the name
+      doc.fontSize(60).text(name, 90, 320, {
+        align: "center"
+      });
+
+      // Draw the date
+      doc.fontSize(15).text(moment().format("MMMM Do YYYY"), 175, 420, {
+        align: "center"
+      });
+
+      // Finalize the PDF and end the stream
+      doc.end();
+      console.log("The certificate was created!");
       res.render('quiz', {
         user,
         pass: "TRUE"

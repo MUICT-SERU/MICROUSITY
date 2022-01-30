@@ -1,23 +1,34 @@
-
 <!DOCTYPE html>
+<style>
+  .teampic {
+    width: 140%;
+    overflow: hidden;
+  }
+  .logopic {
+    height:100px;
+    
+  }
+</style>
 <html lang="en">
 
-  <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<head>
 
-    <title>About Us page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+    rel="stylesheet">
 
-    <!-- Bootstrap core CSS -->
-    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <title>About Us page</title>
 
-<!--
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!--
 
 TemplateMo 570 Chain App Dev
 
@@ -25,19 +36,20 @@ https://templatemo.com/tm-570-chain-app-dev
 
 -->
 
-    <!-- Additional CSS Files -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/templatemo-chain-app-dev.css">
-    <link rel="stylesheet" href="/css/animated.css">
-    <link rel="stylesheet" href="/css/owl.css">
+  <!-- Additional CSS Files -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+    integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/templatemo-chain-app-dev.css">
+  <link rel="stylesheet" href="/css/animated.css">
+  <link rel="stylesheet" href="/css/owl.css">
 
-  </head>
+</head>
 
 
 
 <body>
 
- 
+
   <!-- ***** Header Area Start ***** -->
   <header class="header-area header-sticky wow slideInDown" data-wow-duration="0.75s" data-wow-delay="0s">
     <div class="container">
@@ -45,23 +57,25 @@ https://templatemo.com/tm-570-chain-app-dev
         <div class="col-12">
           <nav class="main-nav">
             <!-- ***** Logo Start ***** -->
-            <a href="home.ejs" class="logo">
-              <img src="/Pic/mylogo.png"  alt="Microusity">
+            <a href="/home" class="logo">
+              <img src="/Pic/mylogo.png" alt="Microusity" class="logopic">
             </a>
 
 
             <!-- ***** Logo End ***** -->
             <!-- ***** Menu Start ***** -->
             <ul class="nav">
-              <li class="scroll-to-section"><a href="/home" >Home</a></li>
+              <li class="scroll-to-section"><a href="/home">Home</a></li>
               <li class="scroll-to-section"><a href="/content">Content</a></li>
               <li class="scroll-to-section"><a href="/quiz">Quiz</a></li>
               <li class="scroll-to-section"><a href="/testingtool">Testing tool</a></li>
               <li class="scroll-to-section"><a href="/aboutus" class="active">About us</a></li>
-              <li><div class="gradient-button"><a id="modal_trigger" href="#modal"><i class="fa fa-sign-in-alt"></i> Sign In Now</a></div></li> 
-            </ul>        
+              <li>
+                <!-- <div class="gradient-button"><a id="modal_trigger" href="/logout">Log Out</a></div> -->
+              </li>
+            </ul>
             <a class='menu-trigger'>
-                <span>Menu</span>
+              <span>Menu</span>
             </a>
             <!-- ***** Menu End ***** -->
           </nav>
@@ -71,145 +85,66 @@ https://templatemo.com/tm-570-chain-app-dev
   </header>
   <!-- ***** Header Area End ***** -->
 
-
-  
-  <div id="modal" class="popupContainer" style="display:none;">
-    <div class="popupHeader">
-        <span class="header_title">Login</span>
-        <span class="modal_close"><i class="fa fa-times"></i></span>
-    </div>
-
-    <section class="popupBody">
-        <!-- Social Login -->
-        <div class="social_login">
-            <div class="">
-                <a href="#" class="social_box fb">
-                    <span class="icon"><i class="fab fa-facebook"></i></span>
-                    <span class="icon_title">Connect with Facebook</span>
-
-                </a>
-
-                <a href="#" class="social_box google">
-                    <span class="icon"><i class="fab fa-google-plus"></i></span>
-                    <span class="icon_title">Connect with Google</span>
-                </a>
-            </div>
-
-            <div class="centeredText">
-                <span>Or use your Email address</span>
-            </div>
-
-            <div class="action_btns">
-                <div class="one_half"><a href="#" id="login_form" class="btn">Login</a></div>
-                <div class="one_half last"><a href="#" id="register_form" class="btn">Sign up</a></div>
-            </div>
-        </div>
-
-        <!-- Username & Password Login form -->
-        <div class="user_login">
-            <form>
-                <label>Email / Username</label>
-                <input type="text" />
-                <br />
-
-                <label>Password</label>
-                <input type="password" />
-                <br />
-
-                <div class="checkbox">
-                    <input id="remember" type="checkbox" />
-                    <label for="remember">Remember me on this computer</label>
-                </div>
-
-                <div class="action_btns">
-                    <div class="one_half"><a href="#" class="btn back_btn"><i class="fa fa-angle-double-left"></i> Back</a></div>
-                    <div class="one_half last"><a href="#" class="btn btn_red">Login</a></div>
-                </div>
-            </form>
-
-            <a href="#" class="forgot_password">Forgot password?</a>
-        </div>
-
-        <!-- Register Form -->
-        <div class="user_register">
-            <form>
-                <label>Full Name</label>
-                <input type="text" />
-                <br />
-
-                <label>Email Address</label>
-                <input type="email" />
-                <br />
-
-                <label>Password</label>
-                <input type="password" />
-                <br />
-
-                <div class="checkbox">
-                    <input id="send_updates" type="checkbox" />
-                    <label for="send_updates">Send me occasional email updates</label>
-                </div>
-
-                <div class="action_btns">
-                    <div class="one_half"><a href="#" class="btn back_btn"><i class="fa fa-angle-double-left"></i> Back</a></div>
-                    <div class="one_half last"><a href="#" class="btn btn_red">Register</a></div>
-                </div>
-            </form>
-        </div>
-    </section>
-</div>
-
-  
-    <br>
-    <br>
+  <br>
+  <br>
   <div id="contactus" class="contactus">
     <div class="container">
       <div class="row">
         <div class="col-lg-6 align-self-center">
           <div class="section-heading">
-            <h4> Creator Team of  <em>Microusity</em> &amp; Who We Are</h4>
-            <img src="assets/images/heading-line-dec.png" alt="">
-            <p> คณะเทคโนโลยีสารสนเทศและการสื่อสาร มหาวิทยลัยมหิดล ได้เล็งเห็นถึงความสำคัญของการเรียนรู้ Life long learning society คณะผู้จัดทำจึงได้คิดค้นวิธีการให้ความรู้ผ่านการเรียนรู้แบบ Problem-based Learning และ Active Learning ที่จะช่วยพัฒนาความรู้และทักษะที่สำคัญในสำหรับการเรียนรู้สำหรับ นักเรียน นักศึกษา และ ผู้สนใจ ในศตวรรษที่ 21 เกี่ยวกับความปลอดภัยของ API ผ่าน Web Application </p>
+            <h4> Creator Team of <em>Microusity</em> &amp; Who We Are</h4>
+            <!-- <img src="assets/images/heading-line-dec.png" alt=""> -->
+            <p> คณะเทคโนโลยีสารสนเทศและการสื่อสาร มหาวิทยลัยมหิดล ได้เล็งเห็นถึงความสำคัญของการเรียนรู้ Life long
+              learning society คณะผู้จัดทำจึงได้คิดค้นวิธีการให้ความรู้ผ่านการเรียนรู้แบบ Problem-based Learning และ
+              Active Learning ที่จะช่วยพัฒนาความรู้และทักษะที่สำคัญในสำหรับการเรียนรู้สำหรับ นักเรียน นักศึกษา และ
+              ผู้สนใจ ในศตวรรษที่ 21 เกี่ยวกับความปลอดภัยของ API ผ่าน Web Application </p>
           </div>
           <div class="section-heading">
-          <h4> <em>Microusity</em> Members</h4>
+            <h4> <em>Microusity</em> Members</h4>
           </div>
-            <div class="col-lg-6">
-              <div class="box-item">
-                <h4 style="color:#069">จันสิดา มกรานนท์</h4>
-                <h5 style="color:#069">Chansida Makaranond</h5>
+          <div class="col-lg-6">
+            <div class="box-item">
+              <h4 style="color:#069">จันสิดา มกรานนท์</h4>
+              <h5 style="color:#069">Chansida Makaranond</h5>
 
-                <p> นักศึษา คณะ เทคโนโลยีสารสนเทศ ( ICT ) หลักสูตร นานาชาติ มหาวิทยาลัย มหิดล Major : Software Engineering </p>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="box-item">
-                <h4 style="color:#069">ภัทรกฤต รัตตานุกูล </h4>
-                <h5 style="color:#069">Pattarakrit Rattanukul</h5>
-
-                <p> นักศึษา คณะ เทคโนโลยีสารสนเทศ ( ICT ) หลักสูตร นานาชาติ มหาวิทยาลัย มหิดล Major : Software Engineering </p>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="box-item">
-                <h4 style="color:#069">ภูมิภัทร วัฒนกุลจรัส </h4>
-                <h5 style="color:#069">   Pumipat Watanakulcharus </h5>
-
-                <p> นักศึษา คณะ เทคโนโลยีสารสนเทศ ( ICT ) หลักสูตร นานาชาติ มหาวิทยาลัย มหิดล Major : Software Engineering </p>
-
-
-              </div>
-            </div>
-          
+              <p> นักศึษา คณะ เทคโนโลยีสารสนเทศ ( ICT ) หลักสูตร นานาชาติ มหาวิทยาลัย มหิดล Major : Software Engineering
+              </p>
             </div>
           </div>
+          <div class="col-lg-6">
+            <div class="box-item">
+              <h4 style="color:#069">ภัทรกฤต รัตตานุกูล </h4>
+              <h5 style="color:#069">Pattarakrit Rattanukul</h5>
+
+              <p> นักศึษา คณะ เทคโนโลยีสารสนเทศ ( ICT ) หลักสูตร นานาชาติ มหาวิทยาลัย มหิดล Major : Software Engineering
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="box-item">
+              <h4 style="color:#069">ภูมิภัทร วัฒนกุลจรัส </h4>
+              <h5 style="color:#069"> Pumipat Watanakulcharus </h5>
+
+              <p> นักศึษา คณะ เทคโนโลยีสารสนเทศ ( ICT ) หลักสูตร นานาชาติ มหาวิทยาลัย มหิดล Major : Software Engineering
+              </p>
+
+
+            </div>
+          </div>
+
         </div>
-      
+        <div class="col-lg-6">
+          <br><br><br><br><br><br>
+          <img src="../Pic/team2.png" class="teampic" alt="">
+        </div>
       </div>
     </div>
+
+  </div>
+  </div>
   </div>
 
-  
+
   <!-- Scripts -->
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -219,21 +154,5 @@ https://templatemo.com/tm-570-chain-app-dev
   <script src="assets/js/popup.js"></script>
   <script src="assets/js/custom.js"></script>
 </body>
+
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

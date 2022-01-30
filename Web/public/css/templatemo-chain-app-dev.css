@@ -1,9 +1,6 @@
 /*
-
 TemplateMo 570 Chain App Dev
-
 https://templatemo.com/tm-570-chain-app-dev
-
 */
 
 /* ---------------------------------------------
@@ -21,7 +18,6 @@ Table of contents
 10. preloader
 11. search
 12. portfolio
-
 --------------------------------------------- */
 /* 
 ---------------------------------------------
@@ -1026,9 +1022,73 @@ Banner Style
 }
 
 .main-banner .left-content .white-button a {
-  background-color: #3b566e;
+  background-color: #0364b9;
   color: #fff !important;
 }
+
+/* 
+---------------------------------------------
+Banner for content Style
+--------------------------------------------- 
+*/
+
+
+
+.main-banner2 {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  padding: 150px 120px 150px 120px;
+  position: relative;
+  overflow: hidden;
+}
+
+
+
+.main-banner2 .left-content {
+  margin-right: 15px;
+}
+
+.main-banner2 .left-content h2 {
+  z-index: 2;
+  position: relative;
+  font-weight: 700;
+  line-height: 70px;
+  font-size: 50px;
+  margin-bottom: 20px;
+}
+
+.main-banner2 .left-content p {
+  margin-bottom: 45px;
+  color: #2a2a2a;
+  font-weight: 400;
+}
+
+.main-banner2 .left-content .first-button {
+  margin-right: 15px;
+}
+
+.main-banner2 .left-content .white-button {
+  display: inline-block;
+}
+
+.main-banner2 .right-image {
+  text-align: center;
+  position: relative;
+  left: 160px;
+  margin-left: 10%;
+  z-index: 20;
+}
+
+.main-banner2 .right-image img {
+  max-width: 710px;
+}
+
+.main-banner2 .left-content .white-button a {
+  background-color: #7f03b9;
+  color: #fff !important;
+}
+
 
 /* 
 ---------------------------------------------
@@ -1064,18 +1124,6 @@ Services Style
   z-index: 0;
 }
 
-.services:before {
-  content: "";
-  background-image: url(../Pic/services-right-dec1.png);
-
-  background-repeat: no-repeat;
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 1136px;
-  height: 244px;
-  z-index: 0;
-}
 
 .services .section-heading {
   text-align: center;
@@ -1237,6 +1285,76 @@ Services Style
 /* ABOUT US */
 
 
+.about-us2 {
+  padding-top: 40px;
+  position: relative;
+}
+.about-us2 .section-heading {
+  margin-bottom: 45px;
+}
+
+.about-us2 .section-heading,
+.about-us2 .box-item,
+.about-us2 p,
+.about-us2 .box-item .gradient-button,
+.about-us2 .box-item span {
+  position: relative;
+  z-index: 1;
+}
+.about-us2 .box-item {
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.07);
+  padding: 10px 30px;
+  background-color: #fff;
+  border-radius: 40px;
+  margin-bottom: 30px;
+  width: fit-content;
+}
+.about-us2 .box-item h4 a {
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 8px;
+  color: #2a2a2a;
+  transition: all 0.3s;
+}
+.about-us2 .box-item p {
+  margin-bottom: 0px;
+}
+
+.about-us2 .box-item:hover h4 a {
+  color: #3b566e;
+}
+
+.about-us2 .gradient-button {
+  margin-top: 30px;
+
+  margin-bottom: 10px;
+}
+.about-us2 span {
+  font-size: 14px;
+  color: #7a7a7a;
+}
+.about-us2 .right-image {
+  position: relative;
+  z-index: 1;
+}
+.about-us2:after {
+  background-image: url(../Pic/about-bg.png);
+  width: 777px;
+  height: 1132px;
+  content: "";
+  position: absolute;
+  background-repeat: no-repeat;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 0;
+ 
+}
+
+
+/* Contact US */
+
+
 .contactus {
   padding-top: 130px;
   position: relative;
@@ -1288,10 +1406,12 @@ Services Style
   position: relative;
   z-index: 0;
 }
-.contactus:after {
-  background-image: url(../Pic/teletubby.png);
-  width: 1000px;
-  height: 800px;
+/* .contactus:after {
+  background-image: url(../Pic/team2.png);
+  width: 50px;
+  height: 50px;
+  padding-left: 60%;
+  padding-bottom: 20%;
   content: "";
   position: absolute;
   background-repeat: no-repeat;
@@ -1300,7 +1420,7 @@ Services Style
   transform: translateY(-50%);
   z-index: 0;
  
-}
+} */
 
 /* CLIENT SAY */
 
@@ -1316,6 +1436,8 @@ Services Style
   margin-top: 10px;
   margin-left: 18%;
   margin-right: 18%;
+  font-size: 20px;
+  color: #666;
 }
 .the-clients .naccs {
   position: relative;
@@ -1388,12 +1510,13 @@ Services Style
   height: 62px;
 }
 .the-clients .nacc .thumb .client-content {
-  padding: 60px 30px;
-  background-image: url(../images/client-bg.png);
+  padding: 80px 80px;
+  background-image: url(../Pic/quote.PNG);
   background-size: cover;
   border-radius: 50px;
-  width: 100%;
+  width: 120%;
   height: auto;
+  margin-right: 5%;
   background-repeat: no-repeat;
 }
 .the-clients .nacc .thumb .client-content p {
@@ -1584,6 +1707,169 @@ Services Style
 
 }
 
+<!-- *****  Pricing 2 Start ***** -->
+
+.pricing2-tables {
+  padding-top: 90px;
+}
+.pricing2-tables .section-heading {
+  text-align: center;
+  margin-bottom: 100px;
+}
+.pricing2-tables .section-heading p {
+  margin-top: 50px;
+  margin-left: 18%;
+  margin-right: 18%;
+}
+.pricing2-item-regular {
+  margin-top: 30px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.07);
+  border-radius: 50px;
+  padding: 90px 30px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+.pricing2-item-regular:before {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  background-image: url(../images/regular-table-top.png);
+  z-index: 0;
+  content: "";
+  width: 100px;
+  height: 100px;
+  max-width: fit-content;
+  max-height: fit-content;
+}
+.pricing2-item-regular:after {
+  position: absolute;
+  bottom: 100px;
+  right: 0;
+  background-image: url(../images/regular-table-bottom.png);
+  z-index: 0;
+  content: "";
+  width: 100px;
+  height: 100px;
+  max-width: fit-content;
+  max-height: fit-content;
+  
+
+}
+.pricing2-item-regular span.price {
+  font-size: 40px;
+
+  color: #fff;
+  position: absolute;
+  font-weight: 700;
+  z-index: 1;
+  left: 500px;
+  top: 500px;
+}
+.pricing2-item-regular h4 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+.pricing2-item-regular .icon img {
+  width: 120px;
+  height: 106px;
+  margin-bottom: 30px;
+}
+.pricing2-item-regular ul li {
+  color: #00c975;
+  font-size: 15px;
+  margin-bottom: 15px;
+}
+.pricing2-item-regular ul li:last-child {
+  margin-bottom: 0px;
+}
+
+.pricing2-item-regular ul li.non-function {
+  color: #afafaf;
+  text-decoration: line-through;
+}
+.pricing2-item-regular .border-button {
+  position: relative;
+  z-index: 1;
+  margin-top: 40px;
+}
+.pricing2-item-pro {
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.07);
+  border-radius: 50px;
+  padding: 120px 30px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+.pricing2-item-pro:before {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  background-image: url(../images/pro-table-top.png);
+  z-index: 0;
+  content: "";
+  width: 100px;
+  height: 100px;
+}
+.pricing2-item-pro:after {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url(../images/pro-table-bottom.png);
+  z-index: 0;
+  content: "";
+  width: 100px;
+  height: 100px;
+  max-width: fit-content;
+  max-height: fit-content;
+}
+.pricing2-item-pro span.price {
+  font-size: 40px;
+
+  color: #fff;
+  position: absolute;
+  font-weight: 700;
+  z-index: 1;
+  left: 100px;
+  top: 100px;
+}
+.pricing2-item-pro h4 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+.pricing2-item-pro .icon img {
+  width: 120px;
+  height: 106px;
+  margin-bottom: 30px;
+}
+.pricing2-item-pro ul li {
+  color: #0bd36f;
+  font-size: 15px;
+  margin-bottom: 15px;
+}
+.pricing2-item-pro ul li:last-child {
+  margin-bottom: 0px;
+}
+
+.pricing2-item-pro ul li.non-function {
+  color: #afafaf;
+  text-decoration: line-through;
+}
+.pricing2-item-pro .border-button {
+  position: relative;
+  z-index: 1;
+  margin-top: 40px;
+
+}
+
 
 .free-quote {
   background-image: url(../images/quote-bg.jpg);
@@ -1650,7 +1936,7 @@ Services Style
 
 
 footer {
-  background-image: url(../images/footer-bg.png);
+  background-image: url(/Pic/footer.png);
 
   background-position: center top;
   background-repeat: no-repeat;
@@ -1660,7 +1946,7 @@ footer {
   padding-bottom: 60px;
 }
 footer .section-heading {
-  margin-bottom: 45px;
+  margin-bottom: 105px;
 }
 
 footer .section-heading h4 {
@@ -1668,6 +1954,7 @@ footer .section-heading h4 {
   color: #fff;
   margin-left: 13%;
   margin-right: 13%;
+  margin-top: 50%;
   text-align: center;
 }
 footer #search {
@@ -1703,7 +1990,7 @@ footer #search button:hover {
   color: #4b8ef1;
 }
 .footer-widget .logo img {
-  max-width: 96px;
+  max-width: 200px;
   margin-bottom: 30px;
 }
 .footer-widget h4 {

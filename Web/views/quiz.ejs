@@ -20,6 +20,10 @@
         box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.15);
     }
 
+    .quizlib-question-warning {
+        color: rgb(143, 38, 38);
+    }
+
     #quiz-result {
         display: none;
         margin-bottom: 10px;
@@ -28,6 +32,9 @@
         font-family: 'Helvetica Neue', Helvetica, Arial, serif;
         font-size: 16px;
         color: #fff;
+    }
+    #certi {
+        display: none;
     }
 
     input[type="text"] {
@@ -117,7 +124,7 @@
                         <nav class="main-nav">
                             <!-- ***** Logo Start ***** -->
                             <a href="/home" class="logo">
-                                <img src="/Pic/mylogo.png" alt="Microusity">
+                                <img src="/Pic/mylogo.png" alt="Microusity" class="logopic">
                             </a>
 
 
@@ -147,68 +154,370 @@
 
         <br><br><br><br>
 
-        
-            <div class="row mt-5">
-                <div class="col-md-6 offset-md-3">
-                    <!-- Certificate -->
-                    
-                    <% if(user.pass == "TRUE"||pass == "TRUE"){ %>
-                        <div class="alert alert-primary" role="alert">
-                            You have passed the quiz, <a href="/certificate/certificate.pdf" download class="alert-link">get your certificate </a>now.
-                          </div>
-                        <% } %>
-                    <!-- Quiz Results -->
-                    <div id="quiz-result" class="card">
-                        You Scored <span id="quiz-percent"></span>% - <span id="quiz-score"></span>/<span
-                            id="quiz-max-score"></span><br />
-                    </div>
 
-                    <!-- Quiz Container -->
-                    <div id="quiz">
-                        <!-- Question 1 -->
-                        <div class="card quizlib-question">
-                            <div class="quizlib-question-title">1. What is the answer to life, the universe and
-                                everything?
-                            </div>
-                            <div class="quizlib-question-answers">
-                                <input type="text" name="q1">
-                            </div>
-                        </div>
-                        <!-- Question 2 -->
-                        <div class="card quizlib-question">
-                            <div class="quizlib-question-title">2. Your enemy's father...</div>
-                            <div class="quizlib-question-answers">
-                                <ul>
-                                    <li><label><input type="radio" name="q2" value="a"> is a hamster</label></li>
-                                    <li><label><input type="radio" name="q2" value="b"> smells of elderberries</label>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- Question 3 -->
-                        <div class="card quizlib-question">
-                            <div class="quizlib-question-title">3. Which factors will contribute to the end of humanity
-                                as
-                                we know
-                                it?
-                            </div>
-                            <div class="quizlib-question-answers">
-                                <ul>
-                                    <li><label><input type="checkbox" name="q3" value="a"> Global warming</label></li>
-                                    <li><label><input type="checkbox" name="q3" value="b"> The release of Linux
-                                            4.1.15</label></li>
-                                    <li><label><input type="checkbox" name="q3" value="c"> Cats</label></li>
-                                    <li><label><input type="checkbox" name="q3" value="d"> Advancements in artificial
-                                            intelligence</label></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- Answer Button -->
-                        <button type="button" onclick="showResults();">Check Answers</button>
+        <div class="row mt-5">
+            <div class="col-md-9 offset-md-2">
+                <!-- Certificate -->
+
+                <% if(user.pass=="TRUE" ||pass=="TRUE" ){ %>
+                    <div class="alert alert-primary" role="alert">
+                        You have passed the quiz, <a href="/certificate/certificate.pdf" download class="alert-link">get
+                            your certificate </a>now.
                     </div>
-                </div>
+                    <!-- <div class="alert alert-primary" role="alert">
+                        You have passed the quiz, <a href="/certificate" class="alert-link">get
+                            your certificate </a>now.
+                    </div> -->
+                    <% } %>
+
+
+                        <!-- Quiz Container -->
+                        <div id="quiz">
+                            <!-- Question 1 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>1. อะไรทำให้ Web API แตกต่างจาก Web Service  </b>
+                                </div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="radio" name="q1" value="a"> &nbsp; Web API
+                                                ออกแบบมาเพื่อใช้เป็นช่องทางสื่อสารระหว่างอุปกรณ์อิเล็กทรอนิกส์กับอุปกรณ์อิเล็กทรอนิกส์อื่นๆ</label>
+                                        </li>
+                                        <li><label><input type="radio" name="q1" value="b"> &nbsp; Web API
+                                                ไม่ได้ยึดติดกับ Operating system ชนิดใด หรือ ภาษา programming
+                                                ชนิดไหน</label></li>
+                                        <li><label><input type="radio" name="q1" value="c"> &nbsp; Web API มีความยืดหยุ่นในการใช้งานมากกว่าเพราะว่า Web API ไม่ได้จำกัดอยู่แค่บน HTTP</label></li>
+                                        <li><label><input type="radio" name="q1" value="d"> &nbsp; Web API ทำงานอยู่บน internet protocol โดยอาศัยรูปแบบข้อมูลแบบ XML, SOAP, WSDL หรือ UDDI</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 2 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>2. รูปแบบข้อมูลแบบ JSON ดีกว่า XML อย่างไร  </b></div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="radio" name="q2" value="a"> &nbsp; สามารถต่อขยาย (extensible) ได้ง่ายกว่า</label></li>
+                                        <li><label><input type="radio" name="q2" value="b"> &nbsp;
+                                            เหมาะกับการรับรู้ข้อมูลมากกว่า</label></li>
+                                        <li><label><input type="radio" name="q2" value="c"> &nbsp;
+                                            อนุญาตให้สร้างแท็กของตนเอง ทำให้การทำงานเป็นไปได้ง่ายขึ้น</label></li>
+                                        <li><label><input type="radio" name="q2" value="d"> &nbsp;
+                                                อ่านได้ง่ายและกระชับกว่า</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 3 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>3. ถ้าเราต้องการที่จะ นำ Google Maps มาโชว์ใน Application หรือเว็บไซต์เราควรที่จะต้องทำยังไง  </b></div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="radio" name="q3" value="a"> &nbsp; ใช้ Google API
+                                                ที่เป็น Public API</label></li>
+                                        <li><label><input type="radio" name="q3" value="b"> &nbsp; ใช้ Google API
+                                                ที่เป็น Private API</label></li>
+                                        <li><label><input type="radio" name="q3" value="c"> &nbsp; แปะลิ้ง Google Maps
+                                                ให้ลูกค้าเข้าผ่าน Link</label></li>
+                                        <li><label><input type="radio" name="q3" value="d"> &nbsp; บันทึกรูปภาพจาก Google Maps และนำมาวางในเว็บไซต์ของเรา</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 4 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>4. Monolithic Architecture มีลักษณะอย่างไร  </b>
+                                </div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="radio" name="q4" value="a"> &nbsp; Service ต่างๆ จะอยู่ใน Environment เดียวกัน และใช้ Database ร่วมกัน</label></li>
+                                        <li><label><input type="radio" name="q4" value="b"> &nbsp; Service ต่างๆ จะอยู่ในคนละ Environment กัน แต่ใช้ Database ร่วมกัน</label></li>
+                                        <li><label><input type="radio" name="q4" value="c"> &nbsp; Service ต่างๆ จะอยู่ในคนละ Environment กัน และใช้ Database แยกกัน</label></li>
+                                        <li><label><input type="radio" name="q4" value="d"> &nbsp; ไม่มีข้อใดถูก</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 5 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>5. การใช้ Monolithic Architecture
+                                        จะเริ่มเกิดปัญหาเมื่อ Developer พยายามที่จะทำอะไร  </b></div>
+                                <br>       
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="radio" name="q5" value="a"> &nbsp;
+                                                จะเกิดปัญหาขึ้นเมื่อนักพัฒนาพยายามที่จะ Log in เข้าสู่ระบบ</label></li>
+                                        <li><label><input type="radio" name="q5" value="b"> &nbsp;
+                                                จะเกิดปัญหาขึ้นเมื่อนักพัฒนาต้องการที่จะเพิ่ม Feature
+                                                ใหม่ๆเข้าไปและขยายระบบเพื่อรองรับลูกค้ามากขึ้น</label></li>
+                                        <li><label><input type="radio" name="q5" value="c"> &nbsp;
+                                            จะเกิดปัญหาขึ้นเมื่อเราต้องการ run โค้ดที่เป็นแบบ Single codebase  </label></li>
+                                        <li><label><input type="radio" name="q5" value="d"> &nbsp;
+                                                จะเกิดปัญหาขึ้นเมื่อนักพัฒนาต้องการที่จะเปลี่ยน Color Theme
+                                                จากสีเดิมเป็นสีใหม่</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 6 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>6. Microservice คุณลักษณะอย่างไรบ้าง  </b>
+                                </div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="checkbox" name="q6" value="a">&nbsp;
+                                                มีอิสระต่อกันไม่ผูกพันกับส่วนอื่นๆ สามารถอยู่ได้ด้วยตัวเอง</label></li>
+                                        <li><label><input type="checkbox" name="q6" value="b">&nbsp; ถ้า Service
+                                                ตัวหนึ่งพังหรือปิดลง ตัวอื่นจะต้องไม่พังตามไป</label></li>
+                                        <li><label><input type="checkbox" name="q6" value="c">&nbsp; Microservice
+                                                จะต้องถูกออกแบบมาให้ทดแทนได้</label></li>
+                                        <li><label><input type="checkbox" name="q6" value="d">&nbsp; Microservices นั้นสามารถช่วยให้การทำงาน Scaleable ได้มากกว่า</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 7 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>7. การให้สิทธิ์บางอย่างกับ user มากเกินไปจนทำให้ user เจาะระบบได้ ตกอยู่ใน OWASP Security API ข้อใด  </b></div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="radio" name="q7" value="a"> &nbsp;
+                                            A01:2021-Broken Access Control</label></li>
+                                        <li><label><input type="radio" name="q7" value="b"> &nbsp;
+                                            A03:2021-Injection</label></li>
+                                        <li><label><input type="radio" name="q7" value="c"> &nbsp;
+                                            A04:2021-Insecure Design </label></li>
+                                        <li><label><input type="radio" name="q7" value="d"> &nbsp;
+                                            A05:2021-Security Misconfiguration</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 8 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>8. จากโค้ด Query HQLQuery = session.createQuery("FROM accounts WHERE custID='" + request.getParameter("id") + "'");
+                                    <br><br>
+                                    หากผู้โจมตีแก้ไขค่าพารามิเตอร์ 'id' ในเบราว์เซอร์เพื่อส่ง: ' หรือ '1'='1 ในระบบที่มีการรักษาความปลอดภัยไม่ดีจะทำให้เกิดอะไรขึ้น  
+                                    </b></div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="radio" name="q8" value="a"> &nbsp;
+                                            ทำให้เกิดความเสียหายที่เรียกว่า “Double Spending attack” ได้</label></li>
+                                        <li><label><input type="radio" name="q8" value="b"> &nbsp;
+                                            จะเปลี่ยนความหมายของ Query ทั้งสอง และสั่งให้ return ข้อมูลทั้งหมดจาก Account table</label></li>
+                                        <li><label><input type="radio" name="q8" value="c"> &nbsp;
+                                            ทำให้ผู้ไม่หวังดีสามารถอัพโหลดโค้ดสำหรับอัพเดทขึ้นไปเพื่อรันทั้งแอพพลิเคชันได้ </label></li>
+                                        <li><label><input type="radio" name="q8" value="d"> &nbsp;
+                                            ทำให้ไม่สามารถตรวจสอบและแจ้งเตือนการโจมตีได้ในขณะที่ใช้งาน</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 9 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>9. จากตัวอย่างข้อที่ผ่านมาคือ  OWASP Security API ข้อไหน  </b></div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="radio" name="q9" value="a"> &nbsp;
+                                            A03:2021-Injection</label></li>
+                                        <li><label><input type="radio" name="q9" value="b"> &nbsp;
+                                            A04:2021-Insecure Design</label></li>
+                                        <li><label><input type="radio" name="q9" value="c"> &nbsp;
+                                            A05:2021-Security Misconfiguration</label></li>
+                                        <li><label><input type="radio" name="q9" value="d"> &nbsp;
+                                            A09:2021-Security Logging and Monitoring Failures</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 10 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>10. นิยามของ A07:2021-Identification and Authentication Failures ตรงกับข้อไหน  </b></div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="radio" name="q10" value="a"> &nbsp;
+                                            การโจมตีโดยการส่ง Remote Code เข้ามาเพื่อให้มีช่องโหว่ที่เกิด การเปลี่ยนแปลงข้อมูลหรือถอดรหัสข้อมูลใน Application ที่ผิดพลาด</label></li>
+                                        <li><label><input type="radio" name="q10" value="b"> &nbsp;
+                                            การโจมตีโดยการปลอมแปลง request ฝั่งเซิร์ฟเวอร์ ซึ่งเป็นช่องโหว่ด้านความปลอดภัยของ web application</label></li>
+                                        <li><label><input type="radio" name="q10" value="c"> &nbsp;
+                                            การโจมตีที่ โฟกัสไปที่ CI/CD pipelines ที่สามารถใส่คำสั่ง (code) เพื่อทำการควบคุมทั้ง system ได้</label></li>
+                                        <li><label><input type="radio" name="q10" value="d"> &nbsp;
+                                            การโจมตีที่เกี่ยวกับการ login โดยใช้ Username และ Password หรือ การใช้ Login Key หรือ การใช้ session token</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 11 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>11. ข้อใดคือตัวอย่างของ A09:2021-Security Logging and Monitoring Failures  </b></div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="radio" name="q11" value="a"> &nbsp;
+                                            ตัวแอพพลิเคชั่นมีการเก็บ log แบบ real time</label></li>
+                                        <li><label><input type="radio" name="q11" value="b"> &nbsp;
+                                            ข้อมูล Log ถูกจัดเก็บไว้ในที่จัดเก็บข้อมูลของเครื่องเท่านั้น</label></li>
+                                        <li><label><input type="radio" name="q11" value="c"> &nbsp;
+                                            มีการเก็บ Log ของ API</label></li>
+                                        <li><label><input type="radio" name="q11" value="d"> &nbsp;
+                                            มีการจัดเก็บ Log ที่ออกแบบมาอย่างดี</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 12 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>12. ในกรณีที่  Developer ไม่ได้มีการป้องกัน หรือ ไม่ได้ตรวจสอบสิทธิ์การเข้าถึง financial info จาก user อื่น ทำให้เกิดปัญหาใดตามมา  </b></div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="radio" name="q12" value="a"> &nbsp;
+                                            เซิฟเวอร์ล่ม</label></li>
+                                        <li><label><input type="radio" name="q12" value="b"> &nbsp;
+                                            ไม่สามารถเข้าถึงข้อมูลได้ </label></li>
+                                        <li><label><input type="radio" name="q12" value="c"> &nbsp;
+                                            ข้อมูลรั่วไหล </label></li>
+                                        <li><label><input type="radio" name="q12" value="d"> &nbsp;
+                                            เว็บหรือแอปพลิเคชั่น โหลดช้า</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 13 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>13. “ช่องโหว่เรื่องความปลอดภัยของ API ที่สามารถแทนที่ตัวแปรบน Request URL แล้วสามารถเข้าถึงข้อมูลที่ไม่อนุญาตให้เข้าถึงได้”  คือคำนิยามของ OWASP API Security ข้อใด  </b></div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="radio" name="q13" value="a"> &nbsp;
+                                            API1:2019 Broken Object Level Authorization</label></li>
+                                        <li><label><input type="radio" name="q13" value="b"> &nbsp;
+                                            API3:2019 Excessive Data Exposure </label></li>
+                                        <li><label><input type="radio" name="q13" value="c"> &nbsp;
+                                            API4:2019 Lack of Resources & Rate Limiting </label></li>
+                                        <li><label><input type="radio" name="q13" value="d"> &nbsp;
+                                            API5:2019 Broken Function Level Authorization</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 14 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>14. API3:2019 Excessive Data Exposure เกิดจากอะไร  </b></div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="radio" name="q14" value="a"> &nbsp;
+                                            การที่ API ไม่สามารถเข้าถึง Server ได้</label></li>
+                                        <li><label><input type="radio" name="q14" value="b"> &nbsp;
+                                            การที่ API ใช้เวลานานเกินไปในการตอบสนอง</label></li>
+                                        <li><label><input type="radio" name="q14" value="c"> &nbsp;
+                                            การที่ API ตัวเดิม ถูกใช้ยิงไปสู่หลาย Database</label></li>
+                                        <li><label><input type="radio" name="q14" value="d"> &nbsp;
+                                            การที่ API ตอบข้อมูลมามาก เกินกว่าที่จะต้องนำไปใช้งานจริง</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 15 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>15. HTTP 500 Internal Server Error ทำให้เกิดปัญหาอะไรตามมา  </b>
+                                </div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="checkbox" name="q15" value="a">
+                                            &nbsp; การรั่วไหลของทรัพยากร (Resource leakage)</label></li>
+                                        <li><label><input type="checkbox" name="q15" value="b">
+                                            &nbsp; การที่ตัว Response time ของเว็บแอปพลิเคชั่นของเราใช้เวลานานขึ้น (Response time error)</label></li>
+                                        <li><label><input type="checkbox" name="q15" value="c">
+                                            &nbsp; ปฏิเสธการให้บริการ (Denial of service)</label></li>
+                                        <li><label><input type="checkbox" name="q15" value="d">&nbsp; ทำให้ User interface pixel มีการเปลี่ยนแปลง </label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 16 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>16. ข้อใดต่อไปนี้มีส่วนที่ทำให้เกิดข้อผิดพลาดแบบ HTTP 500 Internal Server Error ได้  </b></div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="radio" name="q16" value="a"> &nbsp;
+                                            การที่ API ให้ทำงานหนักเกินกว่าจะรับไหว </label></li>
+                                        <li><label><input type="radio" name="q16" value="b"> &nbsp;
+                                            การขาดการจัดการข้อผิดพลาด</label></li>
+                                        <li><label><input type="radio" name="q16" value="c"> &nbsp;
+                                            ช่องโหว่ที่ API ยอมรับค่าเกินกว่าที่ควรจะเป็นจริง ๆ ถ้าหากถูกใส่เข้าไป</label></li>
+                                        <li><label><input type="radio" name="q16" value="d"> &nbsp;
+                                            การตั้งค่าอย่างไม่ปลอดภัย</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 17 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>17. การรั่วไหลของพฤติกรรมอนุญาตให้ผู้บุกรุกแก้ไขเวอร์ชั่นของแอปพลิเคชันและใช้ประโยชน์อื่นๆ ได้เกิดจากปัญหาใน OWASP API Security ข้อใด  </b></div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="radio" name="q17" value="a"> &nbsp;
+                                            API1:2019 Broken Object Level Authorization </label></li>
+                                        <li><label><input type="radio" name="q17" value="b"> &nbsp;
+                                            API3:2019 Excessive Data Exposure</label></li>
+                                        <li><label><input type="radio" name="q17" value="c"> &nbsp;
+                                            API4:2019 Lack of Resources & Rate Limiting</label></li>
+                                        <li><label><input type="radio" name="q17" value="d"> &nbsp;
+                                            API5:2019 Broken Function Level Authorization</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 18 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>18. Fuzzing Technique คืออะไร  </b></div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="radio" name="q18" value="a"> &nbsp;
+                                            การที่ทำให้ระบบนั้นมีความปลอดภัยมากขึ้นผ่านการออกแบบ Infrastructure ที่ดี </label></li>
+                                        <li><label><input type="radio" name="q18" value="b"> &nbsp;
+                                            การพยายามทําให้โปรแกรมหรือเครือข่ายล้มเหลว โดยการป้อนข้อมูลที่สร้างขึ้นแบบสุ่ม </label></li>
+                                        <li><label><input type="radio" name="q18" value="c"> &nbsp;
+                                            การที่พัฒนาระบบให้ดีขึ้นผ่านการป้อนข้อมูลเพื่อปกป้อง API Gateway</label></li>
+                                        <li><label><input type="radio" name="q18" value="d"> &nbsp;
+                                            การใช้ NMap ใช้สำหรับ Scan Port ว่ามี Port ใดเปิดอยู่ และสามารถระบุ Operating Systems เพื่อตรวจสอบความปลอดภัยของระบบได้</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Question 19 -->
+                            <div class="card quizlib-question">
+                                <div class="quizlib-question-title"><b>19. ข้อใดผิดเกี่ยวกับ Fuzzing  </b></div>
+                                <br>
+                                <div class="quizlib-question-answers">
+                                    <ul>
+                                        <li><label><input type="radio" name="q19" value="a"> &nbsp;
+                                            Fuzzing ระบุจุดบกพร่องได้อย่างน่าเชื่อถือ โดยมีผล False positive ต่ำ </label></li>
+                                        <li><label><input type="radio" name="q19" value="b"> &nbsp;
+                                            Fuzzing สามารถใช้สำหรับการทดสอบ black-box, grey-box และ white-box </label></li>
+                                        <li><label><input type="radio" name="q19" value="c"> &nbsp;
+                                            Fuzzing เป็นวิธีการทดสอบแบบอัตโนมัติเกือบทั้งหมด</label></li>
+                                        <li><label><input type="radio" name="q19" value="d"> &nbsp;
+                                            Fuzzing สามารถตรวจจับช่องโหว่ แต่ไม่สามารถให้ข้อมูลไดนามิกเกี่ยวกับข้อผิดพลาดได้</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Quiz Results -->
+                            <div id="quiz-result" class="card">
+                                You Scored <span id="quiz-percent"></span>% - <span id="quiz-score"></span>/<span
+                                    id="quiz-max-score"></span><br />
+                            </div>
+                            <!-- Quiz Certificate -->
+                            <div id="certi" class="alert alert-primary" role="alert">
+                                You have passed the quiz, <a href="/certificate/certificate.pdf" download class="alert-link">get
+                                    your certificate </a>now.
+                            </div>
+                            <!-- Answer Button -->
+                            <button type="button" onclick="showResults();">Submit Answers</button>
+                          
+                        </div>
+                        <br>
+                        <br>
             </div>
-        
+        </div>
+
     </div>
     <script>
         var quiz;
@@ -218,24 +527,26 @@
             if (quiz.checkAnswers()) {
                 var quizScorePercent = quiz.result.scorePercentFormatted; // The unformatted percentage is a decimal in range 0 - 1
                 var quizResultElement = document.getElementById('quiz-result');
+                var certi = document.getElementById('certi');
                 quizResultElement.style.display = 'block';
                 document.getElementById('quiz-score').innerHTML = quiz.result.score.toString();
                 document.getElementById('quiz-max-score').innerHTML = quiz.result.totalQuestions.toString();
                 document.getElementById('quiz-percent').innerHTML = quizScorePercent.toString();
 
                 // Change background colour of results div according to score percent
-                if (quizScorePercent >= 70){
+                if (quizScorePercent >= 70) {
                     quizResultElement.style.backgroundColor = '#4caf50';
                     $.ajax
-                    ({
-                        type: "GET",
-                        dataType: 'json',
-                        async: false,
-                        url: 'http://localhost:8080/pdf',
-                        success: function () { alert("Success"); },
-                        failure: function () { alert("Error"); }
-                    });
-                } 
+                        ({
+                            type: "GET",
+                            dataType: 'json',
+                            async: false,
+                            url: 'http://localhost:8080/pdf',
+                            success: function () { alert("Success"); },
+                            failure: function () { alert("Error"); }
+                        });
+                        certi.style.display = 'block';
+                }
                 else if (quizScorePercent >= 50) quizResultElement.style.backgroundColor = '#ffc107';
                 else if (quizScorePercent >= 25) quizResultElement.style.backgroundColor = '#ff9800';
                 else if (quizScorePercent >= 0) quizResultElement.style.backgroundColor = '#f44336';
@@ -272,9 +583,26 @@
 
         window.onload = function () {
             quiz = new Quiz('quiz', [
-                '42',
+                'c',
+                'd',
+                'a',
+                'a',
                 'b',
-                ['b', 'c', 'd']
+                ['a', 'b', 'c', 'd'],
+                'a',
+                'b',
+                'a',
+                'd',
+                'b',
+                'c',
+                'a',
+                'd',
+                ['a', 'b', 'c'],
+                'b',
+                'b',
+                'b',
+                'd'
+            
             ]);
         };
     </script>
