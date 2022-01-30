@@ -5,6 +5,8 @@ const dotenv = require("dotenv");
 const fs = require('fs');
 const session = require('express-session');
 const qureystring = require('querystring');
+const spawn = require('child_process').spawn;
+const fork = require('child_process').fork;
 const md5 = require('md5')
 
 //const
@@ -28,6 +30,7 @@ app.use(session({
 
 
 const { MongoClient } = require('mongodb');
+const path = require("path");
 const uri = "mongodb+srv://micro1:micro1@cluster0.u4edv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = client.db("userDB");
@@ -110,6 +113,26 @@ app.get("/homein", (req, res) => {
   res.render('homeNotAuth')
 });
 
+app.get("/launch", async (req, res) => {
+  res.send("testing");
+  console.log(process.cwd());
+  let pathDir = path.resolve(process.cwd() + '/..' + '/script')
+  let scriptPath = path.resolve(pathDir + '/launch-example/test.sh');
+  console.log(pathDir);
+  console.log(scriptPath);
+  const x = spawn(scriptPath, {
+    cwd: pathDir
+  });
+  x.on("message", () => {
+    console.log("spawn test")
+  });
+  x.on("exit", () => {
+    fork("log-parser/index.js", {
+      cwd: pathDir
+    });
+  });
+})
+
 //login page
 app.get('/login', (req, res) => {
   res.render('login', {
@@ -187,10 +210,9 @@ app.get("/testingtool", (req, res) => {
 });
 
 app.get("/result", (req, res) => {
-  if (notauth(req, res)) return;
+  //  if (notauth(req, res)) return;
   let user = getUser(req)
-  const fs = require('fs')
-  fs.readFile('../example/output.json', 'utf8', (err, data) => {
+  fs.readFile('../output/output.json', 'utf8', (err, data) => {
     if (err) {
       return console.log("File read failed:", err)
     }
@@ -204,7 +226,10 @@ app.get("/result", (req, res) => {
 
 
     for (let result of resultList) {
-      if (result.request.status_code >= 400 && result.request.status_code < 500) {
+      if (result.request === null) {
+
+      }
+      else if (result.request.status_code >= 400 && result.request.status_code < 500) {
         main4xx += 1;
       } else if (result.request.status_code >= 500 && result.request.status_code < 600) {
         main5xx += 1;
