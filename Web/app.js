@@ -5,7 +5,8 @@ const dotenv = require("dotenv");
 const fs = require('fs');
 const session = require('express-session');
 const qureystring = require('querystring');
-
+const spawn = require('child_process').spawn;
+const fork = require('child_process').fork;
 //const
 const SESSION_AUTH_USER = 'session-auth-user'
 
@@ -27,6 +28,7 @@ app.use(session({
 
 
 const { MongoClient } = require('mongodb');
+const path = require("path");
 const uri = "mongodb+srv://micro1:micro1@cluster0.u4edv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = client.db("userDB");
@@ -84,6 +86,26 @@ app.get("/", (req, res) => {
 app.get("/home", (req, res) => {
   res.render("home");
 });
+
+app.get("/launch", async (req, res) => {
+  res.send("testing");
+  console.log(process.cwd());
+  let pathDir = path.resolve(process.cwd() + '/..' + '/script')
+  let scriptPath = path.resolve(pathDir + '/launch-example/test.sh');
+  console.log(pathDir);
+  console.log(scriptPath);
+  const x = spawn(scriptPath, {
+    cwd: pathDir
+  });
+  x.on("message", () => {
+    console.log("spawn test")
+  });
+  x.on("exit", () => {
+    fork("log-parser/index.js", {
+      cwd: pathDir
+    });
+  });
+})
 
 //login page
 app.get('/login', (req, res) => {
@@ -158,10 +180,9 @@ app.get("/testingtool", (req, res) => {
 });
 
 app.get("/result", (req, res) => {
-  if (notauth(req, res)) return;
+  //  if (notauth(req, res)) return;
   let user = getUser(req)
-  const fs = require('fs')
-  fs.readFile('../example/output.json', 'utf8', (err, data) => {
+  fs.readFile('../output/output.json', 'utf8', (err, data) => {
     if (err) {
       return console.log("File read failed:", err)
     }
@@ -175,7 +196,10 @@ app.get("/result", (req, res) => {
 
 
     for (let result of resultList) {
-      if (result.request.status_code >= 400 && result.request.status_code < 500) {
+      if (result.request === null) {
+
+      }
+      else if (result.request.status_code >= 400 && result.request.status_code < 500) {
         main4xx += 1;
       } else if (result.request.status_code >= 500 && result.request.status_code < 600) {
         main5xx += 1;
@@ -256,7 +280,7 @@ app.get("/pdf", (req, res) => {
     }, function (err) {
       if (err) throw err;
       console.log("Updated Status");
-      
+
     });
 
 
@@ -289,9 +313,9 @@ app.get("/pdf", (req, res) => {
   // Finalize the PDF and end the stream
   doc.end();
   console.log("The certificate was created!");
-  
+
   res.end("This message will be sent back to the client!");
-  
+
 
 });
 

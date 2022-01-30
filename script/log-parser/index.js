@@ -1,15 +1,16 @@
 const fs = require("fs");
 const readline = require("readline");
+const path = require("path");
 
 const file = readline.createInterface({
-  input: fs.createReadStream("http.log"),
+  input: fs.createReadStream("../script/zeek/http.log"),
   terminal: false,
 });
 let separator,
   setSeparator,
   emptyField,
   unsetField,
-  path,
+  path_zeek,
   open,
   fields,
   types,
@@ -29,7 +30,7 @@ file.on("line", function (input) {
     } else if (first.localeCompare("#unset_field") === 0) {
       unsetField = currentLine[1];
     } else if (first.localeCompare("#path") === 0) {
-      path = currentLine[1];
+      path_zeek = currentLine[1];
     } else if (first.localeCompare("#open") === 0) {
       open = currentLine[1];
     } else if (first.localeCompare("#fields") === 0) {
@@ -69,7 +70,10 @@ file.on("close", () => {
   mapBffToSubrequest();
   let output = [];
   mapping.forEach((value) => {
-    const errorCode = value["request"]["status_code"];
+    let errorCode = -1;
+    if(value.request !== null) {
+      errorCode = value.request.status_code
+    }
     const statusInside = value["subrequest"].map((x) => x["status_code"]);
     const errorCodeInside = statusInside.filter((x) => x > 200);
     let bffError = errorCode > 200;
@@ -77,7 +81,11 @@ file.on("close", () => {
         output.push(value);
     }
   });
-  fs.writeFileSync('output.json', JSON.stringify(output));
+  let outputDir = path.resolve(process.cwd(), "../output")
+  if(!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir);
+  }
+  fs.writeFileSync(path.resolve(outputDir, "output.json"), JSON.stringify(output));
 });
 
 function mapBffToSubrequest() {
