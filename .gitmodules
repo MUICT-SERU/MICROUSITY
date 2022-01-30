@@ -1,0 +1,4 @@
+[submodule "restler-fuzzer"]
+	path = restler-fuzzer
+	url = https://github.com/pumipatw/restler-fuzzer
+	branch = temp-mac-fix

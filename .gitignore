@@ -3,3 +3,13 @@
 
 # Mac
 .DS_Store
+
+# Log file
+*.log
+
+# restler binary
+bin
+
+# restler compiled files
+Compile
+FuzzLean
