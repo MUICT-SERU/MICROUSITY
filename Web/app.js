@@ -210,7 +210,7 @@ app.get("/testingtool", (req, res) => {
 });
 
 app.get("/result", (req, res) => {
-  //  if (notauth(req, res)) return;
+  if (notauth(req, res)) return;
   let user = getUser(req)
   fs.readFile('../output/output.json', 'utf8', (err, data) => {
     if (err) {
