@@ -115,16 +115,11 @@ app.get("/homein", (req, res) => {
 
 app.get("/launch", async (req, res) => {
   res.send("testing");
-  console.log(process.cwd());
   let pathDir = path.resolve(process.cwd() + '/..' + '/script')
   let scriptPath = path.resolve(pathDir + '/launch-example/test.sh');
-  console.log(pathDir);
-  console.log(scriptPath);
   const x = spawn(scriptPath, {
-    cwd: pathDir
-  });
-  x.on("message", () => {
-    console.log("spawn test")
+    cwd: path.resolve(pathDir, 'launch-example'),
+    stdio: ['ignore', 'inherit', 'inherit']
   });
   x.on("exit", () => {
     fork("log-parser/index.js", {
@@ -210,7 +205,7 @@ app.get("/testingtool", (req, res) => {
 });
 
 app.get("/result", (req, res) => {
-  if (notauth(req, res)) return;
+  // if (notauth(req, res)) return;
   let user = getUser(req)
   fs.readFile('../output/output.json', 'utf8', (err, data) => {
     if (err) {
@@ -263,7 +258,7 @@ app.get("/result", (req, res) => {
 
 //save dict to file
 app.get("/saveDict_json", (req, res) => {
-  fs.writeFile("dict.json", req.query.data, function (err) {
+  fs.writeFile("../grammar/dict.json", req.query.data, function (err) {
     if (err) {
       return console.log(err);
     }
@@ -277,7 +272,7 @@ app.get("/saveDict_json", (req, res) => {
 
 //save dyn to file
 app.get("/saveDyn_json", (req, res) => {
-  fs.writeFile("restler_user_settings.json", req.query.data, function (err) {
+  fs.writeFile("../grammar/restler_user_settings.json", req.query.data, function (err) {
     if (err) {
       return console.log(err);
     }
