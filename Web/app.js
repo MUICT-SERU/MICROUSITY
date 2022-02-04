@@ -64,22 +64,23 @@ function clearUser(req) {
   setUser(req, null)
 }
 
-//Function to check if the user login or not
-function isLogin(req) {
-  return getUser(req) != null
-}
-
+//middleware for auth
+app.use(function isAuth(req, res, next) {
+  req.user = getUser(req);
+  next();
+});
 //Function when we know that the user is not login yet
-function notauth(req, res) {
-  if (!isLogin(req)) {
-    let query = qureystring.stringify({
-      fromUrl: req.originalUrl,
-    })
-    res.redirect('/login')
-    return true
-  }
-  return false
-}
+// function notauth(req, res) {
+//   if (!isLogin(req)) {
+//     let query = qureystring.stringify({
+//       fromUrl: req.originalUrl,
+//     })
+//     res.redirect('/login')
+//     return true
+//   }
+//   return false
+// }
+
 
 //Function when we know that the user is not login yet
 function notauthHome(req, res) {
@@ -95,22 +96,24 @@ function notauthHome(req, res) {
 
 //main home page
 app.get("/", (req, res) => {
-  if (notauthHome(req, res)) return;
+  if (req.user === null) {
+    res.render('homeNotAuth');
+    return;
+  };
   let user = getUser(req)
   res.render('home', {
     user,
   });
 });
 app.get("/home", (req, res) => {
-  if (notauthHome(req, res)) return;
+  if (req.user === null) {
+    res.render('homeNotAuth');
+    return;
+  }
   let user = getUser(req)
   res.render('home', {
     user,
   });
-});
-
-app.get("/homein", (req, res) => {
-  res.render('homeNotAuth')
 });
 
 app.get("/launch", async (req, res) => {
@@ -186,27 +189,26 @@ app.post('/register', (req, res) => {
 
 })
 
+
 //lesson page
 app.get("/content", (req, res) => {
-  if (notauth(req, res)) return;
-  let user = getUser(req)
   res.render('content', {
-    user,
+    user: req.user,
   });
 });
 
 //testing tool page
 app.get("/testingtool", (req, res) => {
-  if (notauth(req, res)) return;
-  let user = getUser(req)
+  if(req.user === null) {
+    res.redirect('/login');
+    return;
+  }
   res.render('testingtool', {
-    user,
+    user: req.user,
   });
 });
 
 app.get("/result", (req, res) => {
-  // if (notauth(req, res)) return;
-  let user = getUser(req)
   fs.readFile('../output/output.json', 'utf8', (err, data) => {
     if (err) {
       return console.log("File read failed:", err)
@@ -249,7 +251,7 @@ app.get("/result", (req, res) => {
       sub4xxs: sub4xx,
       sub5xxs: sub5xx,
       trackIds: trackId,
-      user
+      user: req.user
     })
     //console.log(data)
   });
@@ -291,8 +293,11 @@ app.get("/print", (req, res) => {
 
 
 app.get("/pdf", (req, res) => {
-  if (notauth(req, res)) return;
-  let user = getUser(req);
+  if(req.user === null) {
+    res.status(403).send("not authorized");
+    return;
+  }
+  let user = req.user;
   let fname = user.fname;
   let lname = user.lname;
   // Import dependencies
@@ -348,8 +353,11 @@ app.get("/pdf", (req, res) => {
 
 //quiz page
 app.get("/quiz", (req, res) => {
-  if (notauth(req, res)) return;
-  let user = getUser(req)
+  if(req.user === null) {
+    res.status(403).send("not authorized");
+    return;
+  }
+  let user = req.user;
   let fname = user.fname;
   let lname = user.lname;
   collection.find({ email: user.email, pass: "TRUE" }).toArray(function (err, users) {
