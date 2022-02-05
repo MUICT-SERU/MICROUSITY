@@ -4,7 +4,6 @@ const app = express();
 const dotenv = require("dotenv");
 const fs = require('fs');
 const session = require('express-session');
-const qureystring = require('querystring');
 const spawn = require('child_process').spawn;
 const fork = require('child_process').fork;
 const md5 = require('md5')
@@ -81,19 +80,6 @@ app.use(function isAuth(req, res, next) {
 //   return false
 // }
 
-
-//Function when we know that the user is not login yet
-function notauthHome(req, res) {
-  if (!isLogin(req)) {
-    let query = qureystring.stringify({
-      fromUrl: req.originalUrl,
-    })
-    res.redirect('/homein')
-    return true
-  }
-  return false
-}
-
 //main home page
 app.get("/", (req, res) => {
   if (req.user === null) {
@@ -115,9 +101,14 @@ app.get("/home", (req, res) => {
     user,
   });
 });
-
-app.get("/launch", async (req, res) => {
-  res.send("testing");
+let isTesting = false
+app.post("/launch", async (req, res) => {
+  if(isTesting) {
+    res.sendStatus(409);
+    return;
+  }
+  res.sendStatus(200);
+  isTesting = true;
   let pathDir = path.resolve(process.cwd() + '/..' + '/script')
   let scriptPath = path.resolve(pathDir + '/launch-example/test.sh');
   const x = spawn(scriptPath, {
@@ -129,6 +120,7 @@ app.get("/launch", async (req, res) => {
       cwd: pathDir
     });
   });
+  isTesting = false;
 })
 
 //login page
@@ -354,7 +346,7 @@ app.get("/pdf", (req, res) => {
 //quiz page
 app.get("/quiz", (req, res) => {
   if(req.user === null) {
-    res.status(403).send("not authorized");
+    res.statusCode(403);
     return;
   }
   let user = req.user;
