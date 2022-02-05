@@ -7,7 +7,7 @@ const session = require('express-session');
 const spawn = require('child_process').spawn;
 const fork = require('child_process').fork;
 const md5 = require('md5')
-
+const Mutex = require('async-mutex').Mutex;
 //const
 const SESSION_AUTH_USER = 'session-auth-user'
 
@@ -101,26 +101,38 @@ app.get("/home", (req, res) => {
     user,
   });
 });
-let isTesting = false
+const testMutex = new Mutex();
 app.post("/launch", async (req, res) => {
-  if(isTesting) {
-    res.sendStatus(409);
+  if (testMutex.isLocked()) {
+    res.statusCode(409);
     return;
   }
-  res.sendStatus(200);
-  isTesting = true;
+  res.send(200);
   let pathDir = path.resolve(process.cwd() + '/..' + '/script')
   let scriptPath = path.resolve(pathDir + '/launch-example/test.sh');
-  const x = spawn(scriptPath, {
-    cwd: path.resolve(pathDir, 'launch-example'),
-    stdio: ['ignore', 'inherit', 'inherit']
-  });
-  x.on("exit", () => {
-    fork("log-parser/index.js", {
-      cwd: pathDir
-    });
-  });
-  isTesting = false;
+  testMutex.runExclusive(
+    () => {
+      const x = spawn(scriptPath, {
+        cwd: path.resolve(pathDir, 'launch-example'),
+        stdio: ['ignore', 'inherit', 'inherit']
+      });
+      x.on("exit", () => {
+        fork("log-parser/index.js", {
+          cwd: pathDir
+        });
+      });
+    }
+  );
+});
+
+app.get("/test_status", (req, res) => {
+  if (testMutex.isLocked()) {
+    res.send("LOCKED");
+    return;
+  }
+  else {
+    res.send("UNLOCKED");
+  }
 })
 
 //login page
@@ -191,7 +203,7 @@ app.get("/content", (req, res) => {
 
 //testing tool page
 app.get("/testingtool", (req, res) => {
-  if(req.user === null) {
+  if (req.user === null) {
     res.redirect('/login');
     return;
   }
@@ -285,7 +297,7 @@ app.get("/print", (req, res) => {
 
 
 app.get("/pdf", (req, res) => {
-  if(req.user === null) {
+  if (req.user === null) {
     res.status(403).send("not authorized");
     return;
   }
@@ -345,8 +357,8 @@ app.get("/pdf", (req, res) => {
 
 //quiz page
 app.get("/quiz", (req, res) => {
-  if(req.user === null) {
-    res.statusCode(403);
+  if (req.user === null) {
+    res.status(403);
     return;
   }
   let user = req.user;
