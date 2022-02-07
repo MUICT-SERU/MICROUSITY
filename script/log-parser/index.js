@@ -65,7 +65,7 @@ function handleLog(line) {
   return column;
 }
 const mapping = new Map();
-let bffPort = [3000];
+let bffPort = [8060];
 file.on("close", () => {
   mapBffToSubrequest();
   let output = [];

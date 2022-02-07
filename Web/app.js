@@ -4,13 +4,16 @@ const app = express();
 const dotenv = require("dotenv");
 const fs = require('fs');
 const session = require('express-session');
-const qureystring = require('querystring');
-const spawn = require('child_process').spawn;
+const spawn = require('child_process').spawnSync;
 const fork = require('child_process').fork;
 const md5 = require('md5')
-
+const Mutex = require('async-mutex').Mutex;
+const EventEmitter = require('events');
+const {Worker} = require('worker_threads');
 //const
 const SESSION_AUTH_USER = 'session-auth-user'
+
+let events = new EventEmitter();
 
 //setting
 app.use(express.static("public"));
@@ -64,68 +67,70 @@ function clearUser(req) {
   setUser(req, null)
 }
 
-//Function to check if the user login or not
-function isLogin(req) {
-  return getUser(req) != null
-}
-
+//middleware for auth
+app.use(function isAuth(req, res, next) {
+  req.user = getUser(req);
+  next();
+});
 //Function when we know that the user is not login yet
-function notauth(req, res) {
-  if (!isLogin(req)) {
-    let query = qureystring.stringify({
-      fromUrl: req.originalUrl,
-    })
-    res.redirect('/login')
-    return true
-  }
-  return false
-}
-
-//Function when we know that the user is not login yet
-function notauthHome(req, res) {
-  if (!isLogin(req)) {
-    let query = qureystring.stringify({
-      fromUrl: req.originalUrl,
-    })
-    res.redirect('/homein')
-    return true
-  }
-  return false
-}
+// function notauth(req, res) {
+//   if (!isLogin(req)) {
+//     let query = qureystring.stringify({
+//       fromUrl: req.originalUrl,
+//     })
+//     res.redirect('/login')
+//     return true
+//   }
+//   return false
+// }
 
 //main home page
 app.get("/", (req, res) => {
-  if (notauthHome(req, res)) return;
+  if (req.user === null) {
+    res.render('homeNotAuth');
+    return;
+  };
   let user = getUser(req)
   res.render('home', {
     user,
   });
 });
 app.get("/home", (req, res) => {
-  if (notauthHome(req, res)) return;
+  if (req.user === null) {
+    res.render('homeNotAuth');
+    return;
+  }
   let user = getUser(req)
   res.render('home', {
     user,
   });
 });
-
-app.get("/homein", (req, res) => {
-  res.render('homeNotAuth')
+let isTesting = false;
+app.post("/launch", async (req, res) => {
+  if (isTesting === true) {
+    res.sendStatus(409);
+    return;
+  }
+  res.sendStatus(200);
+  events.emit('TESTSTARTED');
 });
 
-app.get("/launch", async (req, res) => {
-  res.send("testing");
-  let pathDir = path.resolve(process.cwd() + '/..' + '/script')
-  let scriptPath = path.resolve(pathDir + '/launch-example/test.sh');
-  const x = spawn(scriptPath, {
-    cwd: path.resolve(pathDir, 'launch-example'),
-    stdio: ['ignore', 'inherit', 'inherit']
-  });
-  x.on("exit", () => {
-    fork("log-parser/index.js", {
-      cwd: pathDir
-    });
-  });
+events.on('TESTSTARTED', () => {
+  isTesting = true;
+  const worker = new Worker('./worker.js');
+  worker.once('exit', () => {
+    isTesting = false;
+  })
+});
+
+app.get("/test_status", (req, res) => {
+  if (testMutex.isLocked()) {
+    res.send("LOCKED");
+    return;
+  }
+  else {
+    res.send("UNLOCKED");
+  }
 })
 
 //login page
@@ -186,28 +191,32 @@ app.post('/register', (req, res) => {
 
 })
 
+
 //lesson page
 app.get("/content", (req, res) => {
-  if (notauth(req, res)) return;
-  let user = getUser(req)
   res.render('content', {
-    user,
+    user: req.user,
   });
 });
 
 //testing tool page
 app.get("/testingtool", (req, res) => {
-  if (notauth(req, res)) return;
-  let user = getUser(req)
+  if (req.user === null) {
+    res.redirect('/login');
+    return;
+  }
   res.render('testingtool', {
-    user,
+    user: req.user,
   });
 });
 
 app.get("/result", (req, res) => {
+<<<<<<< HEAD
   // if (notauth(req, res)) return;
   let user = getUser(req)
   //fs.readFile('../example/output2.json', 'utf8', (err, data) => {
+=======
+>>>>>>> 7e6e917115c7a28575526d87bbac429bbf0b8c18
   fs.readFile('../output/output.json', 'utf8', (err, data) => {
     if (err) {
       return console.log("File read failed:", err)
@@ -252,7 +261,7 @@ app.get("/result", (req, res) => {
       sub4xxs: sub4xx,
       sub5xxs: sub5xx,
       trackIds: trackId,
-      user
+      user: req.user
     })
     //console.log(data)
   });
@@ -294,8 +303,11 @@ app.get("/print", (req, res) => {
 
 
 app.get("/pdf", (req, res) => {
-  if (notauth(req, res)) return;
-  let user = getUser(req);
+  if (req.user === null) {
+    res.status(403).send("not authorized");
+    return;
+  }
+  let user = req.user;
   let fname = user.fname;
   let lname = user.lname;
   // Import dependencies
@@ -351,8 +363,11 @@ app.get("/pdf", (req, res) => {
 
 //quiz page
 app.get("/quiz", (req, res) => {
-  if (notauth(req, res)) return;
-  let user = getUser(req)
+  if (req.user === null) {
+    res.status(403);
+    return;
+  }
+  let user = req.user;
   let fname = user.fname;
   let lname = user.lname;
   collection.find({ email: user.email, pass: "TRUE" }).toArray(function (err, users) {
