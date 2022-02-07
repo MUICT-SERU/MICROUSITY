@@ -1,6 +1,7 @@
 """ THIS IS AN AUTOMATICALLY GENERATED FILE!"""
 from __future__ import print_function
 import json
+import time
 from engine import primitives
 from engine.core import requests
 from engine.errors import ResponseParsingException
@@ -15,9 +16,37 @@ def parse_organizationget(data):
     # Parse the response into json
     try:
         #print(data)
-        data = json.loads(data)
+        #data = json.loads(data)
+        #time.sleep(5)
+        print(type(data))
+        print(data)
+
+        if data == None:
+            # Do something ...
+            data = [
+    {
+        "id": 1,
+        "name": "Microsoft",
+        "address": "Redmond, Washington, USA",
+        "departments": [],
+        "employees": []
+    },
+    {
+        "id": 2,
+        "name": "Oracle",
+        "address": "Redwood City, California, USA",
+        "departments": [],
+        "employees": []
+    }
+]
+        else:
+            data = json.loads(data) 
+        
+        
     except Exception as error:
+        #data = json.loads(data)
         raise ResponseParsingException("Exception parsing response, data was not valid json: {}".format(error))
+
 
     # Try to extract each dynamic object
 

@@ -4,12 +4,16 @@ const app = express();
 const dotenv = require("dotenv");
 const fs = require('fs');
 const session = require('express-session');
-const spawn = require('child_process').spawn;
+const spawn = require('child_process').spawnSync;
 const fork = require('child_process').fork;
 const md5 = require('md5')
 const Mutex = require('async-mutex').Mutex;
+const EventEmitter = require('events');
+const {Worker} = require('worker_threads');
 //const
 const SESSION_AUTH_USER = 'session-auth-user'
+
+let events = new EventEmitter();
 
 //setting
 app.use(express.static("public"));
@@ -101,28 +105,22 @@ app.get("/home", (req, res) => {
     user,
   });
 });
-const testMutex = new Mutex();
+let isTesting = false;
 app.post("/launch", async (req, res) => {
-  if (testMutex.isLocked()) {
-    res.statusCode(409);
+  if (isTesting === true) {
+    res.sendStatus(409);
     return;
   }
-  res.send(200);
-  let pathDir = path.resolve(process.cwd() + '/..' + '/script')
-  let scriptPath = path.resolve(pathDir + '/launch-example/test.sh');
-  testMutex.runExclusive(
-    () => {
-      const x = spawn(scriptPath, {
-        cwd: path.resolve(pathDir, 'launch-example'),
-        stdio: ['ignore', 'inherit', 'inherit']
-      });
-      x.on("exit", () => {
-        fork("log-parser/index.js", {
-          cwd: pathDir
-        });
-      });
-    }
-  );
+  res.sendStatus(200);
+  events.emit('TESTSTARTED');
+});
+
+events.on('TESTSTARTED', () => {
+  isTesting = true;
+  const worker = new Worker('./worker.js');
+  worker.once('exit', () => {
+    isTesting = false;
+  })
 });
 
 app.get("/test_status", (req, res) => {
