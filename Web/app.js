@@ -207,6 +207,7 @@ app.get("/testingtool", (req, res) => {
 app.get("/result", (req, res) => {
   // if (notauth(req, res)) return;
   let user = getUser(req)
+  //fs.readFile('../example/output2.json', 'utf8', (err, data) => {
   fs.readFile('../output/output.json', 'utf8', (err, data) => {
     if (err) {
       return console.log("File read failed:", err)
@@ -237,7 +238,9 @@ app.get("/result", (req, res) => {
         }
         else if (subrequest.status_code >= 500 && subrequest.status_code < 600) {
           sub5xx += 1;
-          trackId.push({ id: result.request.subrequest });
+          if(result.request.status_code < 500 || result.request.status_code >= 600){
+            trackId.push({ id: result.request.subrequest });
+          }
         }
       }
     }
