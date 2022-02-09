@@ -66,6 +66,7 @@ function handleLog(line) {
 }
 const mapping = new Map();
 let bffPort = [8060];
+let excludedPort = [8080];
 file.on("close", () => {
   mapBffToSubrequest();
   let output = [];
@@ -92,6 +93,9 @@ function mapBffToSubrequest() {
   let javaExceptionRegex = /\S*Exception/;
   for (let index = 0; index < log.length; index++) {
     const element = log[index];
+    if(excludedPort.includes(element["id.resp_p"])) {
+      continue;
+    }
     const javaException = javaExceptionRegex.exec(element["post_body"]);
     if(javaException !== null) element["exception"] = javaException[0];
     const requestNo = element["subrequest"];
