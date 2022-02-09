@@ -124,7 +124,7 @@ events.on('TESTSTARTED', () => {
 });
 
 app.get("/test_status", (req, res) => {
-  if (testMutex.isLocked()) {
+  if (isTesting) {
     res.send("LOCKED");
     return;
   }
@@ -262,30 +262,22 @@ app.get("/result", (req, res) => {
 
 //save dict to file
 app.get("/saveDict_json", (req, res) => {
-  fs.writeFile("../grammar/dict.json", req.query.data, function (err) {
-    if (err) {
-      return console.log(err);
-    }
-
-    console.log("The file was saved!");
-    res.end("This message will be sent back to the client!");
-  });
-  var data = req.query.data;
-  console.log(data);
+  try {
+    fs.writeFileSync("../grammar/dict.json", req.query.data);
+    console.log("dict written");
+  } catch (error) {
+    console.log(err);
+  }
 });
 
 //save dyn to file
 app.get("/saveDyn_json", (req, res) => {
-  fs.writeFile("../grammar/restler_user_settings.json", req.query.data, function (err) {
-    if (err) {
-      return console.log(err);
-    }
-
-    console.log("The file was saved!");
-    res.end("This message will be sent back to the client!");
-  });
-  var data = req.query.data;
-  console.log(data);
+  try {
+    fs.writeFileSync("../grammar/restler_user_settings.json", req.query.data);
+    console.log("engine settings written");
+  } catch (error) {
+    console.log(err);
+  }
 });
 
 //print page
