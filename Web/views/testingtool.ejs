@@ -221,19 +221,8 @@
                 }
                 function poll() {
                     setTimeout(
-                        fetch(
-                            "/testing_status"
-                        ).then(
-                            res => res.text()
-                        ).then(
-                            res => {
-                                console.log(res);
-                                if(res.localeCompare("LOCKED")) {
-                                    poll();
-                                }
-                            }
-                        ),
-                        5000
+                       window.location.href="/result",
+                        10000
                     )
                 }
             </script>

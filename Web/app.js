@@ -211,17 +211,11 @@ app.get("/testingtool", (req, res) => {
 });
 
 app.get("/result", (req, res) => {
-<<<<<<< HEAD
 
   // if (notauth(req, res)) return;
   let user = getUser(req)
   //fs.readFile('../example/output2.json', 'utf8', (err, data) => {
 
-=======
-  // if (notauth(req, res)) return;
-  let user = getUser(req)
-  //fs.readFile('../example/output2.json', 'utf8', (err, data) => {
->>>>>>> 960fabaddeb21117d0ccfb9d30f8b91c3dddc857
   fs.readFile('../output/output.json', 'utf8', (err, data) => {
     if (err) {
       return console.log("File read failed:", err)
@@ -281,6 +275,8 @@ app.get("/saveDict_json", (req, res) => {
   } catch (error) {
     console.log(err);
   }
+res.sendStatus(200);
+
 });
 
 //save dyn to file
@@ -291,6 +287,7 @@ app.get("/saveDyn_json", (req, res) => {
   } catch (error) {
     console.log(err);
   }
+  res.sendStatus(200);
 });
 
 //print page
