@@ -1,1 +1,1 @@
-{"checkers":{"invaliddynamicobject":{"invalid_objects":["1","someinvalidobject","valid-object/$*","valid-object=valid-object","valid-object=?valid-object","valid-object?valid-object","valid-object,valid-object","5"]}}}
+{"checkers":{"invaliddynamicobject":{"invalid_objects":["1","someinvalidobject","valid-object/$*","valid-object=valid-object","valid-object=?valid-object","valid-object?valid-object","valid-object,valid-object","5","990"]}}}
