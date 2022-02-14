@@ -9,7 +9,7 @@ const fork = require('child_process').fork;
 const md5 = require('md5')
 const Mutex = require('async-mutex').Mutex;
 const EventEmitter = require('events');
-const {Worker} = require('worker_threads');
+const { Worker } = require('worker_threads');
 //const
 const SESSION_AUTH_USER = 'session-auth-user'
 
@@ -65,6 +65,15 @@ function getUser(req) {
 //Clear user function
 function clearUser(req) {
   setUser(req, null)
+}
+
+//remove duplicate id
+function removeDupId(arr) {
+    return arr = arr.filter((value, index, self) =>
+    index === self.findIndex((t) => (
+      t.id === value.id
+    ))
+  )
 }
 
 //middleware for auth
@@ -214,9 +223,9 @@ app.get("/result", (req, res) => {
 
   // if (notauth(req, res)) return;
   let user = getUser(req)
-  fs.readFile('../example/output.json', 'utf8', (err, data) => {
+  //fs.readFile('../example/output2.json', 'utf8', (err, data) => {
 
-  //fs.readFile('../output/output.json', 'utf8', (err, data) => {
+    fs.readFile('../output/output.json', 'utf8', (err, data) => {
     if (err) {
       return console.log("File read failed:", err)
     }
@@ -226,7 +235,13 @@ app.get("/result", (req, res) => {
     var sub5xx = 0;
     var sub4xx = 0;
 
+    var bffLeak = false;
+
     var trackId = [];
+    var trackIdSet = [];
+    var bffLeakId = [];
+    var coreLeakId = [];
+    var bothLeakId = [];
 
 
     for (let result of resultList) {
@@ -246,20 +261,50 @@ app.get("/result", (req, res) => {
         }
         else if (subrequest.status_code >= 500 && subrequest.status_code < 600) {
           sub5xx += 1;
-          if(result.request.status_code < 500 || result.request.status_code >= 600){
+          //if (result.request.status_code < 500 || result.request.status_code >= 600) {
             trackId.push({ id: result.request.subrequest });
-          }
+          //}
         }
       }
     }
     console.log(trackId);
+
+    //filter out the same id
+    trackIdSet = removeDupId(trackId);
+    console.log(trackIdSet);
+
+    for (let result of resultList) {
+      for (let id of trackIdSet) {
+        bffLeak = false;
+        if (result.request.subrequest == id.id) {
+          if (result.request.exception) {
+            bffLeak = true;
+            //console.log(id.id)
+          }
+          for (let subrequest of result.subrequest) {
+            if (subrequest.exception && bffLeak == true) {
+              console.log("bff/core: " + id.id)
+            } else if (subrequest.exception && bffLeak == false) {
+              console.log("-/core: " + id.id)
+            } else if (!subrequest.exception && bffLeak == true) {
+              console.log("bff/-: " + id.id)
+            }
+          }
+        }
+      }
+
+
+
+    }
+
+
     res.render('result', {
       results: resultList,
       main4xxs: main4xx,
       main5xxs: main5xx,
       sub4xxs: sub4xx,
       sub5xxs: sub5xx,
-      trackIds: trackId,
+      trackIds: trackIdSet,
       user: req.user
     })
     //console.log(data)
@@ -275,7 +320,7 @@ app.get("/saveDict_json", (req, res) => {
   } catch (error) {
     console.log(err);
   }
-res.sendStatus(200);
+  res.sendStatus(200);
 
 });
 
