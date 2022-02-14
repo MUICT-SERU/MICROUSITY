@@ -1,5 +1,9 @@
 server:
   port: 8060
+  error:
+    include-message: NEVER
+    include-binding-errors: NEVER
+    include-exception: false
 
 eureka:
   client:

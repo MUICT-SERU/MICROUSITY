@@ -27,9 +27,17 @@ public class DepartmentRepository {
 	}
 	
 	public List<Department> findByOrganization(Long organizationId) {
-		return departments.stream()
+		if(departments.stream()
 				.filter(a -> a.getOrganizationId().equals(organizationId))
-				.toList();
+				.toList().isEmpty()){
+			throw new IllegalArgumentException("empty");
+		}
+		else {
+			return departments.stream()
+					.filter(a -> a.getOrganizationId().equals(organizationId))
+					.toList();
+		}
+
 	}
 	
 }

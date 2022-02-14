@@ -211,12 +211,11 @@ app.get("/testingtool", (req, res) => {
 });
 
 app.get("/result", (req, res) => {
-<<<<<<< HEAD
+
   // if (notauth(req, res)) return;
   let user = getUser(req)
   //fs.readFile('../example/output2.json', 'utf8', (err, data) => {
-=======
->>>>>>> 7e6e917115c7a28575526d87bbac429bbf0b8c18
+
   fs.readFile('../output/output.json', 'utf8', (err, data) => {
     if (err) {
       return console.log("File read failed:", err)

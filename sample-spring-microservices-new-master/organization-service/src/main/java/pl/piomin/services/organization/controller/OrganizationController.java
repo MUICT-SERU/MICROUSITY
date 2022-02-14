@@ -5,12 +5,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.web.server.ResponseStatusException;
 import pl.piomin.services.organization.client.DepartmentClient;
 import pl.piomin.services.organization.client.EmployeeClient;
 import pl.piomin.services.organization.model.Organization;
@@ -56,10 +58,19 @@ public class OrganizationController {
 	
 	@GetMapping("/{id}/with-departments-and-employees")
 	public Organization findByIdWithDepartmentsAndEmployees(@PathVariable("id") Long id) {
-		LOGGER.info("Organization find: id={}", id);
-		Organization organization = repository.findById(id);
-		organization.setDepartments(departmentClient.findByOrganizationWithEmployees(organization.getId()));
-		return organization;
+		//LOGGER.info("Organization find: id={}", id);
+		try {
+			System.out.println("test0");
+			Organization organization = repository.findById(id);
+			System.out.println("test1");
+			organization.setDepartments(departmentClient.findByOrganizationWithEmployees(organization.getId()));
+			return organization;
+		} catch (Exception ex) {
+			System.out.println("testt");
+			throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST, "Sth", ex);
+		}
+
 	}
 	
 	@GetMapping("/{id}/with-employees")
