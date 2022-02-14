@@ -201,25 +201,29 @@
                         });
                 }
                 function launch() {
-                        let ref = document.getElementById('status');
-                        ref.style.display = 'none';
-                        fetch(
-                            "/launch",
-                            {
-                                method: 'POST',
-                            }
-                        ).then(res => {
-                            if (!res.ok) {
-                                ref.innerText = "Can't start the test";
-                                ref.style.display = 'flex';
-                            }
-                            else {
-                                setTimeout(() => {
-                                    window.location.href = '/result';
-                                }, 10000);
-                            }
-                        })
-                    }
+                    btnDictSubmit.prop("disabled", true);
+                    let ref = document.getElementById('status');
+                    ref.style.display = 'none';
+                    fetch(
+                        "/launch",
+                        {
+                            method: 'POST',
+                        }
+                    ).then(res => {
+                        if (!res.ok) {
+                            ref.innerText = "Can't start the test";
+                            ref.style.display = 'flex';
+                        }
+                        else {
+                            poll();
+                        }
+                    })
+                }
+                function poll() {
+                    setTimeout(() => {
+                            window.location.href = '/result';
+                            }, 14000);
+                }
             </script>
 
         </div>

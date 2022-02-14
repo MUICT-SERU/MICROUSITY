@@ -1,7 +1,7 @@
 #! /bin/sh
 (
     cd ../zeek
-    zeek -i lo0 track.zeek &
+    zeek -C -i lo0 track.zeek &
     sleep 5
     cd -
     (
