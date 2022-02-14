@@ -49,9 +49,10 @@ public class OrganizationController {
 	}
 
 	@GetMapping("/{id}/with-departments")
-	public Organization findByIdWithDepartments(@PathVariable("id") Long id) {
+	public Organization findByIdWithDepartments(@PathVariable("id") String id) {
+		//System.out.println("Fail");
 		LOGGER.info("Organization find: id={}", id);
-		Organization organization = repository.findById(id);
+		Organization organization = repository.findById(Long.parseLong(id));
 		organization.setDepartments(departmentClient.findByOrganization(organization.getId()));
 		return organization;
 	}
