@@ -223,9 +223,9 @@ app.get("/result", (req, res) => {
 
   // if (notauth(req, res)) return;
   let user = getUser(req)
-  //fs.readFile('../example/output2.json', 'utf8', (err, data) => {
+  fs.readFile('../example/output3.json', 'utf8', (err, data) => {
 
-    fs.readFile('../output/output.json', 'utf8', (err, data) => {
+  //fs.readFile('../output/output.json', 'utf8', (err, data) => {
     if (err) {
       return console.log("File read failed:", err)
     }
@@ -238,7 +238,6 @@ app.get("/result", (req, res) => {
     var bffLeak = false;
 
     var trackId = [];
-    var trackIdSet = [];
     var bffLeakId = [];
     var coreLeakId = [];
     var bothLeakId = [];
@@ -267,14 +266,10 @@ app.get("/result", (req, res) => {
         }
       }
     }
-    console.log(trackId);
-
-    //filter out the same id
-    trackIdSet = removeDupId(trackId);
-    console.log(trackIdSet);
+  
 
     for (let result of resultList) {
-      for (let id of trackIdSet) {
+      for (let id of trackId) {
         bffLeak = false;
         if (result.request.subrequest == id.id) {
           if (result.request.exception) {
@@ -283,18 +278,26 @@ app.get("/result", (req, res) => {
           }
           for (let subrequest of result.subrequest) {
             if (subrequest.exception && bffLeak == true) {
-              console.log("bff/core: " + id.id)
+
+              bothLeakId.push({ id: result.request.subrequest });
+              // console.log("bff/core: ")
+              // console.log(bothLeakId)
+
             } else if (subrequest.exception && bffLeak == false) {
-              console.log("-/core: " + id.id)
+              coreLeakId.push({ id: result.request.subrequest });
+              // console.log("-/core: ")
+              // console.log(coreLeakId)
+
             } else if (!subrequest.exception && bffLeak == true) {
-              console.log("bff/-: " + id.id)
+
+              bffLeakId.push({ id: result.request.subrequest });
+              // console.log("bff/-: " )
+              // console.log(bffLeakId)
+              
             }
           }
         }
       }
-
-
-
     }
 
 
@@ -304,10 +307,13 @@ app.get("/result", (req, res) => {
       main5xxs: main5xx,
       sub4xxs: sub4xx,
       sub5xxs: sub5xx,
-      trackIds: trackIdSet,
+      trackIds: removeDupId(trackId),
+      coreLeakIds: removeDupId(coreLeakId),
+      bffLeakIds: removeDupId(bffLeakId),
+      bothLeakIds: removeDupId(bothLeakId),
       user: req.user
     })
-    //console.log(data)
+    console.log(trackId)
   });
 
 });

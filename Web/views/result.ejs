@@ -31,6 +31,11 @@
             float: right;
         }
 
+        .count {
+            float: right;
+            margin: 7px;
+        }
+
         .name {
             float: left;
         }
@@ -193,15 +198,138 @@
         </div>
 
         <br>
-        <!--Exception list-->
+        <!--Both Exception list-->
+        <div id="accordion4">
+            <div class="card">
+                <div class="card-header" id="headingFour">
+                    <h4 class="mb-0">
+                        <span>
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFour"
+                                aria-expanded="true" aria-controls="collapseFour">
+                                <h5>Both BFF and Microservice API that contain error exception</h5>
+                            </button>
+                        </span>
+                        <span class="count">
+                            <%= bothLeakIds.length %>
+                        </span>
+                    </h4>
+                </div>
+
+                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion4">
+                    <div class="card-body">
+                        <ul class="list-group">
+
+                            <% for(let result of results){ %>
+                                <% for(let trackId of bothLeakIds){ %>
+                                    <% if(result.request.subrequest==trackId.id){ %>
+                                        <li class="list-group-item list-group-item-action list-group-item-danger">
+                                            <div class="main">
+                                                <h5>
+                                                    <span class="name">Request: <%= result.request.method %>
+                                                            <%= result.request.uri %></span>
+                                                    <span class="status">
+                                                        <%= result.request.status_code %>
+                                                    </span>
+                                                </h5>
+                                            </div>
+                                        </li>
+
+                                        <% for(let subrequest of result.subrequest){ %>
+                                            <li class="list-group-item">
+                                                <div class="sub">
+                                                    <span class="name">Subrequest: <%= subrequest.method %>
+                                                            <%= subrequest.uri %></span>
+                                                    <span class="status">
+                                                        <%= subrequest.status_code %>
+                                                    </span>
+                                                </div>
+                                            </li>
+
+                                            <% } %>
+                                                <br>
+                                                <% } %>
+                                                    <% } %>
+                                                        <% } %>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <!--BFF Exception list-->
+        <div id="accordion3">
+            <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h4 class="mb-0">
+                        <span>
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseThree"
+                                aria-expanded="true" aria-controls="collapseThree">
+                                <h5>BFF that contain error exception</h5>
+                            </button>
+                            <span class="count">
+                                <%= bffLeakIds.length %>
+                            </span>
+                        </span>
+                    </h4>
+                </div>
+
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion3">
+                    <div class="card-body">
+                        <ul class="list-group">
+
+                            <% for(let result of results){ %>
+                                <% for(let trackId of bffLeakIds){ %>
+                                    <% if(result.request.subrequest==trackId.id){ %>
+                                        <li class="list-group-item list-group-item-action list-group-item-danger">
+                                            <div class="main">
+                                                <h5>
+                                                    <span class="name">Request: <%= result.request.method %>
+                                                            <%= result.request.uri %></span>
+                                                    <span class="status">
+                                                        <%= result.request.status_code %>
+                                                    </span>
+                                                </h5>
+                                            </div>
+                                        </li>
+
+                                        <% for(let subrequest of result.subrequest){ %>
+                                            <li class="list-group-item">
+                                                <div class="sub">
+                                                    <span class="name">Subrequest: <%= subrequest.method %>
+                                                            <%= subrequest.uri %></span>
+                                                    <span class="status">
+                                                        <%= subrequest.status_code %>
+                                                    </span>
+                                                </div>
+                                            </li>
+
+                                            <% } %>
+                                                <br>
+                                                <% } %>
+                                                    <% } %>
+                                                        <% } %>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <!--Core Exception list-->
         <div id="accordion">
             <div class="card">
                 <div class="card-header" id="headingOne">
                     <h4 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
-                            aria-expanded="true" aria-controls="collapseOne">
-                            <h5>Show sequences contain error exception</h5>
-                        </button>
+                        <span>
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
+                                aria-expanded="true" aria-controls="collapseOne">
+                                <h5>Microservice API sequences that contain error exception</h5>
+                            </button>
+                        </span>
+                        <span class="count">
+                            <%= coreLeakIds.length %>
+                        </span>
                     </h4>
                 </div>
 
@@ -210,7 +338,7 @@
                         <ul class="list-group">
 
                             <% for(let result of results){ %>
-                                <% for(let trackId of trackIds){ %>
+                                <% for(let trackId of coreLeakIds){ %>
                                     <% if(result.request.subrequest==trackId.id){ %>
                                         <li class="list-group-item list-group-item-action list-group-item-danger">
                                             <div class="main">
@@ -252,10 +380,15 @@
             <div class="card">
                 <div class="card-header" id="headingTwo">
                     <h4 class="mb-0">
+                        <span>
                         <button class="btn btn-link2" data-toggle="collapse" data-target="#collapseTwo"
                             aria-expanded="true" aria-controls="collapseTwo">
-                            <h5>Show sequences contain 5XX</h5>
+                            <h5>Sequences contain 5XX</h5>
                         </button>
+                        </span>
+                        <span class="count">
+                            <%= trackIds.length %>
+                        </span>
                     </h4>
                 </div>
 
