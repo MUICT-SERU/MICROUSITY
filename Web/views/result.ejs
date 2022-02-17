@@ -31,6 +31,11 @@
             float: right;
         }
 
+        .count {
+            float: right;
+            margin: 7px;
+        }
+
         .name {
             float: left;
         }
@@ -46,6 +51,7 @@
             background-color: #ffc107;
             border-color: #ffc107;
         }
+
         .btn-success {
             color: #fff;
             background-color: #28a745;
@@ -57,10 +63,26 @@
             background-color: #17a2b8;
             border-color: #17a2b8;
         }
+
         .btn-primary {
             color: #fff;
             background-color: #007bff;
             border-color: #007bff;
+        }
+
+        .btn-link {
+            color: #d30147;
+            background-color: transparent;
+            background-image: none;
+            border-color: transparent;
+        }
+
+        .btn-link2 {
+            color: #d35f01;
+            background-color: transparent;
+            background-image: none;
+            border-color: transparent;
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -114,9 +136,9 @@
         <!-- ***** Header Area End ***** -->
 
         <br><br><br><br><br><br><br>
-        <!--Total Result list-->
+        <!--Total Result count-->
 
-        <!-- <div class="row">
+        <div class="row">
             <div class="col-sm">
                 <div class="card">
                     <div class="card-body">
@@ -124,7 +146,7 @@
                         <button type="button" class="btn btn-primary">
                             <%=main4xxs %>
                         </button>
-                        <p class="card-text" style="color:black;">Error code count</p>
+                        <p class="card-text" style="color:black;"> Total error code count</p>
                         <button type="button" class="btn btn-success"><b>2XX:</b>
                             <%=main4xxs %>
                         </button>
@@ -140,9 +162,9 @@
                     </div>
                 </div>
             </div>
-        </div> -->
+        </div>
 
-        <!--Result list-->
+        <!--Error count-->
 
         <div class="row">
             <div class="col-sm-6">
@@ -176,88 +198,292 @@
         </div>
 
         <br>
+        <!--Both Exception list-->
+        <div id="accordion4">
+            <div class="card">
+                <div class="card-header" id="headingFour">
+                    <h4 class="mb-0">
+                        <span>
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFour"
+                                aria-expanded="true" aria-controls="collapseFour">
+                                <h5>Both BFF and Microservice API that contain error exception</h5>
+                            </button>
+                        </span>
+                        <span class="count">
+                            <%= bothLeakIds.length %>
+                        </span>
+                    </h4>
+                </div>
 
-        <ul class="list-group">
+                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion4">
+                    <div class="card-body">
+                        <ul class="list-group">
 
-            <% for(let result of results){ %>
-                <% for(let trackId of trackIds){ %>
-                    <% if(result.request.subrequest==trackId.id){ %>
-                        <li class="list-group-item list-group-item-action list-group-item-danger">
-                            <div class="main">
-                                <h5>
-                                    <span class="name">Request: <%= result.request.method %>
-                                            <%= result.request.uri %></span>
-                                    <span class="status">
-                                        <%= result.request.status_code %>
-                                    </span>
-                                </h5>
-                            </div>
-                        </li>
+                            <% for(let result of results){ %>
+                                <% for(let trackId of bothLeakIds){ %>
+                                    <% if(result.request.subrequest==trackId.id){ %>
+                                        <li class="list-group-item list-group-item-action list-group-item-danger">
+                                            <div class="main">
+                                                <h5>
+                                                    <span class="name">Request: <%= result.request.method %>
+                                                            <%= result.request.uri %></span>
+                                                    <span class="status">
+                                                        <%= result.request.status_code %>
+                                                    </span>
+                                                </h5>
+                                            </div>
+                                        </li>
 
-                        <% for(let subrequest of result.subrequest){ %>
-                            <li class="list-group-item">
-                                <div class="sub">
-                                    <span class="name">Subrequest: <%= subrequest.method %>
-                                            <%= subrequest.uri %></span>
-                                    <span class="status">
-                                        <%= subrequest.status_code %>
-                                    </span>
-                                </div>
-                            </li>
+                                        <% for(let subrequest of result.subrequest){ %>
+                                            <li class="list-group-item">
+                                                <div class="sub">
+                                                    <span class="name">Subrequest: <%= subrequest.method %>
+                                                            <%= subrequest.uri %></span>
+                                                    <span class="status">
+                                                        <%= subrequest.status_code %>
+                                                    </span>
+                                                </div>
+                                            </li>
 
-                            <% } %>
-                                <br>
-                                <% } %>
-                                    <% } %>
-                                        <% } %>
+                                            <% } %>
+                                                <br>
+                                                <% } %>
+                                                    <% } %>
+                                                        <% } %>
 
-        </ul>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <!--BFF Exception list-->
+        <div id="accordion3">
+            <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h4 class="mb-0">
+                        <span>
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseThree"
+                                aria-expanded="true" aria-controls="collapseThree">
+                                <h5>BFF that contain error exception</h5>
+                            </button>
+                            <span class="count">
+                                <%= bffLeakIds.length %>
+                            </span>
+                        </span>
+                    </h4>
+                </div>
+
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion3">
+                    <div class="card-body">
+                        <ul class="list-group">
+
+                            <% for(let result of results){ %>
+                                <% for(let trackId of bffLeakIds){ %>
+                                    <% if(result.request.subrequest==trackId.id){ %>
+                                        <li class="list-group-item list-group-item-action list-group-item-danger">
+                                            <div class="main">
+                                                <h5>
+                                                    <span class="name">Request: <%= result.request.method %>
+                                                            <%= result.request.uri %></span>
+                                                    <span class="status">
+                                                        <%= result.request.status_code %>
+                                                    </span>
+                                                </h5>
+                                            </div>
+                                        </li>
+
+                                        <% for(let subrequest of result.subrequest){ %>
+                                            <li class="list-group-item">
+                                                <div class="sub">
+                                                    <span class="name">Subrequest: <%= subrequest.method %>
+                                                            <%= subrequest.uri %></span>
+                                                    <span class="status">
+                                                        <%= subrequest.status_code %>
+                                                    </span>
+                                                </div>
+                                            </li>
+
+                                            <% } %>
+                                                <br>
+                                                <% } %>
+                                                    <% } %>
+                                                        <% } %>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <!--Core Exception list-->
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h4 class="mb-0">
+                        <span>
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
+                                aria-expanded="true" aria-controls="collapseOne">
+                                <h5>Microservice API sequences that contain error exception</h5>
+                            </button>
+                        </span>
+                        <span class="count">
+                            <%= coreLeakIds.length %>
+                        </span>
+                    </h4>
+                </div>
+
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                        <ul class="list-group">
+
+                            <% for(let result of results){ %>
+                                <% for(let trackId of coreLeakIds){ %>
+                                    <% if(result.request.subrequest==trackId.id){ %>
+                                        <li class="list-group-item list-group-item-action list-group-item-danger">
+                                            <div class="main">
+                                                <h5>
+                                                    <span class="name">Request: <%= result.request.method %>
+                                                            <%= result.request.uri %></span>
+                                                    <span class="status">
+                                                        <%= result.request.status_code %>
+                                                    </span>
+                                                </h5>
+                                            </div>
+                                        </li>
+
+                                        <% for(let subrequest of result.subrequest){ %>
+                                            <li class="list-group-item">
+                                                <div class="sub">
+                                                    <span class="name">Subrequest: <%= subrequest.method %>
+                                                            <%= subrequest.uri %></span>
+                                                    <span class="status">
+                                                        <%= subrequest.status_code %>
+                                                    </span>
+                                                </div>
+                                            </li>
+
+                                            <% } %>
+                                                <br>
+                                                <% } %>
+                                                    <% } %>
+                                                        <% } %>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <!--500 error list-->
+        <div id="accordion2">
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h4 class="mb-0">
+                        <span>
+                        <button class="btn btn-link2" data-toggle="collapse" data-target="#collapseTwo"
+                            aria-expanded="true" aria-controls="collapseTwo">
+                            <h5>Sequences contain 5XX</h5>
+                        </button>
+                        </span>
+                        <span class="count">
+                            <%= trackIds.length %>
+                        </span>
+                    </h4>
+                </div>
+
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion2">
+                    <div class="card-body">
+                        <ul class="list-group">
+
+                            <% for(let result of results){ %>
+                                <% for(let trackId of trackIds){ %>
+                                    <% if(result.request.subrequest==trackId.id){ %>
+                                        <li class="list-group-item list-group-item-action list-group-item-danger">
+                                            <div class="main">
+                                                <h5>
+                                                    <span class="name">Request: <%= result.request.method %>
+                                                            <%= result.request.uri %></span>
+                                                    <span class="status">
+                                                        <%= result.request.status_code %>
+                                                    </span>
+                                                </h5>
+                                            </div>
+                                        </li>
+
+                                        <% for(let subrequest of result.subrequest){ %>
+                                            <li class="list-group-item">
+                                                <div class="sub">
+                                                    <span class="name">Subrequest: <%= subrequest.method %>
+                                                            <%= subrequest.uri %></span>
+                                                    <span class="status">
+                                                        <%= subrequest.status_code %>
+                                                    </span>
+                                                </div>
+                                            </li>
+
+                                            <% } %>
+                                                <br>
+                                                <% } %>
+                                                    <% } %>
+                                                        <% } %>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
 
 
-        <script>
+
+
+    </div>
+
+    <script>
 
 
 
-            //function that tigger when clicking the submit button
-            btnDictSubmit.on('click', function () {
-                let dict = inputDict.val()
-                let dyn = inputDyn.val()
-                submit(dict, dyn)
-            })
+        //function that tigger when clicking the submit button
+        btnDictSubmit.on('click', function () {
+            let dict = inputDict.val()
+            let dyn = inputDyn.val()
+            submit(dict, dyn)
+        })
 
-            function submit(dict, dyn) {
+        function submit(dict, dyn) {
 
-                console.log(dict)
-                var parseDict = JSON.parse(dict);
-                console.log(parseDict)
-                $.ajax
-                    ({
-                        type: "GET",
-                        dataType: 'json',
-                        async: false,
-                        url: 'http://localhost:8080/saveDict_json',
-                        data: { data: JSON.stringify(parseDict) },
-                        success: function () { alert("Success"); },
-                        failure: function () { alert("Error"); }
-                    });
+            console.log(dict)
+            var parseDict = JSON.parse(dict);
+            console.log(parseDict)
+            $.ajax
+                ({
+                    type: "GET",
+                    dataType: 'json',
+                    async: false,
+                    url: 'http://localhost:8080/saveDict_json',
+                    data: { data: JSON.stringify(parseDict) },
+                    success: function () { alert("Success"); },
+                    failure: function () { alert("Error"); }
+                });
 
-                console.log(dyn)
-                var parseDyn = JSON.parse(dyn);
-                console.log(parseDyn)
-                $.ajax
-                    ({
-                        type: "GET",
-                        dataType: 'json',
-                        async: false,
-                        url: 'http://localhost:8080/saveDyn_json',
-                        data: { data: JSON.stringify(parseDyn) },
-                        success: function () { alert("Success"); },
-                        failure: function () { alert("Error"); }
-                    });
+            console.log(dyn)
+            var parseDyn = JSON.parse(dyn);
+            console.log(parseDyn)
+            $.ajax
+                ({
+                    type: "GET",
+                    dataType: 'json',
+                    async: false,
+                    url: 'http://localhost:8080/saveDyn_json',
+                    data: { data: JSON.stringify(parseDyn) },
+                    success: function () { alert("Success"); },
+                    failure: function () { alert("Error"); }
+                });
 
-            }
+        }
 
-        </script>
+    </script>
 
     </div>
 </body>
