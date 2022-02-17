@@ -23,8 +23,8 @@ public class DepartmentApplication {
 	@Bean
 	DepartmentRepository repository() {
 		DepartmentRepository repository = new DepartmentRepository();
-		repository.add(new Department(1L, "Development"));
-		repository.add(new Department(1L, "Operations"));
+		repository.add(new Department(3L, "Development"));
+		repository.add(new Department(3L, "Operations"));
 		repository.add(new Department(2L, "Development"));
 		repository.add(new Department(2L, "Operations"));		
 		return repository;
