@@ -232,8 +232,13 @@ app.get("/result", (req, res) => {
     var resultList = JSON.parse(data);
     var main5xx = 0;
     var main4xx = 0;
+    var main3xx = 0;
+    var main2xx = 0;
     var sub5xx = 0;
     var sub4xx = 0;
+    var sub3xx = 0;
+    var sub2xx = 0;
+    var countReq = 0;
 
     var bffLeak = false;
 
@@ -247,6 +252,12 @@ app.get("/result", (req, res) => {
       if (result.request === null) {
 
       }
+      else if (result.request.status_code >= 200 && result.request.status_code < 300) {
+        main2xx += 1;
+      }
+      else if (result.request.status_code >= 300 && result.request.status_code < 400) {
+        main3xx += 1;
+      }
       else if (result.request.status_code >= 400 && result.request.status_code < 500) {
         main4xx += 1;
       } else if (result.request.status_code >= 500 && result.request.status_code < 600) {
@@ -255,6 +266,12 @@ app.get("/result", (req, res) => {
 
       }
       for (let subrequest of result.subrequest) {
+        if (subrequest.status_code >= 200 && subrequest.status_code < 300) {
+          sub2xx += 1;
+        }
+        if (subrequest.status_code >= 300 && subrequest.status_code < 400) {
+          sub3xx += 1;
+        }
         if (subrequest.status_code >= 400 && subrequest.status_code < 500) {
           sub4xx += 1;
         }
@@ -265,6 +282,7 @@ app.get("/result", (req, res) => {
           //}
         }
       }
+      countReq++;
     }
   
 
@@ -307,6 +325,9 @@ app.get("/result", (req, res) => {
       main5xxs: main5xx,
       sub4xxs: sub4xx,
       sub5xxs: sub5xx,
+      sum3xxs: main3xx+sub3xx,
+      sum2xxs: main2xx+sub2xx,
+      countReqs: countReq,
       trackIds: removeDupId(trackId),
       coreLeakIds: removeDupId(coreLeakId),
       bffLeakIds: removeDupId(bffLeakId),

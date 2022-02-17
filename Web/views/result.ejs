@@ -144,20 +144,20 @@
                     <div class="card-body">
                         <h5 class="card-title">Total Request</h5>
                         <button type="button" class="btn btn-primary">
-                            <%=main4xxs %>
+                            <%=countReqs %>
                         </button>
                         <p class="card-text" style="color:black;"> Total error code count</p>
                         <button type="button" class="btn btn-success"><b>2XX:</b>
-                            <%=main4xxs %>
+                            <%=sum2xxs %>
                         </button>
                         <a class="btn btn-info"><b>3XX:</b>
-                            <%=main5xxs %>
+                            <%=sum3xxs %>
                         </a>
                         <button type="button" class="btn btn-danger"><b>4XX:</b>
-                            <%=main4xxs %>
+                            <%=main4xxs + sub4xxs %>
                         </button>
                         <a class="btn btn-warning"><b>5XX:</b>
-                            <%=main5xxs %>
+                            <%=main5xxs + sub5xxs %>
                         </a>
                     </div>
                 </div>
