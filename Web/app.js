@@ -223,9 +223,9 @@ app.get("/result", (req, res) => {
 
   // if (notauth(req, res)) return;
   let user = getUser(req)
-  //fs.readFile('../example/output3.json', 'utf8', (err, data) => {
+  fs.readFile('../example/output4.json', 'utf8', (err, data) => {
 
-  fs.readFile('../output/output.json', 'utf8', (err, data) => {
+  //fs.readFile('../output/output.json', 'utf8', (err, data) => {
     if (err) {
       return console.log("File read failed:", err)
     }
@@ -287,35 +287,49 @@ app.get("/result", (req, res) => {
   
 
     for (let result of resultList) {
-      for (let id of trackId) {
+      //for (let id of trackId) {
         bffLeak = false;
-        if (result.request.subrequest == id.id) {
-          if (result.request.exception) {
+        //if (result.request.subrequest == id.id) {
+          if (result.request === null) {
+
+          }
+          else if (result.request.exception) {
             bffLeak = true;
             //console.log(id.id)
+            
           }
-          for (let subrequest of result.subrequest) {
-            if (subrequest.exception && bffLeak == true) {
-
-              bothLeakId.push({ id: result.request.subrequest });
-              // console.log("bff/core: ")
-              // console.log(bothLeakId)
-
-            } else if (subrequest.exception && bffLeak == false) {
-              coreLeakId.push({ id: result.request.subrequest });
-              // console.log("-/core: ")
-              // console.log(coreLeakId)
-
-            } else if (!subrequest.exception && bffLeak == true) {
-
+          if (result.subrequest.length==0){
+            if(bffLeak == true){
               bffLeakId.push({ id: result.request.subrequest });
-              // console.log("bff/-: " )
-              // console.log(bffLeakId)
-              
+             
             }
+          } else {
+            for (let subrequest of result.subrequest) {
+              
+              if (subrequest.exception && bffLeak == true) {
+  
+                bothLeakId.push({ id: result.request.subrequest });
+                //console.log("bff/core: ")
+                // console.log(bothLeakId)
+  
+              } else if (subrequest.exception && bffLeak == false) {
+                coreLeakId.push({ id: result.request.subrequest });
+                //console.log("-/core: ")
+                // console.log(coreLeakId)
+  
+              } else if (!subrequest.exception && bffLeak == true) {
+  
+                bffLeakId.push({ id: result.request.subrequest });
+                //console.log("bff/-: " )
+                // console.log(bffLeakId)
+                
+              }
+            }
+
           }
-        }
-      }
+          
+        //}
+      //}
     }
 
 
