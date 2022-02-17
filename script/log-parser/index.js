@@ -71,16 +71,7 @@ file.on("close", () => {
   mapBffToSubrequest();
   let output = [];
   mapping.forEach((value) => {
-    let errorCode = -1;
-    if(value.request !== null) {
-      errorCode = value.request.status_code
-    }
-    const statusInside = value["subrequest"].map((x) => x["status_code"]);
-    const errorCodeInside = statusInside.filter((x) => x > 200);
-    let bffError = errorCode > 200;
-    if (errorCodeInside.length > 0 || bffError) {
-        output.push(value);
-    }
+    output.push(value);
   });
   let outputDir = path.resolve(process.cwd(), "../output")
   if(!fs.existsSync(outputDir)) {
