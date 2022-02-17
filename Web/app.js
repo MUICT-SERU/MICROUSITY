@@ -223,9 +223,9 @@ app.get("/result", (req, res) => {
 
   // if (notauth(req, res)) return;
   let user = getUser(req)
-  fs.readFile('../example/output4.json', 'utf8', (err, data) => {
+  //fs.readFile('../example/output4.json', 'utf8', (err, data) => {
 
-  //fs.readFile('../output/output.json', 'utf8', (err, data) => {
+  fs.readFile('../output/output.json', 'utf8', (err, data) => {
     if (err) {
       return console.log("File read failed:", err)
     }
