@@ -1,9 +1,6 @@
 server:
   port: 8088
-  error:
-    include-message: always
-    include-binding-errors: always
-    include-exception: true
+
 spring:
   profiles:
     active: native
