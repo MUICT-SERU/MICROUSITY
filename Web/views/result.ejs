@@ -27,6 +27,10 @@
     <link rel="stylesheet" href="/css/animated.css">
     <link rel="stylesheet" href="/css/owl.css">
     <style>
+        i {
+            color:rgb(255, 30, 0);
+        }
+
         .status {
             float: right;
         }
@@ -224,24 +228,48 @@
                                     <% if(result.request.subrequest==trackId.id){ %>
                                         <li class="list-group-item list-group-item-action list-group-item-danger">
                                             <div class="main">
-                                                <h5>
+                                                <b>
                                                     <span class="name">Request: <%= result.request.method %>
                                                             <%= result.request.uri %></span>
                                                     <span class="status">
                                                         <%= result.request.status_code %>
                                                     </span>
-                                                </h5>
+                                                </b>
+                                                <% if(result.request.exception){ %>
+                                                    <br>
+                                                    <i> Exception: <%=
+                                                            result.request.exception %></i>
+                                                    <% } %>
+
                                             </div>
                                         </li>
 
                                         <% for(let subrequest of result.subrequest){ %>
                                             <li class="list-group-item">
                                                 <div class="sub">
-                                                    <span class="name">Subrequest: <%= subrequest.method %>
-                                                            <%= subrequest.uri %></span>
-                                                    <span class="status">
-                                                        <%= subrequest.status_code %>
+                                                    <span class="name"> 
+                                                        <% if(subrequest.exception){ %>
+                                                         <b>Subrequest: <%= subrequest.method %> <%= subrequest.uri %></b>
+                                                        <% } else {%> 
+                                                        Subrequest: <%= subrequest.method %> <%= subrequest.uri %>
+                                                        <% } %> 
                                                     </span>
+
+                                                    <span class="status">
+                                                        <% if(subrequest.exception){ %>
+                                                            <b><%= subrequest.status_code %></b>
+                                                           <% } else {%> 
+                                                            <%= subrequest.status_code %>
+                                                           <% } %> 
+                                                        
+                                                    </span>
+
+                                                    <% if(subrequest.exception){ %>
+                                                        <br>
+                                                        <i> Exception: <%=
+                                                                subrequest.exception %></i>
+                                                        <% } %>
+
                                                 </div>
                                             </li>
 
@@ -283,13 +311,18 @@
                                     <% if(result.request.subrequest==trackId.id){ %>
                                         <li class="list-group-item list-group-item-action list-group-item-danger">
                                             <div class="main">
-                                                <h5>
+                                                <b>
                                                     <span class="name">Request: <%= result.request.method %>
                                                             <%= result.request.uri %></span>
                                                     <span class="status">
                                                         <%= result.request.status_code %>
                                                     </span>
-                                                </h5>
+                                                </b>
+
+                                                <% if(result.request.exception){ %>
+                                                    <br>
+                                                    <i> Exception: <%= result.request.exception %></i>
+                                                    <% } %>
                                             </div>
                                         </li>
 
@@ -342,24 +375,41 @@
                                     <% if(result.request.subrequest==trackId.id){ %>
                                         <li class="list-group-item list-group-item-action list-group-item-danger">
                                             <div class="main">
-                                                <h5>
+                                                
                                                     <span class="name">Request: <%= result.request.method %>
                                                             <%= result.request.uri %></span>
                                                     <span class="status">
                                                         <%= result.request.status_code %>
                                                     </span>
-                                                </h5>
+                                                
                                             </div>
                                         </li>
 
                                         <% for(let subrequest of result.subrequest){ %>
                                             <li class="list-group-item">
                                                 <div class="sub">
-                                                    <span class="name">Subrequest: <%= subrequest.method %>
-                                                            <%= subrequest.uri %></span>
-                                                    <span class="status">
-                                                        <%= subrequest.status_code %>
+                                                    <span class="name"> 
+                                                        <% if(subrequest.exception){ %>
+                                                         <b>Subrequest: <%= subrequest.method %> <%= subrequest.uri %></b>
+                                                        <% } else {%> 
+                                                        Subrequest: <%= subrequest.method %> <%= subrequest.uri %>
+                                                        <% } %> 
                                                     </span>
+
+                                                    <span class="status">
+                                                        <% if(subrequest.exception){ %>
+                                                            <b><%= subrequest.status_code %></b>
+                                                           <% } else {%> 
+                                                            <%= subrequest.status_code %>
+                                                           <% } %> 
+                                                        
+                                                    </span>
+
+                                                    <% if(subrequest.exception){ %>
+                                                        <br>
+                                                        <i> Exception: <%=
+                                                                subrequest.exception %></i>
+                                                        <% } %>
                                                 </div>
                                             </li>
 
@@ -381,10 +431,10 @@
                 <div class="card-header" id="headingTwo">
                     <h4 class="mb-0">
                         <span>
-                        <button class="btn btn-link2" data-toggle="collapse" data-target="#collapseTwo"
-                            aria-expanded="true" aria-controls="collapseTwo">
-                            <h5>Sequences contain 5XX</h5>
-                        </button>
+                            <button class="btn btn-link2" data-toggle="collapse" data-target="#collapseTwo"
+                                aria-expanded="true" aria-controls="collapseTwo">
+                                <h5>Sequences contain 5XX</h5>
+                            </button>
                         </span>
                         <span class="count">
                             <%= trackIds.length %>
@@ -401,24 +451,49 @@
                                     <% if(result.request.subrequest==trackId.id){ %>
                                         <li class="list-group-item list-group-item-action list-group-item-danger">
                                             <div class="main">
-                                                <h5>
-                                                    <span class="name">Request: <%= result.request.method %>
-                                                            <%= result.request.uri %></span>
-                                                    <span class="status">
-                                                        <%= result.request.status_code %>
+
+                                                    <span class="name"> 
+                                                        <% if(result.request.status_code >= 500 && result.request.status_code < 600){ %>
+                                                         <b>Request: <%= result.request.method %> <%= result.request.uri %></b>
+                                                        <% } else {%> 
+                                                            Request: <%= result.request.method %> <%= result.request.uri %>
+                                                        <% } %> 
                                                     </span>
-                                                </h5>
+
+                                                    <span class="status">
+                                                        <% if(result.request.status_code >= 500 && result.request.status_code < 600){ %>
+                                                            <b><%= result.request.status_code %></b>
+                                                           <% } else {%> 
+                                                            <%= result.request.status_code %>
+                                                           <% } %> 
+                                                        
+                                                    </span>
+                                                
                                             </div>
                                         </li>
 
                                         <% for(let subrequest of result.subrequest){ %>
                                             <li class="list-group-item">
                                                 <div class="sub">
-                                                    <span class="name">Subrequest: <%= subrequest.method %>
-                                                            <%= subrequest.uri %></span>
-                                                    <span class="status">
-                                                        <%= subrequest.status_code %>
+                                                    
+
+                                                    <span class="name"> 
+                                                        <% if(subrequest.status_code >= 500 && subrequest.status_code < 600){ %>
+                                                         <b>Subrequest: <%= subrequest.method %> <%= subrequest.uri %></b>
+                                                        <% } else {%> 
+                                                        Subrequest: <%= subrequest.method %> <%= subrequest.uri %>
+                                                        <% } %> 
                                                     </span>
+
+                                                    <span class="status">
+                                                        <% if(subrequest.status_code >= 500 && subrequest.status_code < 600){ %>
+                                                            <b><%= subrequest.status_code %></b>
+                                                           <% } else {%> 
+                                                            <%= subrequest.status_code %>
+                                                           <% } %> 
+                                                        
+                                                    </span>
+
                                                 </div>
                                             </li>
 
