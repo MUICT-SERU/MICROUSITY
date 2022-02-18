@@ -1,7 +1,7 @@
+require('dotenv').config();
 //import to use
 const express = require("express");
 const app = express();
-const dotenv = require("dotenv");
 const fs = require("fs");
 const session = require("express-session");
 const spawn = require("child_process").spawnSync;
@@ -51,7 +51,6 @@ client.connect((err) => {
 //Setting for ejs
 app.set("view engine", "ejs");
 app.set("views", "./views");
-dotenv.config();
 
 //Set user function
 function setUser(req, user) {
