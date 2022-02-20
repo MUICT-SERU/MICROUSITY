@@ -28,10 +28,14 @@
     <link rel="stylesheet" href="/css/owl.css">
     <style>
         i {
-            color:rgb(255, 30, 0);
+            color: rgb(255, 30, 0);
         }
 
         .status {
+            float: right;
+        }
+
+        .exception {
             float: right;
         }
 
@@ -142,15 +146,51 @@
         <br><br><br><br><br><br><br>
         <!--Total Result count-->
 
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-sm">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Total Request</h5>
+                        <h5 class="card-title">Total Requests</h5>
                         <button type="button" class="btn btn-primary">
                             <%=countReqs %>
                         </button>
-                        <p class="card-text" style="color:black;"> Total error code count</p>
+                        <br><br>
+                        <h5 class="card-title"> Total Responses</h5>
+                        <button type="button" class="btn btn-success"><b>2XX:</b>
+                            <%=sum2xxs %>
+                        </button>
+                        <a class="btn btn-info"><b>3XX:</b>
+                            <%=sum3xxs %>
+                        </a>
+                        <button type="button" class="btn btn-danger"><b>4XX:</b>
+                            <%=main4xxs + sub4xxs %>
+                        </button>
+                        <a class="btn btn-warning"><b>5XX:</b>
+                            <%=main5xxs + sub5xxs %>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <!--Total count-->
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Requests</h5>
+                        <button type="button" class="btn btn-primary">
+                            <%=countReqs %>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Responses</h5>
+                        <!-- <p class="card-text" style="color:black;">Error code count</p> -->
                         <button type="button" class="btn btn-success"><b>2XX:</b>
                             <%=sum2xxs %>
                         </button>
@@ -168,14 +208,17 @@
             </div>
         </div>
 
+        <br>
+        <h4>Issues found</h4>
+        <br>
         <!--Error count-->
 
         <div class="row">
             <div class="col-sm-6">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Backend For Frontend (BFF)</h5>
-                        <p class="card-text" style="color:black;">Error code count</p>
+                        <h5 class="card-title">Responses from Backend For Frontend (BFF)</h5>
+                        <p class="card-text" style="color:black;">Error responses count</p>
                         <button type="button" class="btn btn-danger"><b>4XX:</b>
                             <%=main4xxs %>
                         </button>
@@ -188,8 +231,8 @@
             <div class="col-sm-6">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Microservice API</h5>
-                        <p class="card-text" style="color:black;">Error code count</p>
+                        <h5 class="card-title">Responses from Core APIs</h5>
+                        <p class="card-text" style="color:black;">Error responses count</p>
                         <button type="button" class="btn btn-danger"><b>4XX:</b>
                             <%=sub4xxs %>
                         </button>
@@ -200,7 +243,8 @@
                 </div>
             </div>
         </div>
-
+        <br>
+        <h4>Detailed analysis</h4>
         <br>
         <!--Both Exception list-->
         <div id="accordion4">
@@ -210,7 +254,7 @@
                         <span>
                             <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFour"
                                 aria-expanded="true" aria-controls="collapseFour">
-                                <h5>Both BFF and Microservice API that contain error exception</h5>
+                                <h5>Both responses from BFF and Core APIs contain errors</h5>
                             </button>
                         </span>
                         <span class="count">
@@ -237,8 +281,9 @@
                                                 </b>
                                                 <% if(result.request.exception){ %>
                                                     <br>
-                                                    <i> Exception: <%=
-                                                            result.request.exception %></i>
+                                                    <span class="exception">
+                                                    <i> Exception: <%= result.request.exception %></i>
+                                                    </span>
                                                     <% } %>
 
                                             </div>
@@ -247,27 +292,32 @@
                                         <% for(let subrequest of result.subrequest){ %>
                                             <li class="list-group-item">
                                                 <div class="sub">
-                                                    <span class="name"> 
+                                                    <span class="name">
                                                         <% if(subrequest.exception){ %>
-                                                         <b>Subrequest: <%= subrequest.method %> <%= subrequest.uri %></b>
-                                                        <% } else {%> 
-                                                        Subrequest: <%= subrequest.method %> <%= subrequest.uri %>
-                                                        <% } %> 
+                                                            <b>Subrequest: <%= subrequest.method %>
+                                                                    <%= subrequest.uri %></b>
+                                                            <% } else {%>
+                                                                Subrequest: <%= subrequest.method %>
+                                                                    <%= subrequest.uri %>
+                                                                        <% } %>
                                                     </span>
 
                                                     <span class="status">
                                                         <% if(subrequest.exception){ %>
-                                                            <b><%= subrequest.status_code %></b>
-                                                           <% } else {%> 
-                                                            <%= subrequest.status_code %>
-                                                           <% } %> 
-                                                        
+                                                            <b>
+                                                                <%= subrequest.status_code %>
+                                                            </b>
+                                                            <% } else {%>
+                                                                <%= subrequest.status_code %>
+                                                                    <% } %>
+
                                                     </span>
 
                                                     <% if(subrequest.exception){ %>
                                                         <br>
-                                                        <i> Exception: <%=
-                                                                subrequest.exception %></i>
+                                                        <span class="exception">
+                                                        <i> Exception: <%= subrequest.exception %></i>
+                                                        </span>
                                                         <% } %>
 
                                                 </div>
@@ -293,7 +343,7 @@
                         <span>
                             <button class="btn btn-link" data-toggle="collapse" data-target="#collapseThree"
                                 aria-expanded="true" aria-controls="collapseThree">
-                                <h5>BFF that contain error exception</h5>
+                                <h5>Only responses from BFF contain errors</h5>
                             </button>
                             <span class="count">
                                 <%= bffLeakIds.length %>
@@ -321,7 +371,9 @@
 
                                                 <% if(result.request.exception){ %>
                                                     <br>
+                                                    <span class="exception">
                                                     <i> Exception: <%= result.request.exception %></i>
+                                                    </span>
                                                     <% } %>
                                             </div>
                                         </li>
@@ -357,7 +409,7 @@
                         <span>
                             <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
                                 aria-expanded="true" aria-controls="collapseOne">
-                                <h5>Microservice API sequences that contain error exception</h5>
+                                <h5>Only responses from Core APIs contain errors</h5>
                             </button>
                         </span>
                         <span class="count">
@@ -375,40 +427,45 @@
                                     <% if(result.request.subrequest==trackId.id){ %>
                                         <li class="list-group-item list-group-item-action list-group-item-danger">
                                             <div class="main">
-                                                
-                                                    <span class="name">Request: <%= result.request.method %>
-                                                            <%= result.request.uri %></span>
-                                                    <span class="status">
-                                                        <%= result.request.status_code %>
-                                                    </span>
-                                                
+
+                                                <span class="name">Request: <%= result.request.method %>
+                                                        <%= result.request.uri %></span>
+                                                <span class="status">
+                                                    <%= result.request.status_code %>
+                                                </span>
+
                                             </div>
                                         </li>
 
                                         <% for(let subrequest of result.subrequest){ %>
                                             <li class="list-group-item">
                                                 <div class="sub">
-                                                    <span class="name"> 
+                                                    <span class="name">
                                                         <% if(subrequest.exception){ %>
-                                                         <b>Subrequest: <%= subrequest.method %> <%= subrequest.uri %></b>
-                                                        <% } else {%> 
-                                                        Subrequest: <%= subrequest.method %> <%= subrequest.uri %>
-                                                        <% } %> 
+                                                            <b>Subrequest: <%= subrequest.method %>
+                                                                    <%= subrequest.uri %></b>
+                                                            <% } else {%>
+                                                                Subrequest: <%= subrequest.method %>
+                                                                    <%= subrequest.uri %>
+                                                                        <% } %>
                                                     </span>
 
                                                     <span class="status">
                                                         <% if(subrequest.exception){ %>
-                                                            <b><%= subrequest.status_code %></b>
-                                                           <% } else {%> 
-                                                            <%= subrequest.status_code %>
-                                                           <% } %> 
-                                                        
+                                                            <b>
+                                                                <%= subrequest.status_code %>
+                                                            </b>
+                                                            <% } else {%>
+                                                                <%= subrequest.status_code %>
+                                                                    <% } %>
+
                                                     </span>
 
                                                     <% if(subrequest.exception){ %>
                                                         <br>
-                                                        <i> Exception: <%=
-                                                                subrequest.exception %></i>
+                                                        <span class="exception">
+                                                        <i> Exception: <%= subrequest.exception %></i>
+                                                        </span>
                                                         <% } %>
                                                 </div>
                                             </li>
@@ -433,7 +490,7 @@
                         <span>
                             <button class="btn btn-link2" data-toggle="collapse" data-target="#collapseTwo"
                                 aria-expanded="true" aria-controls="collapseTwo">
-                                <h5>Sequences contain 5XX</h5>
+                                <h5>Requests with HTTP 5XX responses</h5>
                             </button>
                         </span>
                         <span class="count">
@@ -452,46 +509,58 @@
                                         <li class="list-group-item list-group-item-action list-group-item-danger">
                                             <div class="main">
 
-                                                    <span class="name"> 
-                                                        <% if(result.request.status_code >= 500 && result.request.status_code < 600){ %>
-                                                         <b>Request: <%= result.request.method %> <%= result.request.uri %></b>
-                                                        <% } else {%> 
-                                                            Request: <%= result.request.method %> <%= result.request.uri %>
-                                                        <% } %> 
-                                                    </span>
+                                                <span class="name">
+                                                    <% if(result.request.status_code>= 500 && result.request.status_code
+                                                        < 600){ %>
+                                                            <b>Request: <%= result.request.method %>
+                                                                    <%= result.request.uri %></b>
+                                                            <% } else {%>
+                                                                Request: <%= result.request.method %>
+                                                                    <%= result.request.uri %>
+                                                                        <% } %>
+                                                </span>
 
-                                                    <span class="status">
-                                                        <% if(result.request.status_code >= 500 && result.request.status_code < 600){ %>
-                                                            <b><%= result.request.status_code %></b>
-                                                           <% } else {%> 
-                                                            <%= result.request.status_code %>
-                                                           <% } %> 
-                                                        
-                                                    </span>
-                                                
+                                                <span class="status">
+                                                    <% if(result.request.status_code>= 500 && result.request.status_code
+                                                        < 600){ %>
+                                                            <b>
+                                                                <%= result.request.status_code %>
+                                                            </b>
+                                                            <% } else {%>
+                                                                <%= result.request.status_code %>
+                                                                    <% } %>
+
+                                                </span>
+
                                             </div>
                                         </li>
 
                                         <% for(let subrequest of result.subrequest){ %>
                                             <li class="list-group-item">
                                                 <div class="sub">
-                                                    
 
-                                                    <span class="name"> 
-                                                        <% if(subrequest.status_code >= 500 && subrequest.status_code < 600){ %>
-                                                         <b>Subrequest: <%= subrequest.method %> <%= subrequest.uri %></b>
-                                                        <% } else {%> 
-                                                        Subrequest: <%= subrequest.method %> <%= subrequest.uri %>
-                                                        <% } %> 
+
+                                                    <span class="name">
+                                                        <% if(subrequest.status_code>= 500 && subrequest.status_code <
+                                                                600){ %>
+                                                                <b>Subrequest: <%= subrequest.method %>
+                                                                        <%= subrequest.uri %></b>
+                                                                <% } else {%>
+                                                                    Subrequest: <%= subrequest.method %>
+                                                                        <%= subrequest.uri %>
+                                                                            <% } %>
                                                     </span>
 
                                                     <span class="status">
-                                                        <% if(subrequest.status_code >= 500 && subrequest.status_code < 600){ %>
-                                                            <b><%= subrequest.status_code %></b>
-                                                           <% } else {%> 
-                                                            <%= subrequest.status_code %>
-                                                           <% } %> 
-                                                        
+                                                        <% if(subrequest.status_code>= 500 && subrequest.status_code <
+                                                                600){ %>
+                                                                <b>
+                                                                    <%= subrequest.status_code %>
+                                                                </b>
+                                                                <% } else {%>
+                                                                    <%= subrequest.status_code %>
+                                                                        <% } %>
+
                                                     </span>
 
                                                 </div>
