@@ -1,6 +1,9 @@
 server:
   port: 8060
-
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-exception: false
 eureka:
   client:
     serviceUrl:

@@ -19,8 +19,8 @@ public class OrganizationRepository {
 		System.out.println("test find by id: ");
 		return organizations.stream()
 				.filter(a -> a.getId().equals(id))
-				.findFirst()
-				.orElseThrow();
+				.findFirst().get();
+				//.orElseThrow();
 	}
 	
 	public List<Organization> findAll() {
