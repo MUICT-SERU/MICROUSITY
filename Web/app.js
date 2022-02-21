@@ -378,7 +378,6 @@ app.get("/pdf", (req, res) => {
   let fname = user.fname;
   let lname = user.lname;
   // Import dependencies
-  const fs = require("fs");
   const moment = require("moment");
   const PDFDocument = require("pdfkit");
 
