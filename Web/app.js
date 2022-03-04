@@ -10,8 +10,14 @@ const { Worker } = require("worker_threads");
 const https = require('https');
 //const
 const SESSION_AUTH_USER = "session-auth-user";
-const key = fs.readFileSync('./key.pem');
-const cert = fs.readFileSync('./cert.pem');
+let key,cert;
+try {
+  key = fs.readFileSync('./key.pem');
+  cert = fs.readFileSync('./cert.pem');
+}
+catch (err) {
+  console.log('Cert not found, will run as http');
+}
 let events = new EventEmitter();
 
 //setting
@@ -496,12 +502,12 @@ app.get("/logout", (req, res) => {
 });
 
 //run
-if (key !== null) {
-  https.createServer({ key: key, cert: cert, passphrase: '1234' }, app).listen(443, () => {
-    console.log('listening w/ https at 8080');
-  });
-} else {
+if (key === undefined) {
   app.listen(8080, () => {
     console.log('listening as http at 8080');
+  });
+} else {
+  https.createServer({ key: key, cert: cert, passphrase: '1234' }, app).listen(443, () => {
+    console.log('listening w/ https');
   });
 }
