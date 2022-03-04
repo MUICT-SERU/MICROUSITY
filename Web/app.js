@@ -7,9 +7,11 @@ const session = require("express-session");
 const md5 = require("md5");
 const EventEmitter = require("events");
 const { Worker } = require("worker_threads");
+const https = require('https');
 //const
 const SESSION_AUTH_USER = "session-auth-user";
-
+const key = fs.readFileSync('./key.pem');
+const cert = fs.readFileSync('./cert.pem');
 let events = new EventEmitter();
 
 //setting
@@ -218,7 +220,7 @@ app.get("/result", (req, res) => {
   let user = getUser(req);
   fs.readFile('../example/output5.json', 'utf8', (err, data) => {
 
-  //fs.readFile("../output/output.json", "utf8", (err, data) => {
+    //fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
     }
@@ -296,7 +298,7 @@ app.get("/result", (req, res) => {
       } else if (result.request.exception) {
         bffLeak = true;
         //console.log(id.id)
-        
+
       }
       if (result.subrequest.length == 0) {
         //console.log(result.subrequest.length)
@@ -306,15 +308,15 @@ app.get("/result", (req, res) => {
       } else {
         for (let subrequest of result.subrequest) {
           if (subrequest.exception) {
-            coreLeak = true;       
-          } 
+            coreLeak = true;
+          }
         }
       }
-      if(coreLeak&&bffLeak){
-        bothLeakId.push({ id: result.request.subrequest }); 
-      } else if(coreLeak&&!bffLeak){
+      if (coreLeak && bffLeak) {
+        bothLeakId.push({ id: result.request.subrequest });
+      } else if (coreLeak && !bffLeak) {
         coreLeakId.push({ id: result.request.subrequest });
-      } else if(!coreLeak&&bffLeak){
+      } else if (!coreLeak && bffLeak) {
         bffLeakId.push({ id: result.request.subrequest });
       }
       //}
@@ -494,6 +496,12 @@ app.get("/logout", (req, res) => {
 });
 
 //run
-app.listen(8080, function () {
-  console.log("Listening at Port " + 8080);
-});
+if (key !== null) {
+  https.createServer({ key: key, cert: cert, passphrase: '1234' }, app).listen(443, () => {
+    console.log('listening w/ https at 8080');
+  });
+} else {
+  app.listen(8080, () => {
+    console.log('listening as http at 8080');
+  });
+}
