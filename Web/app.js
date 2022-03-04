@@ -8,6 +8,8 @@ const md5 = require("md5");
 const EventEmitter = require("events");
 const { Worker } = require("worker_threads");
 const https = require('https');
+const cytoscape = require('cytoscape');
+const dagre = require('cytoscape-dagre');
 //const
 const SESSION_AUTH_USER = "session-auth-user";
 let key,cert;
@@ -488,6 +490,44 @@ app.get("/quiz", (req, res) => {
         });
       }
     });
+});
+
+//contact us  page
+app.get("/graph", (req, res) => {
+  res.render("index");
+});
+
+//contact us  page
+app.get("/graphtest", (req, res) => {
+  // if (notauth(req, res)) return;
+  let user = getUser(req);
+  fs.readFile('../example/output5.json', 'utf8', (err, data) => {
+
+  //fs.readFile("../output/output.json", "utf8", (err, data) => {
+    if (err) {
+      return console.log("File read failed:", err);
+    }
+    
+    var resultList = JSON.parse(data);
+    //console.log(resultList);
+    var trackSeq = [];
+ 
+    for (let result of resultList) {
+    
+      if (result.request.subrequest == 38) {
+        trackSeq.push(result);
+      } 
+    
+    }
+
+    res.render("index", {
+      results: resultList,
+      trackSeqs: trackSeq,
+      user: req.user,
+    });
+    console.log(trackSeq);
+   
+  });
 });
 
 //contact us  page
