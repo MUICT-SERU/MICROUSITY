@@ -33,12 +33,21 @@
 				//console.log(trackSeq.request["id.orig_p"]);
 				nodeList.push( {data: { id: "Client", type: "Src", group: "triangle"}})
 				nodeList.push( {data: { id: "BFF", type: "Res"}})
-				edgeList.push( {data: { source: "Client", target: "BFF", uri: trackSeq.request.uri, label: trackSeq.request.uri}})
+				if(trackSeq.request.exception){
+					edgeList.push( {data: { source: "Client", target: "BFF", uri: trackSeq.request.uri, label: trackSeq.request.uri, color: "red"}})
+				} else {
+					edgeList.push( {data: { source: "Client", target: "BFF", uri: trackSeq.request.uri, label: trackSeq.request.uri}})
+				}
+				
 				//edgeList.push( {data: { source: "BFF", target: "Client", uri: trackSeq.request.status_code}})
 				for(let subrequest of trackSeq.subrequest){
 					//nodeList.push( {data: { id: subrequest["id.orig_p"], type: "Src"}})
 					nodeList.push( {data: { id: subrequest["id.resp_p"], type: "Res"}})
-					edgeList.push( {data: { source: subrequest["id.resp_p"], target: "BFF", uri: subrequest.uri, label: subrequest.uri}})
+					if(subrequest.exception){
+						edgeList.push( {data: { source: subrequest["id.resp_p"], target: "BFF", uri: subrequest.uri, label: subrequest.uri, color: "red"}})
+					} else {
+						edgeList.push( {data: { source: subrequest["id.resp_p"], target: "BFF", uri: subrequest.uri, label: subrequest.uri}})
+					}
 					//edgeList.push( {data: { source: "BFF", target: subrequest["id.resp_p"], uri: subrequest.status_code}})
 				}
 			}
@@ -65,11 +74,11 @@
 					{
 						selector: "edge",
 						style: {
-							width: 1,
-							"source-arrow-shape": "triangle-backcurve",
+							width: 2,
+							"source-arrow-shape": "triangle",
 							"target-arrow-shape": "triangle",
-							"line-color": "#9dbaea",
-							"target-arrow-color": "#9dbaea",
+							"line-color": "data(color)",
+							
 							"curve-style": "bezier",
 							content: 'data(uri)'
 						}
