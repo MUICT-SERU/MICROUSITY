@@ -16,3 +16,4 @@ FuzzLean
 output
 
 *.pem
+.env

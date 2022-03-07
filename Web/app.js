@@ -14,8 +14,8 @@ const dagre = require('cytoscape-dagre');
 const SESSION_AUTH_USER = "session-auth-user";
 let key,cert;
 try {
-  key = fs.readFileSync('./key.pem');
-  cert = fs.readFileSync('./cert.pem');
+  key = fs.readFileSync(process.env.KEY);
+  cert = fs.readFileSync(process.env.CERT);
 }
 catch (err) {
   console.log('Cert not found, will run as http');
