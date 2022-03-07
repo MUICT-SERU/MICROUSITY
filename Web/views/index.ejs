@@ -31,15 +31,15 @@
 
 			for(let trackSeq of data){
 				//console.log(trackSeq.request["id.orig_p"]);
-				nodeList.push( {data: { id: trackSeq.request["id.orig_p"], type: "Src"}})
-				nodeList.push( {data: { id: trackSeq.request["id.resp_p"], type: "Res"}})
-				edgeList.push( {data: { source: trackSeq.request["id.orig_p"], target: trackSeq.request["id.resp_p"], uri: trackSeq.request.uri}})
-				edgeList.push( {data: { source: trackSeq.request["id.resp_p"], target: trackSeq.request["id.orig_p"], uri: trackSeq.request.status_code}})
+				nodeList.push( {data: { id: "Client", type: "Src", group: "triangle"}})
+				nodeList.push( {data: { id: "BFF", type: "Res"}})
+				edgeList.push( {data: { source: "Client", target: "BFF", uri: trackSeq.request.uri, label: trackSeq.request.uri}})
+				//edgeList.push( {data: { source: "BFF", target: "Client", uri: trackSeq.request.status_code}})
 				for(let subrequest of trackSeq.subrequest){
-					nodeList.push( {data: { id: subrequest["id.orig_p"], type: "Src"}})
+					//nodeList.push( {data: { id: subrequest["id.orig_p"], type: "Src"}})
 					nodeList.push( {data: { id: subrequest["id.resp_p"], type: "Res"}})
-					edgeList.push( {data: { source: subrequest["id.resp_p"], target: trackSeq.request["id.resp_p"], uri: subrequest.uri}})
-					edgeList.push( {data: { source: trackSeq.request["id.resp_p"], target: subrequest["id.resp_p"], uri: subrequest.status_code}})
+					edgeList.push( {data: { source: subrequest["id.resp_p"], target: "BFF", uri: subrequest.uri, label: subrequest.uri}})
+					//edgeList.push( {data: { source: "BFF", target: subrequest["id.resp_p"], uri: subrequest.status_code}})
 				}
 			}
 			console.log(nodeList);
@@ -49,10 +49,14 @@
 				style: [
 					{
 						selector: 'node',
+						"style": {
+    						"shape": "data(group)",
+							"label": "data(id)"
+  						},
 						css: {
 							width: 50,
 							height: 50,
-							'background-color': '#61bffc',
+							//'background-color': '#61bffc',
 							content: 'data(id)'
 						}
 
@@ -62,12 +66,23 @@
 						selector: "edge",
 						style: {
 							width: 1,
+							"source-arrow-shape": "triangle-backcurve",
 							"target-arrow-shape": "triangle",
 							"line-color": "#9dbaea",
 							"target-arrow-color": "#9dbaea",
 							"curve-style": "bezier",
 							content: 'data(uri)'
 						}
+					},
+					{
+						selector: "edge[label]",
+						css: {
+							"label": "data(label)",
+							"text-rotation": "autorotate",
+							"text-margin-x": "0px",
+							"text-margin-y": "0px",
+							"font-size": "13px",
+							}
 					}
 				],
 				elements: {
@@ -77,9 +92,14 @@
 					edges: edgeList
 				},
 				layout: {
-					name: 'breadthfirst',
+					name: 'grid',
 					directed: true,
 					padding: 10,
+					nodeDimensionsIncludeLabels: true,
+					cols: 3,
+					rows: 3,
+					spacingFactor: 1,
+					avoidOverlap: true,
 					/* color: "#ffff00",*/
 					fit: true
 				}
