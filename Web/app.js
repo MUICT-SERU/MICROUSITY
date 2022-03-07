@@ -492,13 +492,10 @@ app.get("/quiz", (req, res) => {
     });
 });
 
-//contact us  page
-app.get("/graph", (req, res) => {
-  res.render("index");
-});
+
 
 //contact us  page
-app.get("/graphtest/:id", (req, res) => {
+app.get("/graph/:id", (req, res) => {
   // if (notauth(req, res)) return;
   let id = req.params['id']
   let user = getUser(req);
@@ -521,7 +518,7 @@ app.get("/graphtest/:id", (req, res) => {
     
     }
 
-    res.render("index", {
+    res.render("graph", {
       results: resultList,
       trackSeqs: trackSeq,
       user: req.user,
