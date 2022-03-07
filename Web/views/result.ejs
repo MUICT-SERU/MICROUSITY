@@ -270,7 +270,8 @@
                             <% for(let result of results){ %>
                                 <% for(let trackId of bothLeakIds){ %>
                                     <% if(result.request.subrequest==trackId.id){ %>
-                                        <li class="list-group-item list-group-item-action list-group-item-danger">
+                                       
+                                            <li class="list-group-item list-group-item-action list-group-item-danger" onclick= "window.open('/graphtest/<%=result.request.subrequest%>')">
                                             <div class="main">
                                                 <b>
                                                     <span class="name">Request: <%= result.request.method %>
@@ -288,7 +289,7 @@
 
                                             </div>
                                         </li>
-
+                                 
                                         <% for(let subrequest of result.subrequest){ %>
                                             <li class="list-group-item">
                                                 <div class="sub">
@@ -359,7 +360,7 @@
                             <% for(let result of results){ %>
                                 <% for(let trackId of bffLeakIds){ %>
                                     <% if(result.request.subrequest==trackId.id){ %>
-                                        <li class="list-group-item list-group-item-action list-group-item-danger">
+                                        <li class="list-group-item list-group-item-action list-group-item-danger" onclick= "window.open('/graphtest/<%=result.request.subrequest%>')">
                                             <div class="main">
                                                 <b>
                                                     <span class="name">Request: <%= result.request.method %>
@@ -425,7 +426,7 @@
                             <% for(let result of results){ %>
                                 <% for(let trackId of coreLeakIds){ %>
                                     <% if(result.request.subrequest==trackId.id){ %>
-                                        <li class="list-group-item list-group-item-action list-group-item-danger">
+                                        <li class="list-group-item list-group-item-action list-group-item-danger" onclick= "window.open('/graphtest/<%=result.request.subrequest%>')">
                                             <div class="main">
 
                                                 <span class="name">Request: <%= result.request.method %>

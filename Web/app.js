@@ -498,8 +498,9 @@ app.get("/graph", (req, res) => {
 });
 
 //contact us  page
-app.get("/graphtest", (req, res) => {
+app.get("/graphtest/:id", (req, res) => {
   // if (notauth(req, res)) return;
+  let id = req.params['id']
   let user = getUser(req);
   fs.readFile('../example/output5.json', 'utf8', (err, data) => {
 
@@ -514,7 +515,7 @@ app.get("/graphtest", (req, res) => {
  
     for (let result of resultList) {
     
-      if (result.request.subrequest == 38) {
+      if (result.request.subrequest == id) {
         trackSeq.push(result);
       } 
     
