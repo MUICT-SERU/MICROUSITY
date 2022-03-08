@@ -31,8 +31,8 @@
 
 			for(let trackSeq of data){
 				//console.log(trackSeq.request["id.orig_p"]);
-				nodeList.push( {data: { id: "Client", type: "Src", group: "triangle"}})
-				nodeList.push( {data: { id: "BFF", type: "Res"}})
+				nodeList.push( {data: { id: "Client", label: "Client", type: "Src", group: "triangle"}})
+				nodeList.push( {data: { id: "BFF", label: "BFF", type: "Res"}})
 				if(trackSeq.request.exception){
 					edgeList.push( {data: { source: "Client", target: "BFF", uri: trackSeq.request.uri, label: trackSeq.request.method  + " " + trackSeq.request.uri, color: "red"}})
 				} else {
@@ -42,11 +42,11 @@
 				//edgeList.push( {data: { source: "BFF", target: "Client", uri: trackSeq.request.status_code}})
 				for(let subrequest of trackSeq.subrequest){
 					//nodeList.push( {data: { id: subrequest["id.orig_p"], type: "Src"}})
-					nodeList.push( {data: { id: subrequest["id.resp_p"], type: "Res"}})
+					nodeList.push( {data: { id: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], label: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"],type: "Res"}})
 					if(subrequest.exception){
-						edgeList.push( {data: { source: subrequest["id.resp_p"], target: "BFF", uri: subrequest.uri, label: subrequest.method + " " + subrequest.uri, color: "red"}})
+						edgeList.push( {data: { source: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], target: "BFF", uri: subrequest.uri, label: subrequest.method + " " + subrequest.uri, color: "red"}})
 					} else {
-						edgeList.push( {data: { source: subrequest["id.resp_p"], target: "BFF", uri: subrequest.uri, label: subrequest.method + " " +subrequest.uri}})
+						edgeList.push( {data: { source: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], target: "BFF", uri: subrequest.uri, label: subrequest.method + " " +subrequest.uri}})
 					}
 					//edgeList.push( {data: { source: "BFF", target: subrequest["id.resp_p"], uri: subrequest.status_code}})
 				}
