@@ -226,9 +226,9 @@ app.get("/testingtool", (req, res) => {
 app.get("/result", (req, res) => {
   // if (notauth(req, res)) return;
   let user = getUser(req);
-  fs.readFile('../example/output5.json', 'utf8', (err, data) => {
+  //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
 
-    //fs.readFile("../output/output.json", "utf8", (err, data) => {
+    fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
     }
@@ -492,18 +492,16 @@ app.get("/quiz", (req, res) => {
     });
 });
 
-//contact us  page
-app.get("/graph", (req, res) => {
-  res.render("index");
-});
+
 
 //contact us  page
-app.get("/graphtest", (req, res) => {
+app.get("/graph/:id", (req, res) => {
   // if (notauth(req, res)) return;
+  let id = req.params['id']
   let user = getUser(req);
-  fs.readFile('../example/output5.json', 'utf8', (err, data) => {
+  //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
 
-  //fs.readFile("../output/output.json", "utf8", (err, data) => {
+  fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
     }
@@ -514,13 +512,13 @@ app.get("/graphtest", (req, res) => {
  
     for (let result of resultList) {
     
-      if (result.request.subrequest == 38) {
+      if (result.request.subrequest == id) {
         trackSeq.push(result);
       } 
     
     }
 
-    res.render("index", {
+    res.render("graph", {
       results: resultList,
       trackSeqs: trackSeq,
       user: req.user,
