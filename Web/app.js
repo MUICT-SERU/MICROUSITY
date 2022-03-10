@@ -138,6 +138,7 @@ events.on("TESTSTARTED", () => {
 });
 
 app.get("/test_status", (req, res) => {
+  res.set('Content-Type', 'text/plain')
   if (isTesting) {
     res.send("LOCKED");
     return;

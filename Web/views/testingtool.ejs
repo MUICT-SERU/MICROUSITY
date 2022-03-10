@@ -230,7 +230,7 @@
                             '/test_status'
                         ).then(res => res.text())
                             .then(body => {
-                                if (body.localeCompare('UNLOCKED')) { window.location.href = '/result'; }
+                                if (body.localeCompare('UNLOCKED')==0) { window.location.href = '/result'; }
                             })
                     }, 14000);
                 }
