@@ -65,8 +65,8 @@ function handleLog(line) {
   return column;
 }
 const mapping = new Map();
-let bffPort = [8060];
-let excludedPort = [8080];
+let bffPort = [3000];
+let excludedPort = [443];
 file.on("close", () => {
   mapBffToSubrequest();
   let output = [];

@@ -138,6 +138,7 @@ events.on("TESTSTARTED", () => {
 });
 
 app.get("/test_status", (req, res) => {
+  res.set('Content-Type', 'text/plain')
   if (isTesting) {
     res.send("LOCKED");
     return;
@@ -207,6 +208,10 @@ app.post("/register", (req, res) => {
 
 //lesson page
 app.get("/content", (req, res) => {
+  if(req.user === null) {
+    res.redirect('/login');
+    return;
+  }
   res.render("content", {
     user: req.user,
   });
@@ -225,8 +230,15 @@ app.get("/testingtool", (req, res) => {
 
 app.get("/result", (req, res) => {
   // if (notauth(req, res)) return;
+
   let user = getUser(req);
   //fs.readFile('../example/output99.json', 'utf8', (err, data) => {
+
+  if(req.user === null) {
+    res.redirect('/login');
+    return;
+  }  //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
+
 
     fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
@@ -443,7 +455,7 @@ app.get("/pdf", (req, res) => {
 //quiz page
 app.get("/quiz", (req, res) => {
   if (req.user === null) {
-    res.status(403);
+    res.redirect('/login');
     return;
   }
   let user = req.user;
@@ -501,10 +513,17 @@ app.get("/quiz", (req, res) => {
 
 //contact us  page
 app.get("/graph/:id", (req, res) => {
-  // if (notauth(req, res)) return;
+  if (req.user === null) {
+    res.redirect('/login');
+    return;
+  }
   let id = req.params['id']
+
   let user = getUser(req);
   //fs.readFile('../example/output99.json', 'utf8', (err, data) => {
+
+  //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
+
 
   fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
