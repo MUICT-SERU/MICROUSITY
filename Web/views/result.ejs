@@ -606,7 +606,7 @@
                     type: "GET",
                     dataType: 'json',
                     async: false,
-                    url: 'http://localhost:8080/saveDict_json',
+                    url: '/saveDict_json',
                     data: { data: JSON.stringify(parseDict) },
                     success: function () { alert("Success"); },
                     failure: function () { alert("Error"); }
@@ -620,7 +620,7 @@
                     type: "GET",
                     dataType: 'json',
                     async: false,
-                    url: 'http://localhost:8080/saveDyn_json',
+                    url: '/saveDyn_json',
                     data: { data: JSON.stringify(parseDyn) },
                     success: function () { alert("Success"); },
                     failure: function () { alert("Error"); }
