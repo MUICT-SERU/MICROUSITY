@@ -226,7 +226,7 @@ app.get("/testingtool", (req, res) => {
 app.get("/result", (req, res) => {
   // if (notauth(req, res)) return;
   let user = getUser(req);
-  //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
+  //fs.readFile('../example/output99.json', 'utf8', (err, data) => {
 
     fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
@@ -298,37 +298,42 @@ app.get("/result", (req, res) => {
     }
 
     for (let result of resultList) {
-      //for (let id of trackId) {
-      bffLeak = false;
-      coreLeak = false;
-      //if (result.request.subrequest == id.id) {
       if (result.request === null) {
-      } else if (result.request.exception) {
-        bffLeak = true;
-        //console.log(id.id)
 
-      }
-      if (result.subrequest.length == 0) {
-        //console.log(result.subrequest.length)
-        if (bffLeak == true) {
-          bffLeakId.push({ id: result.request.subrequest });
-        }
       } else {
-        for (let subrequest of result.subrequest) {
-          if (subrequest.exception) {
-            coreLeak = true;
-          }
-        }
+ //for (let id of trackId) {
+  bffLeak = false;
+  coreLeak = false;
+  //if (result.request.subrequest == id.id) {
+  if (result.request === null) {
+  } else if (result.request.exception) {
+    bffLeak = true;
+    //console.log(id.id)
+
+  }
+  if (result.subrequest.length == 0) {
+    //console.log(result.subrequest.length)
+    if (bffLeak == true) {
+      bffLeakId.push({ id: result.request.subrequest });
+    }
+  } else {
+    for (let subrequest of result.subrequest) {
+      if (subrequest.exception) {
+        coreLeak = true;
       }
-      if (coreLeak && bffLeak) {
-        bothLeakId.push({ id: result.request.subrequest });
-      } else if (coreLeak && !bffLeak) {
-        coreLeakId.push({ id: result.request.subrequest });
-      } else if (!coreLeak && bffLeak) {
-        bffLeakId.push({ id: result.request.subrequest });
+    }
+  }
+  if (coreLeak && bffLeak) {
+    bothLeakId.push({ id: result.request.subrequest });
+  } else if (coreLeak && !bffLeak) {
+    coreLeakId.push({ id: result.request.subrequest });
+  } else if (!coreLeak && bffLeak) {
+    bffLeakId.push({ id: result.request.subrequest });
+  }
+  //}
+  //}
       }
-      //}
-      //}
+     
     }
 
     res.render("result", {
@@ -499,7 +504,7 @@ app.get("/graph/:id", (req, res) => {
   // if (notauth(req, res)) return;
   let id = req.params['id']
   let user = getUser(req);
-  //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
+  //fs.readFile('../example/output99.json', 'utf8', (err, data) => {
 
   fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
@@ -511,10 +516,13 @@ app.get("/graph/:id", (req, res) => {
     var trackSeq = [];
  
     for (let result of resultList) {
-    
-      if (result.request.subrequest == id) {
-        trackSeq.push(result);
-      } 
+      if (result.request === null) { 
+
+      }else{
+        if (result.request.subrequest == id) {
+          trackSeq.push(result);
+        } 
+      }
     
     }
 
