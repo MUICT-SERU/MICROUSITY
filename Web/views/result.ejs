@@ -269,9 +269,12 @@
 
                             <% for(let result of results){ %>
                                 <% for(let trackId of bothLeakIds){ %>
+                                    <% if(result.request===null){ %>
+                                        <% } else {%> 
+                                            
                                     <% if(result.request.subrequest==trackId.id){ %>
                                        
-                                            <li class="list-group-item list-group-item-action list-group-item-danger" onclick= "window.open('/graph/<%=result.request.subrequest%>')">
+                                        <li class="list-group-item list-group-item-action list-group-item-danger" onclick= "window.open('/graph/<%=result.request.subrequest%>')">
                                             <div class="main">
                                                 <b>
                                                     <span class="name">Request: <%= result.request.method %>
@@ -285,7 +288,7 @@
                                                     <span class="exception">
                                                     <i> Exception: <%= result.request.exception %></i>
                                                     </span>
-                                                    <% } %>
+                                                <% } %>
 
                                             </div>
                                         </li>
@@ -300,7 +303,7 @@
                                                             <% } else {%>
                                                                 Subrequest: <%= subrequest.method %>
                                                                     <%= subrequest.uri %>
-                                                                        <% } %>
+                                                                <% } %>
                                                     </span>
 
                                                     <span class="status">
@@ -326,9 +329,10 @@
 
                                             <% } %>
                                                 <br>
-                                                <% } %>
-                                                    <% } %>
-                                                        <% } %>
+                                    <% } %>
+                                    <% } %>
+                                <% } %>
+                            <% } %>
 
                         </ul>
                     </div>
@@ -359,6 +363,8 @@
 
                             <% for(let result of results){ %>
                                 <% for(let trackId of bffLeakIds){ %>
+                                    <% if(result.request===null){ %>
+                                        <% } else {%> 
                                     <% if(result.request.subrequest==trackId.id){ %>
                                         <li class="list-group-item list-group-item-action list-group-item-danger" onclick= "window.open('/graph/<%=result.request.subrequest%>')">
                                             <div class="main">
@@ -395,6 +401,8 @@
                                                 <% } %>
                                                     <% } %>
                                                         <% } %>
+                                                        <% } %>
+
 
                         </ul>
                     </div>
@@ -425,6 +433,8 @@
 
                             <% for(let result of results){ %>
                                 <% for(let trackId of coreLeakIds){ %>
+                                    <% if(result.request===null){ %>
+                                        <% } else {%> 
                                     <% if(result.request.subrequest==trackId.id){ %>
                                         <li class="list-group-item list-group-item-action list-group-item-danger" onclick= "window.open('/graph/<%=result.request.subrequest%>')">
                                             <div class="main">
@@ -476,6 +486,7 @@
                                                 <% } %>
                                                     <% } %>
                                                         <% } %>
+                                                        <% } %>
 
                         </ul>
                     </div>
@@ -506,6 +517,9 @@
 
                             <% for(let result of results){ %>
                                 <% for(let trackId of trackIds){ %>
+                                    <% if(result.request===null){ %>
+                                        <% } else {%> 
+                                            
                                     <% if(result.request.subrequest==trackId.id){ %>
                                         <li class="list-group-item list-group-item-action list-group-item-danger">
                                             <div class="main">
@@ -572,7 +586,7 @@
                                                 <% } %>
                                                     <% } %>
                                                         <% } %>
-
+                                                        <% } %> 
                         </ul>
                     </div>
                 </div>
