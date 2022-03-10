@@ -232,7 +232,7 @@ app.get("/result", (req, res) => {
   // if (notauth(req, res)) return;
 
   let user = getUser(req);
-  //fs.readFile('../example/output99.json', 'utf8', (err, data) => {
+  fs.readFile('../example/output99.json', 'utf8', (err, data) => {
 
   if(req.user === null) {
     res.redirect('/login');
@@ -240,7 +240,7 @@ app.get("/result", (req, res) => {
   }  //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
 
 
-    fs.readFile("../output/output.json", "utf8", (err, data) => {
+    //fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
     }
@@ -520,12 +520,12 @@ app.get("/graph/:id", (req, res) => {
   let id = req.params['id']
 
   let user = getUser(req);
-  //fs.readFile('../example/output99.json', 'utf8', (err, data) => {
+  fs.readFile('../example/output99.json', 'utf8', (err, data) => {
 
   //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
 
 
-  fs.readFile("../output/output.json", "utf8", (err, data) => {
+  //fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
     }
