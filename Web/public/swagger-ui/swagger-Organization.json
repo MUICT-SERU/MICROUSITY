@@ -1,0 +1,259 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Organization API",
+        "description": "Documentation Organization API v1.0",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8060",
+            "description": "Generated server url"
+        }
+    ],
+    "paths": {
+        "/organization/": {
+            "get": {
+                "tags": [
+                    "organization-controller"
+                ],
+                "operationId": "findAll",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Organization"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "organization-controller"
+                ],
+                "operationId": "add",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Organization"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Organization"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/organization/{id}": {
+            "get": {
+                "tags": [
+                    "organization-controller"
+                ],
+                "operationId": "findById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Organization"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/organization/{id}/with-employees": {
+            "get": {
+                "tags": [
+                    "organization-controller"
+                ],
+                "operationId": "findByIdWithEmployees",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Organization"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/organization/{id}/with-departments": {
+            "get": {
+                "tags": [
+                    "organization-controller"
+                ],
+                "operationId": "findByIdWithDepartments",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Organization"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/organization/{id}/with-departments-and-employees": {
+            "get": {
+                "tags": [
+                    "organization-controller"
+                ],
+                "operationId": "findByIdWithDepartmentsAndEmployees",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Organization"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Department": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "employees": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Employee"
+                        }
+                    }
+                }
+            },
+            "Employee": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "age": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "position": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Organization": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "departments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Department"
+                        }
+                    },
+                    "employees": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Employee"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

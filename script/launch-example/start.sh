@@ -1,6 +1,6 @@
 #! /bin/sh
 cd ../../sample-spring-microservices-new-master
-trap 'kill $(jobs -p)' EXIT SIGINT SIGKILL SIGTERM
+trap 'kill $(jobs -p)' EXIT INT KILL TERM
 cd config-service
 java -jar $(find . -name "*.jar") 1>../../output/java.log &
 sleep 20
