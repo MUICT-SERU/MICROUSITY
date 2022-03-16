@@ -1,4 +1,14 @@
 <html>
+	<style>
+		#cy {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 50 !important;
+    z-index: 999;
+}
+	</style>
 
 <head>
 	<title>graph</title>
@@ -38,9 +48,24 @@
 				nodeList.push( {data: { id: "Client", label: "Client", type: "Src", group: "triangle"}})
 				nodeList.push( {data: { id: "BFF", label: "BFF", type: "Res"}})
 				if(trackSeq.request.exception){
-					edgeList.push( {data: { source: "Client", target: "BFF", uri: trackSeq.request.uri, status: trackSeq.request.status_code, exception: trackSeq.request.exception, label: trackSeq.request.method  + " " + trackSeq.request.uri, color: "red"}})
+					edgeList.push( {data: { 
+						source: "Client", 
+						target: "BFF", 
+						uri: trackSeq.request.uri, 
+						status: trackSeq.request.status_code, 
+						exception: trackSeq.request.exception,
+						post_body: trackSeq.request.post_body,  
+						label: trackSeq.request.method  + " " + trackSeq.request.uri, 
+						color: "red"}})
 				} else {
-					edgeList.push( {data: { source: "Client", target: "BFF", uri: trackSeq.request.uri, status: trackSeq.request.status_code, exception: "No Exception", label: trackSeq.request.method + " " + trackSeq.request.uri}})
+					edgeList.push( {data: { 
+						source: "Client", 
+						target: "BFF", 
+						uri: trackSeq.request.uri, 
+						status: trackSeq.request.status_code, 
+						exception: "No Exception",
+						post_body: trackSeq.request.post_body, 
+						label: trackSeq.request.method + " " + trackSeq.request.uri}})
 				}
 				
 				//edgeList.push( {data: { source: "BFF", target: "Client", uri: trackSeq.request.status_code}})
@@ -48,9 +73,22 @@
 					//nodeList.push( {data: { id: subrequest["id.orig_p"], type: "Src"}})
 					nodeList.push( {data: { id: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], label: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"],type: "Res"}})
 					if(subrequest.exception){
-						edgeList.push( {data: { source: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], target: "BFF", uri: subrequest.uri, status: subrequest.status_code, exception: subrequest.exception, label: subrequest.method + " " + subrequest.uri, color: "red"}})
+						edgeList.push( {data: { 
+							source: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], 
+							target: "BFF", uri: subrequest.uri, 
+							status: subrequest.status_code, 
+							exception: subrequest.exception,
+							post_body: subrequest.post_body,  
+							label: subrequest.method + " " + subrequest.uri, 
+							color: "red"}})
 					} else {
-						edgeList.push( {data: { source: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], target: "BFF", uri: subrequest.uri, status: subrequest.status_code, exception: "No Exception", label: subrequest.method + " " +subrequest.uri}})
+						edgeList.push( {data: { 
+							source: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], 
+							target: "BFF", uri: subrequest.uri, 
+							status: subrequest.status_code, 
+							exception: "No Exception",
+							post_body: subrequest.post_body,   
+							label: subrequest.method + " " +subrequest.uri}})
 					}
 					//edgeList.push( {data: { source: "BFF", target: subrequest["id.resp_p"], uri: subrequest.status_code}})
 				}
@@ -122,7 +160,7 @@
 			//cy.on('mouseover', 'edge', function(event){
 					//console.log("test");
 					cy.elements('edge').qtip({
-					content: function(){ return 'Status Code: ' + this.attr('status') + '<br> Exception: ' + this.attr('exception')},
+					content: function(){ return '<b>Status Code:</b> ' + this.attr('status') + '<br> <b>Exception:</b> ' + this.attr('exception') + '<br> <b>Response body:</b> '+ this.attr('post_body')},
 					position: {
 						my: 'top center',
 						at: 'bottom center'
@@ -130,8 +168,8 @@
 					style: {
 						classes: 'qtip-bootstrap',
 						tip: {
-							width: 16,
-							height: 8
+							width: 18,
+							height: 10
 						}
 					}
 				});
@@ -146,6 +184,10 @@
 
 <body>
 	<h1>Graph Visualization</h1>
+	<div>
+		<a href="/result" class="mb-4">&lt;Go Back</a>
+	</div>
+	
 	<div id="cy"></div>
 	<!-- Load application code at the end to ensure DOM is loaded -->
 	<!-- <script type="module" src="/js/index.js">
