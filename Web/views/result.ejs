@@ -273,8 +273,13 @@
                                         <% } else {%> 
                                             
                                     <% if(result.request.subrequest==trackId.id){ %>
-                                       
-                                        <li class="list-group-item list-group-item-action list-group-item-danger" onclick= "window.open('/graph/<%=result.request.subrequest%>')">
+                                        <% if(resultid === null){ %>
+                                                <li class="list-group-item list-group-item-action list-group-item-danger" onclick= "window.open('/graph/<%=result.request.subrequest%>')">
+                                            <% } else {%> 
+                                                <li class="list-group-item list-group-item-action list-group-item-danger" onclick= "window.open('/graph2/<%=result.request.subrequest%>/<%=resultid%>')">
+                                                <% } %> 
+                                    
+                                        
                                             <div class="main">
                                                 <b>
                                                     <span class="name">Request: <%= result.request.method %>
@@ -366,7 +371,11 @@
                                     <% if(result.request===null){ %>
                                         <% } else {%> 
                                     <% if(result.request.subrequest==trackId.id){ %>
-                                        <li class="list-group-item list-group-item-action list-group-item-danger" onclick= "window.open('/graph/<%=result.request.subrequest%>')">
+                                        <% if(resultid === null){ %>
+                                            <li class="list-group-item list-group-item-action list-group-item-danger" onclick= "window.open('/graph/<%=result.request.subrequest%>')">
+                                        <% } else {%> 
+                                            <li class="list-group-item list-group-item-action list-group-item-danger" onclick= "window.open('/graph2/<%=result.request.subrequest%>/<%=resultid%>')">
+                                            <% } %> 
                                             <div class="main">
                                                 <b>
                                                     <span class="name">Request: <%= result.request.method %>
@@ -436,7 +445,11 @@
                                     <% if(result.request===null){ %>
                                         <% } else {%> 
                                     <% if(result.request.subrequest==trackId.id){ %>
-                                        <li class="list-group-item list-group-item-action list-group-item-danger" onclick= "window.open('/graph/<%=result.request.subrequest%>')">
+                                        <% if(resultid === null){ %>
+                                            <li class="list-group-item list-group-item-action list-group-item-danger" onclick= "window.open('/graph/<%=result.request.subrequest%>')">
+                                        <% } else {%> 
+                                            <li class="list-group-item list-group-item-action list-group-item-danger" onclick= "window.open('/graph2/<%=result.request.subrequest%>/<%=resultid%>')">
+                                            <% } %> 
                                             <div class="main">
 
                                                 <span class="name">Request: <%= result.request.method %>
