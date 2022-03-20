@@ -40,7 +40,7 @@ app.use(
   })
 );
 
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 const path = require("path");
 const uri =
   "mongodb+srv://micro1:micro1@cluster0.u4edv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
@@ -50,6 +50,7 @@ const client = new MongoClient(uri, {
 });
 const db = client.db("userDB");
 const collection = db.collection("user");
+const resultCollection = db.collection("testResult");
 client.connect((err) => {
   if (err) console.error(err);
   else console.log("Connected successfully to server");
@@ -228,6 +229,191 @@ app.get("/testingtool", (req, res) => {
   });
 });
 
+//save result history
+app.get("/save", (req, res) => {
+  if (req.user === null) {
+    res.redirect("/login");
+    return;
+  }
+  let user = req.user;
+  fs.readFile('../example/output99.json', 'utf8', (err, data) => {
+  //fs.readFile("../output/output.json", "utf8", (err, data) => {
+    if (err) {
+      return console.log("File read failed:", err);
+    }
+    var resultList = JSON.parse(data);
+    var myobj = {
+      email: user.email,
+      result: resultList,
+    };
+    collection.find({ email: user.email }).toArray(function (err, users) {
+      resultCollection.insertOne(myobj, function (err) {
+          if (err) throw err;
+          console.log("1 result inserted");
+          res.redirect("/home");
+        });
+      
+    });
+
+  });
+
+});
+
+//save result history
+app.get("/history", (req, res) => {
+  if (req.user === null) {
+    res.redirect("/login");
+    return;
+  }
+  let user = req.user;
+
+  resultCollection.find({ email: user.email }).toArray(function (err, data) {
+    res.render("history", {
+      data: data
+    });
+  });
+
+});
+
+//result testing tool
+app.get("/resulthis/:id", (req, res) => {
+
+  if(req.user === null) {
+    res.redirect('/login');
+    return;
+  }  
+
+  let id = req.params['id']
+  resultCollection.findOne({"_id": new ObjectId(id)}, function(err, data) {
+    var resultList = data.result;
+    var main5xx = 0;
+    var main4xx = 0;
+    var main3xx = 0;
+    var main2xx = 0;
+    var sub5xx = 0;
+    var sub4xx = 0;
+    var sub3xx = 0;
+    var sub2xx = 0;
+    var countReq = 0;
+
+    var bffLeak = false;
+    var coreLeak = false;
+
+    var trackId = [];
+    var bffLeakId = [];
+    var coreLeakId = [];
+    var bothLeakId = [];
+
+    for (let result of resultList) {
+      if (result.request === null) {
+      } else if (
+        result.request.status_code >= 200 &&
+        result.request.status_code < 300
+      ) {
+        main2xx += 1;
+      } else if (
+        result.request.status_code >= 300 &&
+        result.request.status_code < 400
+      ) {
+        main3xx += 1;
+      } else if (
+        result.request.status_code >= 400 &&
+        result.request.status_code < 500
+      ) {
+        main4xx += 1;
+      } else if (
+        result.request.status_code >= 500 &&
+        result.request.status_code < 600
+      ) {
+        main5xx += 1;
+        trackId.push({ id: result.request.subrequest });
+      }
+      for (let subrequest of result.subrequest) {
+        if (subrequest.status_code >= 200 && subrequest.status_code < 300) {
+          sub2xx += 1;
+        }
+        if (subrequest.status_code >= 300 && subrequest.status_code < 400) {
+          sub3xx += 1;
+        }
+        if (subrequest.status_code >= 400 && subrequest.status_code < 500) {
+          sub4xx += 1;
+        } else if (
+          subrequest.status_code >= 500 &&
+          subrequest.status_code < 600
+        ) {
+          sub5xx += 1;
+          //if (result.request.status_code < 500 || result.request.status_code >= 600) {
+          trackId.push({ id: result.request.subrequest });
+          //}
+        }
+      }
+      countReq++;
+    }
+
+    for (let result of resultList) {
+      if (result.request === null) {
+
+      } else {
+ //for (let id of trackId) {
+  bffLeak = false;
+  coreLeak = false;
+  //if (result.request.subrequest == id.id) {
+  if (result.request === null) {
+  } else if (result.request.exception) {
+    bffLeak = true;
+    //console.log(id.id)
+
+  }
+  if (result.subrequest.length == 0) {
+    //console.log(result.subrequest.length)
+    if (bffLeak == true) {
+      bffLeakId.push({ id: result.request.subrequest });
+    }
+  } else {
+    for (let subrequest of result.subrequest) {
+      if (subrequest.exception) {
+        coreLeak = true;
+      }
+    }
+  }
+  if (coreLeak && bffLeak) {
+    bothLeakId.push({ id: result.request.subrequest });
+  } else if (coreLeak && !bffLeak) {
+    coreLeakId.push({ id: result.request.subrequest });
+  } else if (!coreLeak && bffLeak) {
+    bffLeakId.push({ id: result.request.subrequest });
+  }
+  //}
+  //}
+      }
+     
+    }
+
+    res.render("result2", {
+      results: resultList,
+      main4xxs: main4xx,
+      main5xxs: main5xx,
+      sub4xxs: sub4xx,
+      sub5xxs: sub5xx,
+      sum3xxs: main3xx + sub3xx,
+      sum2xxs: main2xx + sub2xx,
+      countReqs: countReq,
+      trackIds: removeDupId(trackId),
+      coreLeakIds: removeDupId(coreLeakId),
+      bffLeakIds: removeDupId(bffLeakId),
+      bothLeakIds: removeDupId(bothLeakId),
+      user: req.user,
+      resultid: id
+    });
+    console.log(removeDupId(coreLeakId));
+    console.log(removeDupId(bffLeakId));
+    console.log(removeDupId(bothLeakId));
+ 
+ });
+
+});
+
+//result sandbox
 app.get("/result", (req, res) => {
   // if (notauth(req, res)) return;
 
@@ -237,9 +423,8 @@ app.get("/result", (req, res) => {
   if(req.user === null) {
     res.redirect('/login');
     return;
-  }  //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
-
-
+  }  
+  //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
     fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
@@ -510,8 +695,51 @@ app.get("/quiz", (req, res) => {
 });
 
 
+//testingtool graph
+app.get("/graph2/:id/:resultid", (req, res) => {
+  if (req.user === null) {
+    res.redirect('/login');
+    return;
+  }
+  let id = req.params['id']
+  let resultId = req.params['resultid']
 
-//contact us  page
+
+  //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
+
+  resultCollection.findOne({"_id": new ObjectId(resultId)}, function(err, data) {
+  //fs.readFile("../output/output.json", "utf8", (err, data) => {
+    if (err) {
+      return console.log("File read failed:", err);
+    }
+    
+    var resultList = data.result;
+    //console.log(resultList);
+    var trackSeq = [];
+ 
+    for (let result of resultList) {
+      if (result.request === null) { 
+
+      }else{
+        if (result.request.subrequest == id) {
+          trackSeq.push(result);
+        } 
+      }
+    
+    }
+
+    res.render("graph", {
+      results: resultList,
+      trackSeqs: trackSeq,
+      user: req.user,
+    });
+    console.log(trackSeq);
+   
+  });
+});
+
+
+//sandbox graph
 app.get("/graph/:id", (req, res) => {
   if (req.user === null) {
     res.redirect('/login');
