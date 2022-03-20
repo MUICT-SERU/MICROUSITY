@@ -445,8 +445,8 @@ app.get("/result", (req, res) => {
     res.redirect('/login');
     return;
   }  
-  fs.readFile('../example/output5.json', 'utf8', (err, data) => {
-    //fs.readFile("../output/output.json", "utf8", (err, data) => {
+  //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
+    fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
     }
@@ -669,10 +669,10 @@ app.get("/graph/:id", (req, res) => {
 
   let user = getUser(req);
 
-  fs.readFile('../example/output5.json', 'utf8', (err, data) => {
+  //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
 
 
-  //fs.readFile("../output/output.json", "utf8", (err, data) => {
+  fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
     }
