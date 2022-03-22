@@ -10,6 +10,7 @@ const { Worker } = require("worker_threads");
 const https = require('https');
 const cytoscape = require('cytoscape');
 const dagre = require('cytoscape-dagre');
+const moment = require("moment");
 //const
 const SESSION_AUTH_USER = "session-auth-user";
 let key,cert;
@@ -355,6 +356,7 @@ app.get("/testingtool", (req, res) => {
   });
 });
 
+
 //save result history
 app.get("/save", (req, res) => {
   if (req.user === null) {
@@ -370,6 +372,7 @@ app.get("/save", (req, res) => {
     var resultList = JSON.parse(data);
     var myobj = {
       email: user.email,
+      time: moment().format('D MMMM YYYY, h:mm:ss a'),
       result: resultList,
     };
     collection.find({ email: user.email }).toArray(function (err, users) {
@@ -510,7 +513,7 @@ app.get("/pdf", (req, res) => {
   let fname = user.fname;
   let lname = user.lname;
   // Import dependencies
-  const moment = require("moment");
+  //const moment = require("moment");
   const PDFDocument = require("pdfkit");
 
   collection.updateOne(
@@ -571,7 +574,7 @@ app.get("/quiz", (req, res) => {
     .toArray(function (err, users) {
       if (err || users.length !== 0) {
         const fs = require("fs");
-        const moment = require("moment");
+        //const moment = require("moment");
         const PDFDocument = require("pdfkit");
         // Create the PDF document
         const doc = new PDFDocument({
