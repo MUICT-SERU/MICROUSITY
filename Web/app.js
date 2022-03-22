@@ -628,11 +628,7 @@ app.get("/graph2/:id/:resultid", (req, res) => {
   let id = req.params['id']
   let resultId = req.params['resultid']
 
-
-  //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
-
   resultCollection.findOne({"_id": new ObjectId(resultId)}, function(err, data) {
-  //fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
     }
@@ -656,8 +652,8 @@ app.get("/graph2/:id/:resultid", (req, res) => {
       results: resultList,
       trackSeqs: trackSeq,
       user: req.user,
+      resultId: resultId
     });
-    console.log(trackSeq);
    
   });
 });
@@ -674,7 +670,6 @@ app.get("/graph/:id", (req, res) => {
   let user = getUser(req);
 
   //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
-
 
   fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
@@ -700,6 +695,7 @@ app.get("/graph/:id", (req, res) => {
       results: resultList,
       trackSeqs: trackSeq,
       user: req.user,
+      resultId: null
     });
     console.log(trackSeq);
    

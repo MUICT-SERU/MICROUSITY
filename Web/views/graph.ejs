@@ -184,9 +184,15 @@
 
 <body>
 	<h1>Graph Visualization</h1>
+	<% if(resultId === null){ %>
 	<div>
 		<a href="/result" class="mb-4">&lt;Go Back</a>
 	</div>
+	<% } else {%> 
+		<div>
+			<a href="/resulthis/<%= resultId%>" class="mb-4">&lt;Go Back</a>
+		</div>
+		<% } %> 
 	
 	<div id="cy"></div>
 	<!-- Load application code at the end to ensure DOM is loaded -->
