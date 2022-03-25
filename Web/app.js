@@ -520,7 +520,7 @@ app.get("/pdf", (req, res) => {
   collection.updateOne(
     { email: user.email },
     {
-      $set: { pass: "TRUE" },
+      $set: { pass: "TRUE", date: moment().format("MMMM Do YYYY")},
     },
     function (err) {
       if (err) throw err;
@@ -585,7 +585,8 @@ app.get("/quiz", (req, res) => {
 
         // The name
         const name = fname + " " + lname;
-
+        const date = users[0].date;
+        
         // Pipe the PDF into an name.pdf file
         doc.pipe(fs.createWriteStream(`public/certificate/certificate.pdf`));
 
@@ -598,7 +599,7 @@ app.get("/quiz", (req, res) => {
         });
 
         // Draw the date
-        doc.fontSize(15).text(moment().format("MMMM Do YYYY"), 175, 420, {
+        doc.fontSize(15).text(date, 175, 420, {
           align: "center",
         });
 
