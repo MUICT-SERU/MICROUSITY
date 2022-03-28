@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="This is the thesis project">
+    <meta name="author" content="Chansida Makaranond">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet">
+
+    <title>Testing tool</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--TemplateMo 570 Chain App Dev https://templatemo.com/tm-570-chain-app-dev-->
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/templatemo-chain-app-dev.css">
+    <link rel="stylesheet" href="/css/animated.css">
+    <link rel="stylesheet" href="/css/owl.css">
+
+</head>
+
+<body>
+
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <div class="container">
+
+        <!-- ***** Header Area Start ***** -->
+        <header class="header-area header-sticky wow slideInDown" data-wow-duration="0.75s" data-wow-delay="0s">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <nav class="main-nav">
+                            <!-- ***** Logo Start ***** -->
+                            <a href="/home" class="logo">
+                                <img src="/Pic/mylogo.png" alt="Microusity" class="logopic">
+                            </a>
+
+
+                            <!-- ***** Logo End ***** -->
+                            <!-- ***** Menu Start ***** -->
+                            <ul class="nav">
+                                <li class="scroll-to-section"><a href="/home">Home</a></li>
+                                <li class="scroll-to-section"><a href="/content">Content</a></li>
+                                <li class="scroll-to-section"><a href="/quiz">Quiz</a></li>
+                                <li class="scroll-to-section"><a href="/testingtool" class="active">Testing tool</a>
+                                </li>
+                                <li class="scroll-to-section"><a href="/aboutus">About us</a></li>
+                                <li>
+                                    <div class="gradient-button"><a id="modal_trigger" href="/logout"> Log Out</a></div>
+                                </li>
+                            </ul>
+                            <a class='menu-trigger'>
+                                <span>Menu</span>
+                            </a>
+                            <!-- ***** Menu End ***** -->
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- ***** Header Area End ***** -->
+
+        <br><br><br><br><br><br><br>
+
+        <div class="row">
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label" for="grammar"><h5>grammar.py</h5></label>
+                    <input class="form-control" type="file" name="grammar" id="grammar" accept=".py" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="dict"><h5>dict.json</h5></label>
+                    <input class="form-control" type="file" name="dict"  id="dict" accept=".json" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="userSetting"><h5>restler_user_settings.json</h5></label>
+                    <input class="form-control" type="file" name="userSetting" id="userSetting" accept=".json" required>
+                </div>
+                <button type="submit" id="btn-dictSubmit" alt="Submit" class="btn btn-secondary pull-right">Submit</button>
+                
+            </form>
+            
+        </div>
+        
+        <div class="row">
+            
+            <div>
+                <p id="status"></p>
+            </div>
+            
+            <script>
+                function launch() {
+                    btnDictSubmit.prop("disabled", true);
+                    let ref = document.getElementById('status');
+                    ref.style.display = 'none';
+                    fetch(
+                        "/launch",
+                        {
+                            method: 'POST',
+                        }
+                    ).then(res => {
+                        if (!res.ok) {
+                            ref.innerText = "Can't start the test";
+                            ref.style.display = 'flex';
+                        }
+                        else {
+                            poll();
+                        }
+                    })
+                }
+                function poll() {
+                    setInterval(async () => {
+                        await fetch(
+                            '/test_status'
+                        ).then(res => res.text())
+                            .then(body => {
+                                if (body.localeCompare('UNLOCKED')==0) { window.location.href = '/result'; }
+                            })
+                    }, 14000);
+                }
+            </script>
+
+        </div>
+
+</body>
+
+
+
+</html>

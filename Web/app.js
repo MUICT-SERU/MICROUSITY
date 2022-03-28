@@ -11,6 +11,7 @@ const https = require('https');
 const cytoscape = require('cytoscape');
 const dagre = require('cytoscape-dagre');
 const moment = require("moment");
+const formidable = require('formidable');
 //const
 const SESSION_AUTH_USER = "session-auth-user";
 let key,cert;
@@ -345,7 +346,7 @@ app.get("/content", (req, res) => {
   });
 });
 
-//testing tool page
+//sandbox page
 app.get("/testingtool", (req, res) => {
   if (req.user === null) {
     res.redirect("/login");
@@ -356,6 +357,52 @@ app.get("/testingtool", (req, res) => {
   });
 });
 
+//sandbox page
+app.get("/testingtool2", (req, res) => {
+  // if (req.user === null) {
+  //   res.redirect("/login");
+  //   return;
+  // }
+  res.render("testingtool2", {
+    user: req.user,
+  });
+});
+
+//testing tool page
+app.post("/upload", (req, res) => {
+  // if (req.user === null) {
+  //   res.redirect("/login");
+  //   return;
+  // }
+  var form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files) {
+      var outputPath = '../outtest/';
+      var oldGrammarPath = files.grammar.filepath;
+      var oldDictPath = files.dict.filepath;
+      var oldUserSettingPath = files.userSetting.filepath;
+      var newGrammarPath = outputPath + 'grammar.py';
+      var newDictPath = outputPath + 'dict.json';
+      var newUserSettingPath = outputPath + 'restler_user_settings.json';
+      fs.rename(oldGrammarPath, newGrammarPath, function (err) {
+        if (err) throw err;
+      });
+      fs.rename(oldDictPath, newDictPath, function (err) {
+        if (err) throw err;
+      });
+      fs.rename(oldUserSettingPath, newUserSettingPath, function (err) {
+        if (err) throw err;
+      });
+      if (err) {
+        throw err;
+      } else {
+        res.write('File uploaded and moved!');
+      res.end();
+      }
+      
+      
+ });
+  
+});
 
 
 //save result history
@@ -389,7 +436,7 @@ app.get("/save", (req, res) => {
 
 });
 
-//save result history
+//result history
 app.get("/history", (req, res) => {
   if (req.user === null) {
     res.redirect("/login");
