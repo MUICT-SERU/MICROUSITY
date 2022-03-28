@@ -4,7 +4,6 @@ const express = require("express");
 const app = express();
 const fs = require("fs");
 const session = require("express-session");
-const md5 = require("md5");
 const bcrypt = require("bcrypt");
 const EventEmitter = require("events");
 const { Worker } = require("worker_threads");
@@ -16,7 +15,6 @@ const formidable = require('formidable');
 const PDFDocument = require("pdfkit");
 //const
 const SESSION_AUTH_USER = "session-auth-user";
-const salt = bcrypt.genSalt(10);
 let key, cert;
 try {
   key = fs.readFileSync(process.env.KEY);
