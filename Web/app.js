@@ -243,17 +243,7 @@ app.use(function isAuth(req, res, next) {
   req.user = getUser(req);
   next();
 });
-//Function when we know that the user is not login yet
-// function notauth(req, res) {
-//   if (!isLogin(req)) {
-//     let query = qureystring.stringify({
-//       fromUrl: req.originalUrl,
-//     })
-//     res.redirect('/login')
-//     return true
-//   }
-//   return false
-// }
+
 
 //main home page
 app.get("/", (req, res) => {
@@ -514,7 +504,6 @@ app.get("/resulthis/:id", (req, res) => {
 
 //result sandbox
 app.get("/result", (req, res) => {
-  // if (notauth(req, res)) return;
 
   if (req.user === null) {
     res.redirect('/login');
