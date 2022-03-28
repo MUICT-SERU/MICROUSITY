@@ -15,7 +15,7 @@ const formidable = require('formidable');
 const PDFDocument = require("pdfkit");
 //const
 const SESSION_AUTH_USER = "session-auth-user";
-let key,cert;
+let key, cert;
 try {
   key = fs.readFileSync(process.env.KEY);
   cert = fs.readFileSync(process.env.CERT);
@@ -86,14 +86,15 @@ function removeDupId(arr) {
   ));
 }
 
-function getCertificate(name, date){
-   // Create the PDF document
-   const doc = new PDFDocument({
+//get certificate function
+function getCertificate(name, date) {
+  // Create the PDF document
+  const doc = new PDFDocument({
     layout: "landscape",
     size: "A4",
   });
-  
-  // Pipe the PDF into an name.pdf file
+
+  // Pipe the PDF into an certificate.pdf file
   doc.pipe(fs.createWriteStream(`public/certificate/certificate.pdf`));
 
   // Draw the certificate image
@@ -116,127 +117,124 @@ function getCertificate(name, date){
 
 //result render
 function getResult(data, fromFile) {
-  if(fromFile == true){
+  if (fromFile == true) {
     var resultList = JSON.parse(data);
   } else {
     var resultList = data.result;
   }
-    var main5xx = 0;
-    var main4xx = 0;
-    var main3xx = 0;
-    var main2xx = 0;
-    var sub5xx = 0;
-    var sub4xx = 0;
-    var sub3xx = 0;
-    var sub2xx = 0;
-    var countReq = 0;
+  var main5xx = 0;
+  var main4xx = 0;
+  var main3xx = 0;
+  var main2xx = 0;
+  var sub5xx = 0;
+  var sub4xx = 0;
+  var sub3xx = 0;
+  var sub2xx = 0;
+  var countReq = 0;
 
-    var bffLeak = false;
-    var coreLeak = false;
+  var bffLeak = false;
+  var coreLeak = false;
 
-    var trackId = [];
-    var bffLeakId = [];
-    var coreLeakId = [];
-    var bothLeakId = [];
+  var trackId = [];
+  var bffLeakId = [];
+  var coreLeakId = [];
+  var bothLeakId = [];
 
-    for (let result of resultList) {
-      if (result.request === null) {
-      } else if (
-        result.request.status_code >= 200 &&
-        result.request.status_code < 300
-      ) {
-        main2xx += 1;
-      } else if (
-        result.request.status_code >= 300 &&
-        result.request.status_code < 400
-      ) {
-        main3xx += 1;
-      } else if (
-        result.request.status_code >= 400 &&
-        result.request.status_code < 500
-      ) {
-        main4xx += 1;
-      } else if (
-        result.request.status_code >= 500 &&
-        result.request.status_code < 600
-      ) {
-        main5xx += 1;
-        trackId.push({ id: result.request.subrequest });
-      }
-      for (let subrequest of result.subrequest) {
-        if (subrequest.status_code >= 200 && subrequest.status_code < 300) {
-          sub2xx += 1;
-        }
-        if (subrequest.status_code >= 300 && subrequest.status_code < 400) {
-          sub3xx += 1;
-        }
-        if (subrequest.status_code >= 400 && subrequest.status_code < 500) {
-          sub4xx += 1;
-        } else if (
-          subrequest.status_code >= 500 &&
-          subrequest.status_code < 600
-        ) {
-          sub5xx += 1;
-          //if (result.request.status_code < 500 || result.request.status_code >= 600) {
-          trackId.push({ id: result.request.subrequest });
-          //}
-        }
-      }
-      countReq++;
+  for (let result of resultList) {
+    if (result.request === null) {
+    } else if (
+      result.request.status_code >= 200 &&
+      result.request.status_code < 300
+    ) {
+      main2xx += 1;
+    } else if (
+      result.request.status_code >= 300 &&
+      result.request.status_code < 400
+    ) {
+      main3xx += 1;
+    } else if (
+      result.request.status_code >= 400 &&
+      result.request.status_code < 500
+    ) {
+      main4xx += 1;
+    } else if (
+      result.request.status_code >= 500 &&
+      result.request.status_code < 600
+    ) {
+      main5xx += 1;
+      trackId.push({ id: result.request.subrequest });
     }
-
-    for (let result of resultList) {
-      if (result.request === null) {
-
-      } else {
- //for (let id of trackId) {
-  bffLeak = false;
-  coreLeak = false;
-  //if (result.request.subrequest == id.id) {
-  if (result.request === null) {
-  } else if (result.request.exception) {
-    bffLeak = true;
-    //console.log(id.id)
-
-  }
-  if (result.subrequest.length == 0) {
-    //console.log(result.subrequest.length)
-    if (bffLeak == true) {
-      bffLeakId.push({ id: result.request.subrequest });
-    }
-  } else {
     for (let subrequest of result.subrequest) {
-      if (subrequest.exception) {
-        coreLeak = true;
+      if (subrequest.status_code >= 200 && subrequest.status_code < 300) {
+        sub2xx += 1;
+      }
+      if (subrequest.status_code >= 300 && subrequest.status_code < 400) {
+        sub3xx += 1;
+      }
+      if (subrequest.status_code >= 400 && subrequest.status_code < 500) {
+        sub4xx += 1;
+      } else if (
+        subrequest.status_code >= 500 && subrequest.status_code < 600) {
+        sub5xx += 1;
+        //if (result.request.status_code < 500 || result.request.status_code >= 600) {
+        trackId.push({ id: result.request.subrequest });
+        //}
       }
     }
+    countReq++;
   }
-  if (coreLeak && bffLeak) {
-    bothLeakId.push({ id: result.request.subrequest });
-  } else if (coreLeak && !bffLeak) {
-    coreLeakId.push({ id: result.request.subrequest });
-  } else if (!coreLeak && bffLeak) {
-    bffLeakId.push({ id: result.request.subrequest });
-  }
-  //}
-  //}
+
+  for (let result of resultList) {
+    if (result.request === null) {
+    } else {
+      //for (let id of trackId) {
+      bffLeak = false;
+      coreLeak = false;
+      //if (result.request.subrequest == id.id) {
+      if (result.request === null) {
+      } else if (result.request.exception) {
+        bffLeak = true;
+        //console.log(id.id)
+
       }
-     
+      if (result.subrequest.length == 0) {
+        //console.log(result.subrequest.length)
+        if (bffLeak == true) {
+          bffLeakId.push({ id: result.request.subrequest });
+        }
+      } else {
+        for (let subrequest of result.subrequest) {
+          if (subrequest.exception) {
+            coreLeak = true;
+          }
+        }
+      }
+      if (coreLeak && bffLeak) {
+        bothLeakId.push({ id: result.request.subrequest });
+      } else if (coreLeak && !bffLeak) {
+        coreLeakId.push({ id: result.request.subrequest });
+      } else if (!coreLeak && bffLeak) {
+        bffLeakId.push({ id: result.request.subrequest });
+      }
+      //}
+      //}
     }
-    return {
-      results: resultList,
-      main4xxs: main4xx,
-      main5xxs: main5xx,
-      sub4xxs: sub4xx,
-      sub5xxs: sub5xx,
-      sum3xxs: main3xx + sub3xx,
-      sum2xxs: main2xx + sub2xx,
-      countReqs: countReq,
-      trackIds: removeDupId(trackId),
-      coreLeakIds: removeDupId(coreLeakId),
-      bffLeakIds: removeDupId(bffLeakId),
-      bothLeakIds: removeDupId(bothLeakId),
-    }
+
+  }
+  return {
+    results: resultList,
+    main4xxs: main4xx,
+    main5xxs: main5xx,
+    sub4xxs: sub4xx,
+    sub5xxs: sub5xx,
+    sum3xxs: main3xx + sub3xx,
+    sum2xxs: main2xx + sub2xx,
+    countReqs: countReq,
+    trackIds: removeDupId(trackId),
+    coreLeakIds: removeDupId(coreLeakId),
+    bffLeakIds: removeDupId(bffLeakId),
+    bothLeakIds: removeDupId(bothLeakId),
+  }
 
 }
 
@@ -367,7 +365,7 @@ app.post("/register", (req, res) => {
 
 //lesson page
 app.get("/content", (req, res) => {
-  if(req.user === null) {
+  if (req.user === null) {
     res.redirect('/login');
     return;
   }
@@ -401,33 +399,33 @@ app.get("/testingtool2", (req, res) => {
 //testing tool page
 app.post("/upload", (req, res) => {
   var form = new formidable.IncomingForm();
-    form.parse(req, function (err, fields, files) {
-      var outputPath = '../outtest/';
-      var oldGrammarPath = files.grammar.filepath;
-      var oldDictPath = files.dict.filepath;
-      var oldUserSettingPath = files.userSetting.filepath;
-      var newGrammarPath = outputPath + 'grammar.py';
-      var newDictPath = outputPath + 'dict.json';
-      var newUserSettingPath = outputPath + 'restler_user_settings.json';
-      fs.rename(oldGrammarPath, newGrammarPath, function (err) {
-        if (err) throw err;
-      });
-      fs.rename(oldDictPath, newDictPath, function (err) {
-        if (err) throw err;
-      });
-      fs.rename(oldUserSettingPath, newUserSettingPath, function (err) {
-        if (err) throw err;
-      });
-      if (err) {
-        throw err;
-      } else {
-        console.log('File uploaded and moved!');
-        res.sendStatus(200);
-      }
-      
-      
- });
-  
+  form.parse(req, function (err, fields, files) {
+    var outputPath = '../outtest/';
+    var oldGrammarPath = files.grammar.filepath;
+    var oldDictPath = files.dict.filepath;
+    var oldUserSettingPath = files.userSetting.filepath;
+    var newGrammarPath = outputPath + 'grammar.py';
+    var newDictPath = outputPath + 'dict.json';
+    var newUserSettingPath = outputPath + 'restler_user_settings.json';
+    fs.rename(oldGrammarPath, newGrammarPath, function (err) {
+      if (err) throw err;
+    });
+    fs.rename(oldDictPath, newDictPath, function (err) {
+      if (err) throw err;
+    });
+    fs.rename(oldUserSettingPath, newUserSettingPath, function (err) {
+      if (err) throw err;
+    });
+    if (err) {
+      throw err;
+    } else {
+      console.log('File uploaded and moved!');
+      res.sendStatus(200);
+    }
+
+
+  });
+
 });
 
 
@@ -439,7 +437,7 @@ app.get("/save", (req, res) => {
   }
   let user = req.user;
   fs.readFile('../example/output99.json', 'utf8', (err, data) => {
-  //fs.readFile("../output/output.json", "utf8", (err, data) => {
+    //fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
     }
@@ -451,11 +449,11 @@ app.get("/save", (req, res) => {
     };
     collection.find({ email: user.email }).toArray(function (err, users) {
       resultCollection.insertOne(myobj, function (err) {
-          if (err) throw err;
-          console.log("1 result inserted");
-          res.redirect("/home");
-        });
-      
+        if (err) throw err;
+        console.log("1 result inserted");
+        res.redirect("/home");
+      });
+
     });
 
   });
@@ -481,14 +479,14 @@ app.get("/history", (req, res) => {
 //result testing tool
 app.get("/resulthis/:id", (req, res) => {
 
-  if(req.user === null) {
+  if (req.user === null) {
     res.redirect('/login');
     return;
-  }  
+  }
 
   let id = req.params['id']
-  resultCollection.findOne({"_id": new ObjectId(id)}, function(err, data) {
-    let result = getResult(data,false);
+  resultCollection.findOne({ "_id": new ObjectId(id) }, function (err, data) {
+    let result = getResult(data, false);
 
     res.render("result", {
       results: result.results,
@@ -509,8 +507,8 @@ app.get("/resulthis/:id", (req, res) => {
     // console.log(removeDupId(coreLeakId));
     // console.log(removeDupId(bffLeakId));
     // console.log(removeDupId(bothLeakId));
- 
- });
+
+  });
 
 });
 
@@ -518,17 +516,17 @@ app.get("/resulthis/:id", (req, res) => {
 app.get("/result", (req, res) => {
   // if (notauth(req, res)) return;
 
-  if(req.user === null) {
+  if (req.user === null) {
     res.redirect('/login');
     return;
-  }  
+  }
   //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
-    fs.readFile("../output/output.json", "utf8", (err, data) => {
+  fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
     }
-    
-    let result = getResult(data,true);
+
+    let result = getResult(data, true);
     res.render("result", {
       results: result.results,
       main4xxs: result.main4xxs,
@@ -586,23 +584,23 @@ app.get("/pdf", (req, res) => {
   let user = req.user;
   let fname = user.fname;
   let lname = user.lname;
- 
+
   collection.updateOne(
     { email: user.email },
     {
-      $set: { pass: "TRUE", date: moment().format("MMMM Do YYYY")},
+      $set: { pass: "TRUE", date: moment().format("MMMM Do YYYY") },
     },
     function (err) {
       if (err) throw err;
       console.log("Updated Status");
     }
   );
- 
+
   const name = fname + " " + lname;
   getCertificate(name, moment().format("MMMM Do YYYY"));
 
   res.end("This message will be sent back to the client!");
-  
+
 });
 
 //quiz page
@@ -644,24 +642,24 @@ app.get("/graph2/:id/:resultid", (req, res) => {
   let id = req.params['id']
   let resultId = req.params['resultid']
 
-  resultCollection.findOne({"_id": new ObjectId(resultId)}, function(err, data) {
+  resultCollection.findOne({ "_id": new ObjectId(resultId) }, function (err, data) {
     if (err) {
       return console.log("File read failed:", err);
     }
-    
+
     var resultList = data.result;
     //console.log(resultList);
     var trackSeq = [];
- 
-    for (let result of resultList) {
-      if (result.request === null) { 
 
-      }else{
+    for (let result of resultList) {
+      if (result.request === null) {
+
+      } else {
         if (result.request.subrequest == id) {
           trackSeq.push(result);
-        } 
+        }
       }
-    
+
     }
 
     res.render("graph", {
@@ -670,7 +668,7 @@ app.get("/graph2/:id/:resultid", (req, res) => {
       user: req.user,
       resultId: resultId
     });
-   
+
   });
 });
 
@@ -691,20 +689,20 @@ app.get("/graph/:id", (req, res) => {
     if (err) {
       return console.log("File read failed:", err);
     }
-    
+
     var resultList = JSON.parse(data);
     //console.log(resultList);
     var trackSeq = [];
- 
-    for (let result of resultList) {
-      if (result.request === null) { 
 
-      }else{
+    for (let result of resultList) {
+      if (result.request === null) {
+
+      } else {
         if (result.request.subrequest == id) {
           trackSeq.push(result);
-        } 
+        }
       }
-    
+
     }
 
     res.render("graph", {
@@ -714,7 +712,7 @@ app.get("/graph/:id", (req, res) => {
       resultId: null
     });
     console.log(trackSeq);
-   
+
   });
 });
 
