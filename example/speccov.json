@@ -1,0 +1,169 @@
+{
+    "17465c332c1ae3537a8d36840ec0a564a971482f": {
+        "verb": "GET",
+        "endpoint": "/organization",
+        "verb_endpoint": "GET /organization",
+        "valid": 1,
+        "matching_prefix": "None",
+        "invalid_due_to_sequence_failure": 0,
+        "invalid_due_to_resource_failure": 0,
+        "invalid_due_to_parser_failure": 0,
+        "invalid_due_to_500": 0,
+        "status_code": "200",
+        "status_text": "OK",
+        "error_message": null,
+        "request_order": 0,
+        "sample_request": {
+            "request_sent_timestamp": null,
+            "response_received_timestamp": "2022-02-05 12:59:37",
+            "request_uri": "/organization/",
+            "request_headers": [
+                "Accept: application/json",
+                "Host: localhost:8060"
+            ],
+            "request_body": null,
+            "response_headers": [
+                "transfer-encoding: chunked",
+                "Content-Type: application/json",
+                "Date: Sat, 05 Feb 2022 12:59:37 GMT"
+            ],
+            "response_body": "384\r\n[{\"id\":1,\"name\":\"Microsoft\",\"address\":\"Redmond, Washington, USA\",\"departments\":[{\"id\":1,\"name\":\"Development\",\"employees\":[{\"id\":1,\"name\":\"John Smith\",\"age\":34,\"position\":\"Analyst\"},{\"id\":2,\"name\":\"Darren Hamilton\",\"age\":37,\"position\":\"Manager\"},{\"id\":3,\"name\":\"Tom Scott\",\"age\":26,\"position\":\"Developer\"}]},{\"id\":2,\"name\":\"Operations\",\"employees\":[{\"id\":4,\"name\":\"Anna London\",\"age\":39,\"position\":\"Analyst\"},{\"id\":5,\"name\":\"Patrick Dempsey\",\"age\":27,\"position\":\"Developer\"}]}],\"employees\":[{\"id\":1,\"name\":\"John Smith\",\"age\":34,\"position\":\"Analyst\"},{\"id\":2,\"name\":\"Darren Hamilton\",\"age\":37,\"position\":\"Manager\"},{\"id\":3,\"name\":\"Tom Scott\",\"age\":26,\"position\":\"Developer\"},{\"id\":4,\"name\":\"Anna London\",\"age\":39,\"position\":\"Analyst\"},{\"id\":5,\"name\":\"Patrick Dempsey\",\"age\":27,\"position\":\"Developer\"}]},{\"id\":2,\"name\":\"Oracle\",\"address\":\"Redwood City, California, USA\",\"departments\":[],\"employees\":[]}]\r\n0"
+        }
+    },
+    "b1c2aa2db1ec46eb1eb1e9e713d84e55b9264a73": {
+        "verb": "GET",
+        "endpoint": "/organization/{id}/with-departments",
+        "verb_endpoint": "GET /organization/{id}/with-departments",
+        "valid": 1,
+        "matching_prefix": {
+            "id": "17465c332c1ae3537a8d36840ec0a564a971482f",
+            "valid": 1
+        },
+        "invalid_due_to_sequence_failure": 0,
+        "invalid_due_to_resource_failure": 0,
+        "invalid_due_to_parser_failure": 0,
+        "invalid_due_to_500": 0,
+        "status_code": "200",
+        "status_text": "OK",
+        "error_message": null,
+        "request_order": 1,
+        "sample_request": {
+            "request_sent_timestamp": null,
+            "response_received_timestamp": "2022-02-05 12:59:37",
+            "request_uri": "/organization/1/with-departments",
+            "request_headers": [
+                "Accept: application/json",
+                "Host: localhost:8060"
+            ],
+            "request_body": null,
+            "response_headers": [
+                "transfer-encoding: chunked",
+                "Content-Type: application/json",
+                "Date: Sat, 05 Feb 2022 12:59:37 GMT"
+            ],
+            "response_body": "31f\r\n{\"id\":1,\"name\":\"Microsoft\",\"address\":\"Redmond, Washington, USA\",\"departments\":[{\"id\":1,\"name\":\"Development\",\"employees\":[{\"id\":1,\"name\":\"John Smith\",\"age\":34,\"position\":\"Analyst\"},{\"id\":2,\"name\":\"Darren Hamilton\",\"age\":37,\"position\":\"Manager\"},{\"id\":3,\"name\":\"Tom Scott\",\"age\":26,\"position\":\"Developer\"}]},{\"id\":2,\"name\":\"Operations\",\"employees\":[{\"id\":4,\"name\":\"Anna London\",\"age\":39,\"position\":\"Analyst\"},{\"id\":5,\"name\":\"Patrick Dempsey\",\"age\":27,\"position\":\"Developer\"}]}],\"employees\":[{\"id\":1,\"name\":\"John Smith\",\"age\":34,\"position\":\"Analyst\"},{\"id\":2,\"name\":\"Darren Hamilton\",\"age\":37,\"position\":\"Manager\"},{\"id\":3,\"name\":\"Tom Scott\",\"age\":26,\"position\":\"Developer\"},{\"id\":4,\"name\":\"Anna London\",\"age\":39,\"position\":\"Analyst\"},{\"id\":5,\"name\":\"Patrick Dempsey\",\"age\":27,\"position\":\"Developer\"}]}\r\n0"
+        }
+    },
+    "b3542d5a45c2826e94019948344b48de9976b8a6": {
+        "verb": "GET",
+        "endpoint": "/organization/{id}/with-employees",
+        "verb_endpoint": "GET /organization/{id}/with-employees",
+        "valid": 1,
+        "matching_prefix": {
+            "id": "17465c332c1ae3537a8d36840ec0a564a971482f",
+            "valid": 1
+        },
+        "invalid_due_to_sequence_failure": 0,
+        "invalid_due_to_resource_failure": 0,
+        "invalid_due_to_parser_failure": 0,
+        "invalid_due_to_500": 0,
+        "status_code": "200",
+        "status_text": "OK",
+        "error_message": null,
+        "request_order": 2,
+        "sample_request": {
+            "request_sent_timestamp": null,
+            "response_received_timestamp": "2022-02-05 12:59:37",
+            "request_uri": "/organization/1/with-employees",
+            "request_headers": [
+                "Accept: application/json",
+                "Host: localhost:8060"
+            ],
+            "request_body": null,
+            "response_headers": [
+                "transfer-encoding: chunked",
+                "Content-Type: application/json",
+                "Date: Sat, 05 Feb 2022 12:59:37 GMT"
+            ],
+            "response_body": ""
+        }
+    },
+    "bce0f5f0523f26004af79130eb52d723e0ae186d": {
+        "verb": "GET",
+        "endpoint": "/organization/{id}",
+        "verb_endpoint": "GET /organization/{id}",
+        "valid": 1,
+        "matching_prefix": {
+            "id": "17465c332c1ae3537a8d36840ec0a564a971482f",
+            "valid": 1
+        },
+        "invalid_due_to_sequence_failure": 0,
+        "invalid_due_to_resource_failure": 0,
+        "invalid_due_to_parser_failure": 0,
+        "invalid_due_to_500": 0,
+        "status_code": "200",
+        "status_text": "OK",
+        "error_message": null,
+        "request_order": 3,
+        "sample_request": {
+            "request_sent_timestamp": null,
+            "response_received_timestamp": "2022-02-05 12:59:38",
+            "request_uri": "/organization/1",
+            "request_headers": [
+                "Accept: application/json",
+                "Host: localhost:8060"
+            ],
+            "request_body": null,
+            "response_headers": [
+                "transfer-encoding: chunked",
+                "Content-Type: application/json",
+                "Date: Sat, 05 Feb 2022 12:59:37 GMT"
+            ],
+            "response_body": "31f\r\n{\"id\":1,\"name\":\"Microsoft\",\"address\":\"Redmond, Washington, USA\",\"departments\":[{\"id\":1,\"name\":\"Development\",\"employees\":[{\"id\":1,\"name\":\"John Smith\",\"age\":34,\"position\":\"Analyst\"},{\"id\":2,\"name\":\"Darren Hamilton\",\"age\":37,\"position\":\"Manager\"},{\"id\":3,\"name\":\"Tom Scott\",\"age\":26,\"position\":\"Developer\"}]},{\"id\":2,\"name\":\"Operations\",\"employees\":[{\"id\":4,\"name\":\"Anna London\",\"age\":39,\"position\":\"Analyst\"},{\"id\":5,\"name\":\"Patrick Dempsey\",\"age\":27,\"position\":\"Developer\"}]}],\"employees\":[{\"id\":1,\"name\":\"John Smith\",\"age\":34,\"position\":\"Analyst\"},{\"id\":2,\"name\":\"Darren Hamilton\",\"age\":37,\"position\":\"Manager\"},{\"id\":3,\"name\":\"Tom Scott\",\"age\":26,\"position\":\"Developer\"},{\"id\":4,\"name\":\"Anna London\",\"age\":39,\"position\":\"Analyst\"},{\"id\":5,\"name\":\"Patrick Dempsey\",\"age\":27,\"position\":\"Developer\"}]}\r\n0"
+        }
+    },
+    "f590406bf028b90363d94873970dd0c0bd65ad21": {
+        "verb": "GET",
+        "endpoint": "/organization/{id}/with-departments-and-employees",
+        "verb_endpoint": "GET /organization/{id}/with-departments-and-employees",
+        "valid": 1,
+        "matching_prefix": {
+            "id": "17465c332c1ae3537a8d36840ec0a564a971482f",
+            "valid": 1
+        },
+        "invalid_due_to_sequence_failure": 0,
+        "invalid_due_to_resource_failure": 0,
+        "invalid_due_to_parser_failure": 0,
+        "invalid_due_to_500": 0,
+        "status_code": "200",
+        "status_text": "OK",
+        "error_message": null,
+        "request_order": 4,
+        "sample_request": {
+            "request_sent_timestamp": null,
+            "response_received_timestamp": "2022-02-05 12:59:38",
+            "request_uri": "/organization/1/with-departments-and-employees",
+            "request_headers": [
+                "Accept: application/json",
+                "Host: localhost:8060"
+            ],
+            "request_body": null,
+            "response_headers": [
+                "transfer-encoding: chunked",
+                "Content-Type: application/json",
+                "Date: Sat, 05 Feb 2022 12:59:38 GMT"
+            ],
+            "response_body": ""
+        }
+    }
+}

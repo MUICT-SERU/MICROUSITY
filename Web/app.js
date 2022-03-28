@@ -12,6 +12,7 @@ const cytoscape = require('cytoscape');
 const dagre = require('cytoscape-dagre');
 const moment = require("moment");
 const formidable = require('formidable');
+const PDFDocument = require("pdfkit");
 //const
 const SESSION_AUTH_USER = "session-auth-user";
 let key,cert;
@@ -44,6 +45,7 @@ app.use(
 
 const { MongoClient, ObjectId } = require("mongodb");
 const path = require("path");
+const { get } = require('http');
 const uri =
   "mongodb+srv://micro1:micro1@cluster0.u4edv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {
@@ -82,6 +84,34 @@ function removeDupId(arr) {
   return (arr = arr.filter(
     (value, index, self) => index === self.findIndex((t) => t.id === value.id)
   ));
+}
+
+function getCertificate(name, date){
+   // Create the PDF document
+   const doc = new PDFDocument({
+    layout: "landscape",
+    size: "A4",
+  });
+  
+  // Pipe the PDF into an name.pdf file
+  doc.pipe(fs.createWriteStream(`public/certificate/certificate.pdf`));
+
+  // Draw the certificate image
+  doc.image("public/Pic/certificate.PNG", 0, 0, { width: 842 });
+
+  // Draw the name
+  doc.fontSize(60).text(name, 90, 320, {
+    align: "center",
+  });
+
+  // Draw the date
+  doc.fontSize(15).text(date, 175, 420, {
+    align: "center",
+  });
+
+  // Finalize the PDF and end the stream
+  doc.end();
+  console.log("The certificate was created!");
 }
 
 //result render
@@ -556,10 +586,7 @@ app.get("/pdf", (req, res) => {
   let user = req.user;
   let fname = user.fname;
   let lname = user.lname;
-  // Import dependencies
-  //const moment = require("moment");
-  const PDFDocument = require("pdfkit");
-
+ 
   collection.updateOne(
     { email: user.email },
     {
@@ -570,38 +597,12 @@ app.get("/pdf", (req, res) => {
       console.log("Updated Status");
     }
   );
-
-  // Create the PDF document
-  const doc = new PDFDocument({
-    layout: "landscape",
-    size: "A4",
-  });
-
-  // The name
+ 
   const name = fname + " " + lname;
-
-  // Pipe the PDF into an name.pdf file
-  doc.pipe(fs.createWriteStream(`public/certificate/certificate.pdf`));
-
-  // Draw the certificate image
-  doc.image("public/Pic/certificate.PNG", 0, 0, { width: 842 });
-
-  // Draw the name
-  doc.fontSize(60).text(name, 90, 320, {
-    align: "center",
-  });
-
-  // Draw the date
-  doc.fontSize(15).text(moment().format("MMMM Do YYYY"), 175, 420, {
-    align: "center",
-  });
-
-  // Finalize the PDF and end the stream
-  doc.end();
-  console.log("The certificate was created!");
+  getCertificate(name, moment().format("MMMM Do YYYY"));
 
   res.end("This message will be sent back to the client!");
-  //res.redirect('/quiz')
+  
 });
 
 //quiz page
@@ -617,38 +618,9 @@ app.get("/quiz", (req, res) => {
     .find({ email: user.email, pass: "TRUE" })
     .toArray(function (err, users) {
       if (err || users.length !== 0) {
-        const fs = require("fs");
-        //const moment = require("moment");
-        const PDFDocument = require("pdfkit");
-        // Create the PDF document
-        const doc = new PDFDocument({
-          layout: "landscape",
-          size: "A4",
-        });
-
-        // The name
         const name = fname + " " + lname;
         const date = users[0].date;
-        
-        // Pipe the PDF into an name.pdf file
-        doc.pipe(fs.createWriteStream(`public/certificate/certificate.pdf`));
-
-        // Draw the certificate image
-        doc.image("public/Pic/certificate.PNG", 0, 0, { width: 842 });
-
-        // Draw the name
-        doc.fontSize(60).text(name, 90, 320, {
-          align: "center",
-        });
-
-        // Draw the date
-        doc.fontSize(15).text(date, 175, 420, {
-          align: "center",
-        });
-
-        // Finalize the PDF and end the stream
-        doc.end();
-        console.log("The certificate was created!");
+        getCertificate(name, date);
         res.render("quiz", {
           user,
           pass: "TRUE",
