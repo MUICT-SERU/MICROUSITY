@@ -5,6 +5,7 @@ const app = express();
 const fs = require("fs");
 const session = require("express-session");
 const md5 = require("md5");
+const bcrypt = require("bcrypt");
 const EventEmitter = require("events");
 const { Worker } = require("worker_threads");
 const https = require('https');
@@ -15,6 +16,7 @@ const formidable = require('formidable');
 const PDFDocument = require("pdfkit");
 //const
 const SESSION_AUTH_USER = "session-auth-user";
+const salt = bcrypt.genSalt(10);
 let key, cert;
 try {
   key = fs.readFileSync(process.env.KEY);
@@ -310,7 +312,7 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   let { username, password, fromUrl } = req.body;
   collection
-    .find({ email: username, password: md5(password) })
+    .find({ email: username, password: bcrypt.hash(password,10) })
     .toArray(function (err, users) {
       if (err || users.length != 1) {
         return res.redirect("/login?invalid=1");
@@ -340,7 +342,7 @@ app.post("/register", (req, res) => {
     fname: fname,
     lname: lname,
     email: email,
-    password: md5(password),
+    password: bcrypt.hash(password, 10),
     pass: "FALSE",
   };
 
