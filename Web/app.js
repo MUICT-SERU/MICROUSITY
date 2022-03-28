@@ -370,10 +370,6 @@ app.get("/testingtool2", (req, res) => {
 
 //testing tool page
 app.post("/upload", (req, res) => {
-  // if (req.user === null) {
-  //   res.redirect("/login");
-  //   return;
-  // }
   var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
       var outputPath = '../outtest/';
@@ -395,8 +391,8 @@ app.post("/upload", (req, res) => {
       if (err) {
         throw err;
       } else {
-        res.write('File uploaded and moved!');
-      res.end();
+        console.log('File uploaded and moved!');
+        res.sendStatus(200);
       }
       
       
