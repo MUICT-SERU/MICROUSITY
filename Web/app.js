@@ -248,22 +248,26 @@ app.use(function isAuth(req, res, next) {
 //main home page
 app.get("/", (req, res) => {
   if (req.user === null) {
-    res.render("homeNotAuth");
+    res.render("home", {
+      user: null,
+    });
     return;
   }
   let user = getUser(req);
   res.render("home", {
-    user,
+    user: user,
   });
 });
 app.get("/home", (req, res) => {
   if (req.user === null) {
-    res.render("homeNotAuth");
+    res.render("home", {
+      user: null,
+    });
     return;
   }
   let user = getUser(req);
   res.render("home", {
-    user,
+    user: user,
   });
 });
 let isTesting = false;
@@ -560,10 +564,6 @@ app.get("/saveDyn_json", (req, res) => {
   res.sendStatus(200);
 });
 
-//print page
-app.get("/print", (req, res) => {
-  res.render("print2");
-});
 
 app.get("/pdf", (req, res) => {
   if (req.user === null) {
