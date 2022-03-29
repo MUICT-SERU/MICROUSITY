@@ -476,10 +476,14 @@ header
 }
 
 .header-area .main-nav .nav li:last-child a:hover,
-.background-header .main-nav .nav li:last-child a:hover,
+.background-header .main-nav .nav li:last-child a:hover {
+  color: #fff !important;
+}
+
+
 .header-area .main-nav .nav li:nth-child(6) a:hover,
 .background-header .main-nav .nav li:nth-child(6) a:hover {
-  color: #fff !important;
+  color: #4b8ef1 !important;
 }
 
 .header-area .main-nav .nav li a {
