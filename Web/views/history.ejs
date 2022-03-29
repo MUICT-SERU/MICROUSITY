@@ -82,11 +82,17 @@
         <br>
         <!-- History list -->
         <div id="user-list" class="list-group">
-            <% for(let result of data){ %>
+            <% for(let i = data.length - 1; i >= 0; i--){ %>
+                <a href="/resulthis/<%= data[i]._id%>" class="list-group-item list-group-item-action flex-column align-items-start">
+                <h5 class="mb-1"> <%= data[i].time%></h5>
+            </a>
+            <% } %>
+
+            <!-- <% for(let result of data){ %>
                 <a href="/resulthis/<%= result._id%>" class="list-group-item list-group-item-action flex-column align-items-start">
                 <h5 class="mb-1"> <%= result.time%></h5>
             </a>
-            <% } %>
+            <% } %> -->
         </div>
     </div>
 
