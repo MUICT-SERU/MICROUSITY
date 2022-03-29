@@ -431,23 +431,30 @@ app.get("/save", (req, res) => {
   }
   let user = req.user;
   fs.readFile('../example/output99.json', 'utf8', (err, data) => {
-    //fs.readFile("../output/output.json", "utf8", (err, data) => {
+  //fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
     }
-    var resultList = JSON.parse(data);
-    var myobj = {
-      email: user.email,
-      time: moment().format('D MMMM YYYY, h:mm:ss a'),
-      result: resultList,
-    };
-    collection.find({ email: user.email }).toArray(function (err, users) {
-      resultCollection.insertOne(myobj, function (err) {
-        if (err) throw err;
-        console.log("1 result inserted");
-        res.redirect("/home");
+    fs.readFile('../example/speccov.json', 'utf8', (err, coverage) => {
+      if (err) {
+        return console.log("File read failed:", err);
+      }
+      var resultList = JSON.parse(data);
+      var myobj = {
+        email: user.email,
+        time: moment().format('D MMMM YYYY, h:mm:ss a'),
+        result: resultList,
+        coverage: JSON.parse(coverage)
+      };
+      collection.find({ email: user.email }).toArray(function (err, users) {
+        resultCollection.insertOne(myobj, function (err) {
+          if (err) throw err;
+          console.log("1 result inserted");
+          res.redirect("/home");
+        });
+  
       });
-
+      
     });
 
   });
@@ -481,7 +488,15 @@ app.get("/resulthis/:id", (req, res) => {
   let id = req.params['id']
   resultCollection.findOne({ "_id": new ObjectId(id) }, function (err, data) {
     let result = getResult(data, false);
-
+    let invalid = 0;
+      let valid = 0;
+      for(let jsonCoverage in data.coverage){
+        if(data.coverage[jsonCoverage].valid==0){
+          invalid++;
+        } else {
+          valid++;
+        }
+      }
     res.render("result", {
       results: result.results,
       main4xxs: result.main4xxs,
@@ -495,6 +510,9 @@ app.get("/resulthis/:id", (req, res) => {
       coreLeakIds: result.coreLeakIds,
       bffLeakIds: result.bffLeakIds,
       bothLeakIds: result.bothLeakIds,
+      speccovs: data.coverage,
+      valid: valid,
+      invalid: invalid,
       user: req.user,
       resultid: id,
     });
@@ -518,24 +536,43 @@ app.get("/result", (req, res) => {
     if (err) {
       return console.log("File read failed:", err);
     }
+    fs.readFile('../example/speccov.json', 'utf8', (err, coverage) => {
+      if (err) {
+        return console.log("File read failed:", err);
+      }
+      let invalid = 0;
+      let valid = 0;
+      let jsonCoverages = JSON.parse(coverage);
+      for(let jsonCoverage in jsonCoverages){
+        if(jsonCoverages[jsonCoverage].valid==0){
+          invalid++;
+        } else {
+          valid++;
+        }
+      }
 
-    let result = getResult(data, true);
-    res.render("result", {
-      results: result.results,
-      main4xxs: result.main4xxs,
-      main5xxs: result.main5xxs,
-      sub4xxs: result.sub4xxs,
-      sub5xxs: result.sub5xxs,
-      sum3xxs: result.sum3xxs,
-      sum2xxs: result.sum2xxs,
-      countReqs: result.countReqs,
-      trackIds: result.trackIds,
-      coreLeakIds: result.coreLeakIds,
-      bffLeakIds: result.bffLeakIds,
-      bothLeakIds: result.bothLeakIds,
-      user: req.user,
-      resultid: null
+      let result = getResult(data, true);
+      res.render("result", {
+        results: result.results,
+        main4xxs: result.main4xxs,
+        main5xxs: result.main5xxs,
+        sub4xxs: result.sub4xxs,
+        sub5xxs: result.sub5xxs,
+        sum3xxs: result.sum3xxs,
+        sum2xxs: result.sum2xxs,
+        countReqs: result.countReqs,
+        trackIds: result.trackIds,
+        coreLeakIds: result.coreLeakIds,
+        bffLeakIds: result.bffLeakIds,
+        bothLeakIds: result.bothLeakIds,
+        speccovs: jsonCoverages,
+        valid: valid,
+        invalid: invalid,
+        user: req.user,
+        resultid: null
+      });
     });
+    
     //console.log(removeDupId(coreLeakId));
     //console.log(removeDupId(bffLeakId));
     //console.log(removeDupId(bothLeakId));

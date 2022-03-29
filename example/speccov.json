@@ -3,7 +3,7 @@
         "verb": "GET",
         "endpoint": "/organization",
         "verb_endpoint": "GET /organization",
-        "valid": 1,
+        "valid": 0,
         "matching_prefix": "None",
         "invalid_due_to_sequence_failure": 0,
         "invalid_due_to_resource_failure": 0,
@@ -68,7 +68,7 @@
         "verb": "GET",
         "endpoint": "/organization/{id}/with-employees",
         "verb_endpoint": "GET /organization/{id}/with-employees",
-        "valid": 1,
+        "valid": 0,
         "matching_prefix": {
             "id": "17465c332c1ae3537a8d36840ec0a564a971482f",
             "valid": 1
