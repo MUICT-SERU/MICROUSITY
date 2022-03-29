@@ -3,7 +3,7 @@
         "verb": "GET",
         "endpoint": "/organization",
         "verb_endpoint": "GET /organization",
-        "valid": 0,
+        "valid": 1,
         "matching_prefix": "None",
         "invalid_due_to_sequence_failure": 0,
         "invalid_due_to_resource_failure": 0,

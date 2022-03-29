@@ -238,6 +238,33 @@ function getResult(data, fromFile) {
 
 }
 
+//result render
+function getSpeccov(data, fromFile) {
+  if (fromFile == true) {
+    var jsonCoverages = JSON.parse(data);
+  } else {
+    var jsonCoverages = data.coverage;
+  }
+  
+  let invalid = 0;
+  let valid = 0;
+
+    for(let jsonCoverage in jsonCoverages){
+      if(jsonCoverages[jsonCoverage].valid==0){
+        invalid++;
+      } else {
+        valid++;
+      }
+    }
+   
+  return {
+    speccovs: jsonCoverages,
+    valid: valid,
+    invalid: invalid,
+  }
+
+}
+
 //middleware for auth
 app.use(function isAuth(req, res, next) {
   req.user = getUser(req);
@@ -488,15 +515,7 @@ app.get("/resulthis/:id", (req, res) => {
   let id = req.params['id']
   resultCollection.findOne({ "_id": new ObjectId(id) }, function (err, data) {
     let result = getResult(data, false);
-    let invalid = 0;
-      let valid = 0;
-      for(let jsonCoverage in data.coverage){
-        if(data.coverage[jsonCoverage].valid==0){
-          invalid++;
-        } else {
-          valid++;
-        }
-      }
+    let coverage = getSpeccov(data,false)
     res.render("result", {
       results: result.results,
       main4xxs: result.main4xxs,
@@ -510,9 +529,9 @@ app.get("/resulthis/:id", (req, res) => {
       coreLeakIds: result.coreLeakIds,
       bffLeakIds: result.bffLeakIds,
       bothLeakIds: result.bothLeakIds,
-      speccovs: data.coverage,
-      valid: valid,
-      invalid: invalid,
+      speccovs: coverage.speccovs,
+      valid: coverage.valid,
+      invalid: coverage.invalid,
       user: req.user,
       resultid: id,
     });
@@ -536,22 +555,13 @@ app.get("/result", (req, res) => {
     if (err) {
       return console.log("File read failed:", err);
     }
-    fs.readFile('../example/speccov.json', 'utf8', (err, coverage) => {
+    fs.readFile('../example/speccov.json', 'utf8', (err, specCoverage) => {
       if (err) {
         return console.log("File read failed:", err);
       }
-      let invalid = 0;
-      let valid = 0;
-      let jsonCoverages = JSON.parse(coverage);
-      for(let jsonCoverage in jsonCoverages){
-        if(jsonCoverages[jsonCoverage].valid==0){
-          invalid++;
-        } else {
-          valid++;
-        }
-      }
 
       let result = getResult(data, true);
+      let coverage = getSpeccov(specCoverage,true)
       res.render("result", {
         results: result.results,
         main4xxs: result.main4xxs,
@@ -565,9 +575,9 @@ app.get("/result", (req, res) => {
         coreLeakIds: result.coreLeakIds,
         bffLeakIds: result.bffLeakIds,
         bothLeakIds: result.bothLeakIds,
-        speccovs: jsonCoverages,
-        valid: valid,
-        invalid: invalid,
+        speccovs: coverage.speccovs,
+        valid: coverage.valid,
+        invalid: coverage.invalid,
         user: req.user,
         resultid: null
       });
