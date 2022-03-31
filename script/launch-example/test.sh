@@ -1,4 +1,5 @@
 #! /bin/sh
+trap 'killall zeek' EXIT
 if [ "$#" -lt 2 ]; then
     echo "need interface and port as argument"
     exit 1
@@ -8,6 +9,7 @@ fi
     if [ "$#" -eq 2 ]; then
     (
         mkdir -p $1
+        cd $1
         zeek -C -i $1 ../track.zeek track::bff_port=$2
     ) &
     elif [ "$#" -eq 3 ]; then
@@ -34,5 +36,4 @@ fi
         --token_refresh_interval 3600 \
         --no_ssl
     )
-    trap 'kill $(jobs -p)' EXIT
 )

@@ -13,6 +13,8 @@ const dagre = require('cytoscape-dagre');
 const moment = require("moment");
 const formidable = require('formidable');
 const PDFDocument = require("pdfkit");
+const { singleIfaceMapping, dualIfaceMapping, getIfaceLog } = require('./log-parser/index')
+
 //const
 const SESSION_AUTH_USER = "session-auth-user";
 let key, cert;
@@ -276,15 +278,37 @@ app.post("/launch", async (req, res) => {
     res.sendStatus(409);
     return;
   }
+  let mode = req.body.mode;
+  if(mode === 'single') {
+    events.emit("TESTSTARTED", 'single');
+  }
+  else if (mode === 'dual') {
+    events.emit("TESTSTARTED", "dual");
+  }
+  else {
+    res.status(400).send("invalid mode");
+    return;
+  }
   res.sendStatus(200);
-  events.emit("TESTSTARTED");
 });
 
-events.on("TESTSTARTED", () => {
+events.on("TESTSTARTED", (mode) => {
   isTesting = true;
   const worker = new Worker("./worker.js");
   worker.once("exit", () => {
     isTesting = false;
+    let first = getIfaceLog(process.env.IFACE);
+    let second = getIfaceLog(process.env.SECOND_IFACE);
+    Promise.all([first, second])
+      .then(
+        res => dualIfaceMapping(res[0], res[1], process.env.IFACE)
+      )
+      .then(
+        res => {
+          fs.writeFileSync("../output/output.json", JSON.stringify(res));
+          console.log("written result");
+        }
+      )
   });
 });
 

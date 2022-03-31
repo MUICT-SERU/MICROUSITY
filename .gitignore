@@ -17,3 +17,4 @@ output
 
 *.pem
 .env
+lineman
