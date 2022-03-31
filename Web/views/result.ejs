@@ -92,6 +92,14 @@
             border-color: transparent;
             text-decoration: underline;
         }
+
+        .btn-link3 {
+            color: #51aacb;
+            background-color: transparent;
+            background-image: none;
+            border-color: transparent;
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -125,9 +133,11 @@
                                 <li class="scroll-to-section"><a href="/home">Home</a></li>
                                 <li class="scroll-to-section"><a href="/content">Content</a></li>
                                 <li class="scroll-to-section"><a href="/quiz">Quiz</a></li>
-                                <li class="scroll-to-section"><a href="/testingtool" class="active">Sandbox</a>
+                                <li class="scroll-to-section"><a href="/testingtool">Sandbox</a>
                                 </li>
                                 <li class="scroll-to-section"><a href="/testingtool2">Testing tool</a></li>
+                                <li class="scroll-to-section"><a href="#" class="active">Result</a>
+                                </li>
                                 <li class="scroll-to-section"><a href="/history">History</a></li>
                                 <li class="scroll-to-section"><a href="/aboutus">About us</a></li>
                                 <li>
@@ -211,6 +221,65 @@
         </div>
 
         <br>
+        <!--Invalid list-->
+        <div id="accordion5">
+            <div class="card">
+                <div class="card-header" id="headingFive">
+                    <h4 class="mb-0">
+                        <span>
+                            <button class="btn btn-link3" data-toggle="collapse" data-target="#collapseFive"
+                                aria-expanded="true" aria-controls="collapseFive">
+                                <h5>API Coverage</h5>
+                            </button>
+                        </span>
+                        <span class="count">
+                            <%= valid %>/<%= valid+invalid %>
+                        </span>
+                    </h4>
+                </div>
+
+                <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion5">
+                    <div class="card-body">
+                        <ul class="list-group">
+
+                            <% for(let speccov in speccovs){ %>
+                                <% if(speccovs[speccov].valid==0){ %>
+                                <li class="list-group-item list-group-item-action list-group-item-danger">
+                                            <div class="main">
+                                                <b>
+                                                    <span class="name"><%= speccovs[speccov].verb_endpoint %>
+                                                           </span>
+                                                    <span class="status">
+                                                        INVALID
+                                                    </span>
+                                                </b>
+
+                                            </div>
+                                </li> 
+                                <br>
+                                <% } else { %>  
+                                    <li class="list-group-item list-group-item-action list-group-item-success">
+                                        <div class="main">
+                                            <b>
+                                                <span class="name"><%= speccovs[speccov].verb_endpoint %>
+                                                       </span>
+                                                <span class="status">
+                                                    VALID
+                                                </span>
+                                            </b>
+
+                                        </div>
+                            </li> 
+                            <br>
+                                    <% } %>  
+                            <% } %>  
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+
         <h4>Issues found</h4>
         <br>
         <!--Error count-->
@@ -613,51 +682,6 @@
 
 
     </div>
-
-    <script>
-
-
-
-        //function that tigger when clicking the submit button
-        btnDictSubmit.on('click', function () {
-            let dict = inputDict.val()
-            let dyn = inputDyn.val()
-            submit(dict, dyn)
-        })
-
-        function submit(dict, dyn) {
-
-            console.log(dict)
-            var parseDict = JSON.parse(dict);
-            console.log(parseDict)
-            $.ajax
-                ({
-                    type: "GET",
-                    dataType: 'json',
-                    async: false,
-                    url: '/saveDict_json',
-                    data: { data: JSON.stringify(parseDict) },
-                    success: function () { alert("Success"); },
-                    failure: function () { alert("Error"); }
-                });
-
-            console.log(dyn)
-            var parseDyn = JSON.parse(dyn);
-            console.log(parseDyn)
-            $.ajax
-                ({
-                    type: "GET",
-                    dataType: 'json',
-                    async: false,
-                    url: '/saveDyn_json',
-                    data: { data: JSON.stringify(parseDyn) },
-                    success: function () { alert("Success"); },
-                    failure: function () { alert("Error"); }
-                });
-
-        }
-
-    </script>
 
     </div>
 </body>
