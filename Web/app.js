@@ -307,10 +307,10 @@ app.post("/launch", async (req, res) => {
   }
   let mode = req.body.mode;
   if(mode === 'single') {
-    events.emit("TESTSTARTED", 'single');
+    events.emit("TESTSTARTED",'single');
   }
   else if (mode === 'dual') {
-    events.emit("TESTSTARTED", "dual");
+    events.emit("TESTSTARTED","dual");
   }
   else {
     res.status(400).send("invalid mode");
@@ -319,19 +319,65 @@ app.post("/launch", async (req, res) => {
   res.sendStatus(200);
 });
 
-events.on("TESTSTARTED", (mode) => {
+events.on("TESTSTARTED", (mode, grammar, dict, settings, token) => {
   isTesting = true;
-  const worker = new Worker("./worker.js");
+  let worker;
+  switch (mode) {
+    case "dual":
+      worker = new Worker('./worker.js');
+      break;
+    case "custom":
+      if(token !== undefined) {
+      worker = new Worker('./worker_custom_script.js', { workerData: {
+        grammar,
+        dict,
+        settings,
+        token
+      }});
+    }
+      else {
+        worker = new Worker('./worker_custom_script.js', {
+          grammar,
+          dict,
+          settings
+        })
+      }
+      break;
+    default:
+      console.log("invalid case");
+      isTesting = false;
+      return;
+  }
   worker.once("exit", () => {
     isTesting = false;
     let first = getIfaceLog(process.env.IFACE);
     let second = getIfaceLog(process.env.SECOND_IFACE);
+    let trick_email = "pooh99191@gmail.com"
     Promise.all([first, second])
       .then(
         res => dualIfaceMapping(res[0], res[1], process.env.IFACE)
       )
       .then(
         res => {
+          fs.readFile('../example/speccov.json', 'utf8', (err, coverage) => {
+            if (err) {
+              return console.log("File read failed:", err);
+            }
+            var myobj = {
+              email: trick_email,
+              time: moment().format('D MMMM YYYY, h:mm:ss a'),
+              result: res,
+              coverage: JSON.parse(coverage)
+            };
+            collection.find({ email: trick_email }).toArray(function (err, users) {
+              resultCollection.insertOne(myobj, function (err) {
+                if (err) throw err;
+                console.log("1 result inserted");
+              });
+        
+            });
+            
+          });
           fs.writeFileSync("../output/output.json", JSON.stringify(res));
           console.log("written result");
         }
@@ -445,13 +491,16 @@ app.get("/testingtool2", (req, res) => {
 app.post("/upload", (req, res) => {
   var form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
-    var outputPath = '../outtest/';
+    var outputPath = path.resolve( __dirname , '../outtest/');
+    console.log(outputPath);
     var oldGrammarPath = files.grammar.filepath;
     var oldDictPath = files.dict.filepath;
     var oldUserSettingPath = files.userSetting.filepath;
-    var newGrammarPath = outputPath + 'grammar.py';
-    var newDictPath = outputPath + 'dict.json';
-    var newUserSettingPath = outputPath + 'restler_user_settings.json';
+    var oldTokenPath = files.token.filepath ?? null;
+    var newGrammarPath = path.resolve(outputPath , 'grammar.py');
+    var newDictPath = path.resolve(outputPath , 'dict.json');
+    var newUserSettingPath = path.resolve(outputPath , 'restler_user_settings.json');
+    var newTokenPath = path.resolve(outputPath , 'token');
     fs.rename(oldGrammarPath, newGrammarPath, function (err) {
       if (err) throw err;
     });
@@ -461,14 +510,21 @@ app.post("/upload", (req, res) => {
     fs.rename(oldUserSettingPath, newUserSettingPath, function (err) {
       if (err) throw err;
     });
+    if(oldTokenPath !== null) {
+      fs.rename(oldTokenPath, newTokenPath, function (err) {
+        if (err) throw err;
+      });
+      fs.chmod(newTokenPath, 0o744, (err) => {
+         if (err) throw err;
+        });
+    }
     if (err) {
       throw err;
     } else {
       console.log('File uploaded and moved!');
-      res.sendStatus(200);
+      res.redirect('/history');
+      events.emit("TESTSTARTED", "custom", newGrammarPath, newDictPath, newUserSettingPath, newTokenPath);
     }
-
-
   });
 
 });
@@ -476,10 +532,10 @@ app.post("/upload", (req, res) => {
 
 //save result history
 app.get("/save", (req, res) => {
-  if (req.user === null) {
-    res.redirect("/login");
-    return;
-  }
+  // if (req.user === null) {
+  //   res.redirect("/login");
+  //   return;
+  // }
   let user = req.user;
   fs.readFile('../example/output99.json', 'utf8', (err, data) => {
   //fs.readFile("../output/output.json", "utf8", (err, data) => {
@@ -492,7 +548,7 @@ app.get("/save", (req, res) => {
       }
       var resultList = JSON.parse(data);
       var myobj = {
-        email: user.email,
+        email: "pooh99191@gmail.com",
         time: moment().format('D MMMM YYYY, h:mm:ss a'),
         result: resultList,
         coverage: JSON.parse(coverage)
@@ -570,10 +626,10 @@ app.get("/resulthis/:id", (req, res) => {
 //result sandbox
 app.get("/result", (req, res) => {
 
-  if (req.user === null) {
-    res.redirect('/login');
-    return;
-  }
+  // if (req.user === null) {
+  //   res.redirect('/login');
+  //   return;
+  // }
   //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
   fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
