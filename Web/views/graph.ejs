@@ -8,6 +8,18 @@
     top: 50 !important;
     z-index: 999;
 }
+
+.qtip{
+	
+	max-width: 421px !important;
+	min-width: 50px;
+}
+
+div.scroll {
+  width: 410px;
+  height: 230px;
+  overflow: scroll;
+}
 	</style>
 
 <head>
@@ -220,7 +232,7 @@
 			//cy.on('mouseover', 'edge', function(event){
 					//console.log("test");
 					cy.elements('edge').qtip({
-					content: function(){ return '<b>Status Code:</b> ' + this.attr('status') + '<br> <b>Exception:</b> ' + this.attr('exception') + '<br> <b>Response body:</b> '+ this.attr('post_body')},
+					content: function(){ return '<div class="scroll"><b>Status Code:</b> ' + this.attr('status') + '<br> <b>Exception:</b> ' + this.attr('exception') + '<br> <b>Response body:</b> '+ this.attr('post_body') +'</div>'},
 					position: {
 						my: 'top center',
 						at: 'bottom center'
@@ -230,7 +242,8 @@
 						tip: {
 							width: 18,
 							height: 10
-						}
+						},
+						overflow: scroll
 					}
 				});
 			//});
