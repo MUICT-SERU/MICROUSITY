@@ -701,7 +701,13 @@ app.get("/graph2/:id/:resultid", (req, res) => {
   }
   let id = req.params['id']
   let resultId = req.params['resultid']
-
+  let error;
+  if(req.query["error"]=='true'){
+    error = true;
+  } else {
+    error = false;
+  }
+   
   resultCollection.findOne({ "_id": new ObjectId(resultId) }, function (err, data) {
     if (err) {
       return console.log("File read failed:", err);
@@ -726,9 +732,9 @@ app.get("/graph2/:id/:resultid", (req, res) => {
       results: resultList,
       trackSeqs: trackSeq,
       user: req.user,
-      resultId: resultId
+      resultId: resultId,
+      error: error
     });
-
   });
 });
 
@@ -740,8 +746,12 @@ app.get("/graph/:id", (req, res) => {
     return;
   }
   let id = req.params['id']
-
-  let user = getUser(req);
+  let error;
+  if(req.query["error"]=='true'){
+    error = true;
+  } else {
+    error = false;
+  }
 
   //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
 
@@ -769,9 +779,9 @@ app.get("/graph/:id", (req, res) => {
       results: resultList,
       trackSeqs: trackSeq,
       user: req.user,
-      resultId: null
+      resultId: null,
+      error: error
     });
-    console.log(trackSeq);
 
   });
 });

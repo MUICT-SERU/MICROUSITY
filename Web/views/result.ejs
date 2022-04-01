@@ -605,7 +605,11 @@
                                         <% } else {%> 
                                             
                                     <% if(result.request.subrequest==trackId.id){ %>
-                                        <li class="list-group-item list-group-item-action list-group-item-danger">
+                                        <% if(resultid === null){ %>
+                                            <li class="list-group-item list-group-item-action list-group-item-warning" onclick= "window.open('/graph/<%=result.request.subrequest%>?error=true','_self')">
+                                        <% } else {%> 
+                                            <li class="list-group-item list-group-item-action list-group-item-warning" onclick= "window.open('/graph2/<%=result.request.subrequest%>/<%=resultid%>?error=true','_self')">
+                                            <% } %> 
                                             <div class="main">
 
                                                 <span class="name">
