@@ -8,6 +8,18 @@
     top: 50 !important;
     z-index: 999;
 }
+
+.qtip{
+	
+	max-width: 421px !important;
+	min-width: 50px;
+}
+
+div.scroll {
+  width: 410px;
+  height: 230px;
+  overflow: scroll;
+}
 	</style>
 
 <head>
@@ -27,6 +39,8 @@
 			let edgeList = [];
 			//console.log(response);
 			let data = <%- JSON.stringify(trackSeqs) %>
+			let error = <%- error %>
+			console.log(error)
 			
 			//document.write(data);
 			// for(let trackSeq of data){
@@ -43,7 +57,61 @@
 			// 	}
 			// }
 
-			for(let trackSeq of data){
+			if(error == true){
+				for(let trackSeq of data){
+				//console.log(trackSeq.request["id.orig_p"]);
+				nodeList.push( {data: { id: "Client", label: "Client", type: "Src", group: "triangle"}})
+				nodeList.push( {data: { id: "BFF", label: "BFF", type: "Res"}})
+				if(trackSeq.request.status_code >= 500 && trackSeq.request.status_code < 600 ){
+					edgeList.push( {data: { 
+						source: "Client", 
+						target: "BFF", 
+						uri: trackSeq.request.uri, 
+						status: trackSeq.request.status_code, 
+						exception: trackSeq.request.exception,
+						post_body: trackSeq.request.post_body,  
+						label: trackSeq.request.method  + " " + trackSeq.request.uri, 
+						color: "orange"}})
+				} else {
+					edgeList.push( {data: { 
+						source: "Client", 
+						target: "BFF", 
+						uri: trackSeq.request.uri, 
+						status: trackSeq.request.status_code, 
+						exception: "No Exception",
+						post_body: trackSeq.request.post_body, 
+						label: trackSeq.request.method + " " + trackSeq.request.uri}})
+				}
+				
+				//edgeList.push( {data: { source: "BFF", target: "Client", uri: trackSeq.request.status_code}})
+				for(let subrequest of trackSeq.subrequest){
+					//nodeList.push( {data: { id: subrequest["id.orig_p"], type: "Src"}})
+					nodeList.push( {data: { id: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], label: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"],type: "Res"}})
+					if(subrequest.status_code  >= 500 && subrequest.status_code < 600 ){
+						edgeList.push( {data: { 
+							source: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], 
+							target: "BFF", uri: subrequest.uri, 
+							status: subrequest.status_code, 
+							exception: subrequest.exception,
+							post_body: subrequest.post_body,  
+							label: subrequest.method + " " + subrequest.uri, 
+							color: "orange"}})
+					} else {
+						edgeList.push( {data: { 
+							source: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], 
+							target: "BFF", uri: subrequest.uri, 
+							status: subrequest.status_code, 
+							exception: "No Exception",
+							post_body: subrequest.post_body,   
+							label: subrequest.method + " " +subrequest.uri}})
+					}
+					//edgeList.push( {data: { source: "BFF", target: subrequest["id.resp_p"], uri: subrequest.status_code}})
+				}
+			}
+
+
+			} else {
+				for(let trackSeq of data){
 				//console.log(trackSeq.request["id.orig_p"]);
 				nodeList.push( {data: { id: "Client", label: "Client", type: "Src", group: "triangle"}})
 				nodeList.push( {data: { id: "BFF", label: "BFF", type: "Res"}})
@@ -93,6 +161,10 @@
 					//edgeList.push( {data: { source: "BFF", target: subrequest["id.resp_p"], uri: subrequest.status_code}})
 				}
 			}
+
+			}
+
+			
 			console.log(nodeList);
 			console.log(edgeList);
 			let cy = cytoscape({
@@ -160,7 +232,7 @@
 			//cy.on('mouseover', 'edge', function(event){
 					//console.log("test");
 					cy.elements('edge').qtip({
-					content: function(){ return '<b>Status Code:</b> ' + this.attr('status') + '<br> <b>Exception:</b> ' + this.attr('exception') + '<br> <b>Response body:</b> '+ this.attr('post_body')},
+					content: function(){ return '<div class="scroll"><b>Status Code:</b> ' + this.attr('status') + '<br> <b>Exception:</b> ' + this.attr('exception') + '<br> <b>Response body:</b> '+ this.attr('post_body') +'</div>'},
 					position: {
 						my: 'top center',
 						at: 'bottom center'
@@ -170,7 +242,8 @@
 						tip: {
 							width: 18,
 							height: 10
-						}
+						},
+						overflow: scroll
 					}
 				});
 			//});
