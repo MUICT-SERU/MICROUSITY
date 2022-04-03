@@ -631,7 +631,7 @@ app.get("/result", (req, res) => {
     return;
   }
   fs.readFile('../example/header.json', 'utf8', (err, data) => {
-
+console.log("test")
   //fs.readFile("../output/output.json", "utf8", (err, data) => {
 
     if (err) {
