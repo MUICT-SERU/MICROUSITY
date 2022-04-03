@@ -630,9 +630,8 @@ app.get("/result", (req, res) => {
     res.redirect('/login');
     return;
   }
-  fs.readFile('../example/header.json', 'utf8', (err, data) => {
-console.log("test")
-  //fs.readFile("../output/output.json", "utf8", (err, data) => {
+  //fs.readFile('../example/header.json', 'utf8', (err, data) => {
+  fs.readFile("../output/output.json", "utf8", (err, data) => {
 
     if (err) {
       return console.log("File read failed:", err);
@@ -811,9 +810,9 @@ app.get("/graph/:id", (req, res) => {
     error = false;
   }
 
-  fs.readFile('../example/header.json', 'utf8', (err, data) => {
+  //fs.readFile('../example/header.json', 'utf8', (err, data) => {
 
-  //fs.readFile("../output/output.json", "utf8", (err, data) => {
+  fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
     }
@@ -865,3 +864,9 @@ if (key === undefined) {
     console.log('listening w/ https');
   });
 }
+
+
+app.get("/test", (req, res) => {
+  
+  res.render("test");
+});

@@ -5,21 +5,28 @@
     height: 100%;
     position: absolute;
     left: 0;
-    top: 50 !important;
+    top: 80 !important;
     z-index: 999;
 }
 
 .qtip{
 	
-	max-width: 421px !important;
+	max-width: 430px !important;
 	min-width: 50px;
 }
 
 div.scroll {
   width: 410px;
-  height: 230px;
+  height: 240px;
   overflow: scroll;
 }
+.card-header{    
+    padding: 0px !important;
+}
+.btn{
+	font-size:  14px !important;
+}
+   
 	</style>
 
 <head>
@@ -27,20 +34,81 @@ div.scroll {
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
 	<link href="/css/style.css" rel="stylesheet" />
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.css">
-
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 	<script src="https://code.jquery.com/jquery-2.1.3.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.21.0/cytoscape.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/cytoscape-qtip2@0.0.2/cytoscape-qtip.min.js"></script>
+	
+	<script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 	<script type="text/javascript">
 		$(function () {
+
+			function getHeader(number, client_header, server_header) {
+				let start ="<br><div id='accordion'>";
+				let end = "</div>";
+				let server = "";
+				let client = "";
+				if(server_header != ""){
+					server = "<div class='card'>" +
+						"<div class='card-header' id='headingOne'>" +
+							"<h5 class='mb-0'>" +
+								"<button class='btn btn-link' data-toggle='collapse' data-target='#server" + number +"' aria-expanded='true'>" +
+								"Server Header" +
+								"</button>" +
+							"</h5>" +
+						"</div>" +
+
+						"<div id='server"+ number +"' class='collapse' aria-labelledby='headingOne' data-parent='#accordion'>" +
+							"<div class='card-body'>" +
+								server_header +
+							"</div>" +
+						"</div>" +
+					"</div>";
+				} else {
+					server = "";
+				}
+				if(client_header !=""){
+					client = "<div class='card'>" +
+						"<div class='card-header' id='headingOne'>" +
+							"<h5 class='mb-0'>" +
+								"<button class='btn btn-link' data-toggle='collapse' data-target='#" + number +"' aria-expanded='true'>" +
+								"Client Header" +
+								"</button>" +
+							"</h5>" +
+						"</div>" +
+
+						"<div id='"+ number +"' class='collapse' aria-labelledby='headingOne' data-parent='#accordion'>" +
+							"<div class='card-body'>" +
+								client_header +
+							"</div>" +
+						"</div>" +
+					"</div>"; 
+				} else {
+					client = "";
+				}
+
+				return start + server + client + end;
+			}
 			
 			let nodeList = [];
 			let edgeList = [];
-			//console.log(response);
+			let i = 0;
+
 			let data = <%- JSON.stringify(trackSeqs) %>
 			let error = <%- error %>
-			console.log(error)
+			
+			let client_header = "";
+			let server_header = "";
+			
 			
 			//document.write(data);
 			// for(let trackSeq of data){
@@ -59,52 +127,103 @@ div.scroll {
 
 			if(error == true){
 				for(let trackSeq of data){
-				//console.log(trackSeq.request["id.orig_p"]);
+					if(trackSeq.request.client_header_names){
+						trackSeq.request.client_header_names.forEach((name,index) => {
+							client_header += "<b>" + name + "</b>: " + trackSeq.request.client_header_values[index] + '<br>'	
+						});
+					} else {
+						client_header = "";
+					}
+					if(trackSeq.request.server_header_names){
+						trackSeq.request.server_header_names.forEach((name,index) => {
+							server_header += "<b>" + name + "</b>: " + trackSeq.request.server_header_values[index] + '<br>'	
+						});
+					} else {
+						server_header = "";
+					}
+
 				nodeList.push( {data: { id: "Client", label: "Client", type: "Src", group: "triangle"}})
 				nodeList.push( {data: { id: "BFF", label: "BFF", type: "Res"}})
 				if(trackSeq.request.status_code >= 500 && trackSeq.request.status_code < 600 ){
 					edgeList.push( {data: { 
 						source: "Client", 
-						target: "BFF", 
+						target: "BFF",
+						number: i,
+						client_header: client_header,
+						server_header: server_header, 
 						uri: trackSeq.request.uri, 
 						status: trackSeq.request.status_code, 
 						exception: trackSeq.request.exception,
 						post_body: trackSeq.request.post_body,
-						//post_body: trackSeq.request.post_body,  
 						label: trackSeq.request.method  + " " + trackSeq.request.uri, 
-						color: "orange"}})
+						color: "orange"}});
+						client_header = "";
+						server_header = "";
+						i++;
 				} else {
 					edgeList.push( {data: { 
 						source: "Client", 
-						target: "BFF", 
+						target: "BFF",
+						number: i,
+						client_header: client_header,
+						server_header: server_header, 
 						uri: trackSeq.request.uri, 
 						status: trackSeq.request.status_code, 
 						exception: "No Exception",
 						post_body: trackSeq.request.post_body, 
-						label: trackSeq.request.method + " " + trackSeq.request.uri}})
+						label: trackSeq.request.method + " " + trackSeq.request.uri}});
+						client_header = "";
+						server_header = "";
+						i++;
 				}
 				
-				//edgeList.push( {data: { source: "BFF", target: "Client", uri: trackSeq.request.status_code}})
+				
 				for(let subrequest of trackSeq.subrequest){
-					//nodeList.push( {data: { id: subrequest["id.orig_p"], type: "Src"}})
+					if(subrequest.client_header_names){
+							subrequest.client_header_names.forEach((name,index) => {
+								client_header += "<b>" + name + "</b>: " + subrequest.client_header_values[index] + '<br>'	
+							});
+						} else {
+							client_header = "";
+						}
+						if(subrequest.server_header_names){
+							subrequest.server_header_names.forEach((name,index) => {
+								server_header += "<b>" + name + "</b>: " + subrequest.server_header_values[index] + '<br>'	
+							});
+						} else {
+							server_header = "";
+						}
+					
 					nodeList.push( {data: { id: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], label: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"],type: "Res"}})
 					if(subrequest.status_code  >= 500 && subrequest.status_code < 600 ){
 						edgeList.push( {data: { 
 							source: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], 
 							target: "BFF", uri: subrequest.uri, 
+							number: i,
+							client_header: client_header,
+							server_header: server_header, 
 							status: subrequest.status_code, 
 							exception: subrequest.exception,
 							post_body: subrequest.post_body,  
 							label: subrequest.method + " " + subrequest.uri, 
-							color: "orange"}})
+							color: "orange"}});
+							client_header = "";
+							server_header = "";
+							i++;
 					} else {
 						edgeList.push( {data: { 
 							source: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], 
-							target: "BFF", uri: subrequest.uri, 
+							target: "BFF", uri: subrequest.uri,
+							number: i,
+							client_header: client_header,
+							server_header: server_header,   
 							status: subrequest.status_code, 
 							exception: "No Exception",
 							post_body: subrequest.post_body,   
-							label: subrequest.method + " " +subrequest.uri}})
+							label: subrequest.method + " " +subrequest.uri}});
+							client_header = "";
+							server_header = "";
+							i++;
 					}
 					//edgeList.push( {data: { source: "BFF", target: subrequest["id.resp_p"], uri: subrequest.status_code}})
 				}
@@ -113,58 +232,109 @@ div.scroll {
 
 			} else {
 				for(let trackSeq of data){
-					//console.log(trackSeq.request["id.orig_p"]);
+					if(trackSeq.request.client_header_names){
+						trackSeq.request.client_header_names.forEach((name,index) => {
+							client_header += "<b>" + name + "</b>: " + trackSeq.request.client_header_values[index] + '<br>'	
+						});
+					} else {
+						client_header = "";
+					}
+					if(trackSeq.request.server_header_names){
+						trackSeq.request.server_header_names.forEach((name,index) => {
+							server_header += "<b>" + name + "</b>: " + trackSeq.request.server_header_values[index] + '<br>'	
+						});
+					} else {
+						server_header = "";
+					}
+					
 					nodeList.push( {data: { id: "Client", label: "Client", type: "Src", group: "triangle"}})
 					nodeList.push( {data: { id: "BFF", label: "BFF", type: "Res"}})
 					if(trackSeq.request.exception){
 						edgeList.push( {data: { 
 							source: "Client", 
-							target: "BFF", 
+							target: "BFF",
+							number: i,
+							client_header: client_header,
+							server_header: server_header,
 							uri: trackSeq.request.uri, 
 							status: trackSeq.request.status_code, 
 							exception: trackSeq.request.exception,
 							post_body: trackSeq.request.post_body,  
 							label: trackSeq.request.method  + " " + trackSeq.request.uri, 
-							color: "red"}})
+							color: "red"}});
+							client_header = "";
+							server_header = "";
+							i++;
 					} else {
 						edgeList.push( {data: { 
 							source: "Client", 
-							target: "BFF", 
+							target: "BFF",
+							number: i,
+							client_header: client_header,
+							server_header: server_header, 
 							uri: trackSeq.request.uri, 
 							status: trackSeq.request.status_code, 
 							exception: "No Exception",
 							post_body: trackSeq.request.post_body, 
-							label: trackSeq.request.method + " " + trackSeq.request.uri}})
+							label: trackSeq.request.method + " " + trackSeq.request.uri}});
+							client_header = "";
+							server_header = "";
+							i++;
 					}
 					
-					//edgeList.push( {data: { source: "BFF", target: "Client", uri: trackSeq.request.status_code}})
+					
 					for(let subrequest of trackSeq.subrequest){
-						//nodeList.push( {data: { id: subrequest["id.orig_p"], type: "Src"}})
+						if(subrequest.client_header_names){
+							subrequest.client_header_names.forEach((name,index) => {
+								client_header += "<b>" + name + "</b>: " + subrequest.client_header_values[index] + '<br>'	
+							});
+						} else {
+							client_header = "";
+						}
+						if(subrequest.server_header_names){
+							subrequest.server_header_names.forEach((name,index) => {
+								server_header += "<b>" + name + "</b>: " + subrequest.server_header_values[index] + '<br>'	
+							});
+						} else {
+							server_header = "";
+						}
+						
 						nodeList.push( {data: { id: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], label: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"],type: "Res"}})
 						if(subrequest.exception){
 							edgeList.push( {data: { 
 								source: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], 
-								target: "BFF", uri: subrequest.uri, 
+								target: "BFF", uri: subrequest.uri,
+								number: i,
+								client_header: client_header,
+								server_header: server_header,  
 								status: subrequest.status_code, 
 								exception: subrequest.exception,
 								post_body: subrequest.post_body,  
 								label: subrequest.method + " " + subrequest.uri, 
-								color: "red"}})
+								color: "red"}});
+								client_header = "";
+								server_header = "";
+								i++;
 						} else {
 							edgeList.push( {data: { 
 								source: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], 
-								target: "BFF", uri: subrequest.uri, 
+								target: "BFF", uri: subrequest.uri,
+								number: i,
+								client_header: client_header,
+								server_header: server_header,  
 								status: subrequest.status_code, 
 								exception: "No Exception",
 								post_body: subrequest.post_body,   
-								label: subrequest.method + " " +subrequest.uri}})
+								label: subrequest.method + " " +subrequest.uri}});
+								client_header = "";
+								server_header = "";
+								i++;
 						}
 						//edgeList.push( {data: { source: "BFF", target: subrequest["id.resp_p"], uri: subrequest.status_code}})
 					}
 				}
 
 			}
-
 			
 			console.log(nodeList);
 			console.log(edgeList);
@@ -230,10 +400,9 @@ div.scroll {
 					fit: true
 				}
 			});
-			//cy.on('mouseover', 'edge', function(event){
-					//console.log("test");
+		
 					cy.elements('edge').qtip({
-					content: function(){ return '<div class="scroll"><b>Status Code:</b> ' + this.attr('status') + '<br> <b>Exception:</b> ' + this.attr('exception') + '<br> <b>Response body:</b> '+ this.attr('post_body') +'</div>'},
+					content: function(){ return '<div class="scroll"><b>Status Code:</b> ' + this.attr('status') + '<br> <b>Exception:</b> ' + this.attr('exception') +'<br><b>Header:</b>' + getHeader(this.attr('number'),this.attr('client_header'),this.attr('server_header')) + '<br> <b>Response body:</b> '+ this.attr('post_body') +'</div>'},
 					position: {
 						my: 'top center',
 						at: 'bottom center'
@@ -246,7 +415,7 @@ div.scroll {
 						}
 					}
 				});
-			//});
+		
 			
 
 		});
@@ -256,7 +425,7 @@ div.scroll {
 </head>
 
 <body>
-	<h1>Graph Visualization</h1>
+	<h3>Graph Visualization</h3>
 	<% if(resultId === null){ %>
 	<div>
 		<a href="/result" class="mb-4">&lt;Go Back</a>
