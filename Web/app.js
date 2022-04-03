@@ -481,7 +481,7 @@ app.get("/save", (req, res) => {
     return;
   }
   let user = req.user;
-  fs.readFile('../example/output99.json', 'utf8', (err, data) => {
+  fs.readFile('../example/output44.json', 'utf8', (err, data) => {
   //fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
@@ -574,8 +574,8 @@ app.get("/result", (req, res) => {
     res.redirect('/login');
     return;
   }
-  //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
-  fs.readFile("../output/output.json", "utf8", (err, data) => {
+  fs.readFile('../example/header.json', 'utf8', (err, data) => {
+  //fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
     }
@@ -753,9 +753,9 @@ app.get("/graph/:id", (req, res) => {
     error = false;
   }
 
-  //fs.readFile('../example/output5.json', 'utf8', (err, data) => {
+  fs.readFile('../example/header.json', 'utf8', (err, data) => {
 
-  fs.readFile("../output/output.json", "utf8", (err, data) => {
+  //fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
     }

@@ -69,7 +69,8 @@ div.scroll {
 						uri: trackSeq.request.uri, 
 						status: trackSeq.request.status_code, 
 						exception: trackSeq.request.exception,
-						post_body: trackSeq.request.post_body,  
+						post_body: trackSeq.request.post_body,
+						//post_body: trackSeq.request.post_body,  
 						label: trackSeq.request.method  + " " + trackSeq.request.uri, 
 						color: "orange"}})
 				} else {
@@ -112,55 +113,55 @@ div.scroll {
 
 			} else {
 				for(let trackSeq of data){
-				//console.log(trackSeq.request["id.orig_p"]);
-				nodeList.push( {data: { id: "Client", label: "Client", type: "Src", group: "triangle"}})
-				nodeList.push( {data: { id: "BFF", label: "BFF", type: "Res"}})
-				if(trackSeq.request.exception){
-					edgeList.push( {data: { 
-						source: "Client", 
-						target: "BFF", 
-						uri: trackSeq.request.uri, 
-						status: trackSeq.request.status_code, 
-						exception: trackSeq.request.exception,
-						post_body: trackSeq.request.post_body,  
-						label: trackSeq.request.method  + " " + trackSeq.request.uri, 
-						color: "red"}})
-				} else {
-					edgeList.push( {data: { 
-						source: "Client", 
-						target: "BFF", 
-						uri: trackSeq.request.uri, 
-						status: trackSeq.request.status_code, 
-						exception: "No Exception",
-						post_body: trackSeq.request.post_body, 
-						label: trackSeq.request.method + " " + trackSeq.request.uri}})
-				}
-				
-				//edgeList.push( {data: { source: "BFF", target: "Client", uri: trackSeq.request.status_code}})
-				for(let subrequest of trackSeq.subrequest){
-					//nodeList.push( {data: { id: subrequest["id.orig_p"], type: "Src"}})
-					nodeList.push( {data: { id: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], label: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"],type: "Res"}})
-					if(subrequest.exception){
+					//console.log(trackSeq.request["id.orig_p"]);
+					nodeList.push( {data: { id: "Client", label: "Client", type: "Src", group: "triangle"}})
+					nodeList.push( {data: { id: "BFF", label: "BFF", type: "Res"}})
+					if(trackSeq.request.exception){
 						edgeList.push( {data: { 
-							source: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], 
-							target: "BFF", uri: subrequest.uri, 
-							status: subrequest.status_code, 
-							exception: subrequest.exception,
-							post_body: subrequest.post_body,  
-							label: subrequest.method + " " + subrequest.uri, 
+							source: "Client", 
+							target: "BFF", 
+							uri: trackSeq.request.uri, 
+							status: trackSeq.request.status_code, 
+							exception: trackSeq.request.exception,
+							post_body: trackSeq.request.post_body,  
+							label: trackSeq.request.method  + " " + trackSeq.request.uri, 
 							color: "red"}})
 					} else {
 						edgeList.push( {data: { 
-							source: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], 
-							target: "BFF", uri: subrequest.uri, 
-							status: subrequest.status_code, 
+							source: "Client", 
+							target: "BFF", 
+							uri: trackSeq.request.uri, 
+							status: trackSeq.request.status_code, 
 							exception: "No Exception",
-							post_body: subrequest.post_body,   
-							label: subrequest.method + " " +subrequest.uri}})
+							post_body: trackSeq.request.post_body, 
+							label: trackSeq.request.method + " " + trackSeq.request.uri}})
 					}
-					//edgeList.push( {data: { source: "BFF", target: subrequest["id.resp_p"], uri: subrequest.status_code}})
+					
+					//edgeList.push( {data: { source: "BFF", target: "Client", uri: trackSeq.request.status_code}})
+					for(let subrequest of trackSeq.subrequest){
+						//nodeList.push( {data: { id: subrequest["id.orig_p"], type: "Src"}})
+						nodeList.push( {data: { id: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], label: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"],type: "Res"}})
+						if(subrequest.exception){
+							edgeList.push( {data: { 
+								source: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], 
+								target: "BFF", uri: subrequest.uri, 
+								status: subrequest.status_code, 
+								exception: subrequest.exception,
+								post_body: subrequest.post_body,  
+								label: subrequest.method + " " + subrequest.uri, 
+								color: "red"}})
+						} else {
+							edgeList.push( {data: { 
+								source: subrequest["id.resp_h"] + " : " + subrequest["id.resp_p"], 
+								target: "BFF", uri: subrequest.uri, 
+								status: subrequest.status_code, 
+								exception: "No Exception",
+								post_body: subrequest.post_body,   
+								label: subrequest.method + " " +subrequest.uri}})
+						}
+						//edgeList.push( {data: { source: "BFF", target: subrequest["id.resp_p"], uri: subrequest.status_code}})
+					}
 				}
-			}
 
 			}
 
@@ -242,8 +243,7 @@ div.scroll {
 						tip: {
 							width: 18,
 							height: 10
-						},
-						overflow: scroll
+						}
 					}
 				});
 			//});

@@ -353,8 +353,8 @@
                                         
                                             <div class="main">
                                                 <b>
-                                                    <span class="name">Request: <%= result.request.method %>
-                                                            <%= result.request.uri %></span>
+                                                    <span class="name"><u>Request: <%= result.request.method %>
+                                                            <%= result.request.uri %></u></span>
                                                     <span class="status">
                                                         <%= result.request.status_code %>
                                                     </span>
@@ -449,8 +449,8 @@
                                             <% } %> 
                                             <div class="main">
                                                 <b>
-                                                    <span class="name">Request: <%= result.request.method %>
-                                                            <%= result.request.uri %></span>
+                                                    <span class="name"><u>Request: <%= result.request.method %>
+                                                            <%= result.request.uri %></u></span>
                                                     <span class="status">
                                                         <%= result.request.status_code %>
                                                     </span>
@@ -523,8 +523,8 @@
                                             <% } %> 
                                             <div class="main">
 
-                                                <span class="name">Request: <%= result.request.method %>
-                                                        <%= result.request.uri %></span>
+                                                <span class="name"><u>Request: <%= result.request.method %>
+                                                        <%= result.request.uri %></u></span>
                                                 <span class="status">
                                                     <%= result.request.status_code %>
                                                 </span>
@@ -615,11 +615,11 @@
                                                 <span class="name">
                                                     <% if(result.request.status_code>= 500 && result.request.status_code
                                                         < 600){ %>
-                                                            <b>Request: <%= result.request.method %>
-                                                                    <%= result.request.uri %></b>
+                                                            <b><u>Request: <%= result.request.method %>
+                                                                    <%= result.request.uri %></u></b>
                                                             <% } else {%>
-                                                                Request: <%= result.request.method %>
-                                                                    <%= result.request.uri %>
+                                                            <u>Request: <%= result.request.method %>
+                                                                    <%= result.request.uri %></u>
                                                                         <% } %>
                                                 </span>
 
