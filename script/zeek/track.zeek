@@ -4,6 +4,7 @@
 @load base/protocols/http
 
 @load ./post_body.zeek
+@load ./log_all_header.zeek
 
 module track;
 export {

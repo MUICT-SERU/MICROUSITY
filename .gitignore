@@ -18,3 +18,4 @@ output
 *.pem
 .env
 lineman
+outtest/
