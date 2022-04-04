@@ -13,7 +13,6 @@ let getIfaceLog = (async (iface) => {
 });
 
 function singleIfaceMapping(first) {
-  fs.writeFileSync("aaaa.json", JSON.stringify(first));
   let result = [];
   let bffRequest = [];
   let subRequest = [];
