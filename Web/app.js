@@ -306,8 +306,9 @@ app.post("/launch", async (req, res) => {
     return;
   }
   let mode = req.body.mode;
+
   if(mode === 'single') {
-    events.emit("TESTSTARTED",'single');
+    events.emit("TESTSTARTED", 'single', "/Users/pumipat/SP2021-TRITECH/grammar/grammar.py", "/Users/pumipat/SP2021-TRITECH/grammar/dict.json", "/Users/pumipat/SP2021-TRITECH/grammar/restler_user_settings.json");
   }
   else if (mode === 'dual') {
     events.emit("TESTSTARTED","dual");
@@ -323,6 +324,16 @@ events.on("TESTSTARTED", (mode, grammar, dict, settings, token) => {
   isTesting = true;
   let worker;
   switch (mode) {
+    case "single":
+      worker = new Worker('./worker_no_shell.js', {
+        workerData: {
+          grammar,
+          dict,
+          settings,
+          token
+        }
+      })
+      break;
     case "dual":
       worker = new Worker('./worker.js');
       break;
@@ -351,11 +362,12 @@ events.on("TESTSTARTED", (mode, grammar, dict, settings, token) => {
   worker.once("exit", () => {
     isTesting = false;
     let first = getIfaceLog(process.env.IFACE);
-    let second = getIfaceLog(process.env.SECOND_IFACE);
+    // let second = getIfaceLog(process.env.SECOND_IFACE);
     let trick_email = "pooh99191@gmail.com"
-    Promise.all([first, second])
+    Promise.resolve(first)
       .then(
-        res => dualIfaceMapping(res[0], res[1], process.env.IFACE)
+        // res => dualIfaceMapping(res[0], res[1], process.env.IFACE)
+        res => singleIfaceMapping(res)
       )
       .then(
         res => {

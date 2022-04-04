@@ -215,6 +215,12 @@
                         "/launch",
                         {
                             method: 'POST',
+                            body: {
+                                'mode': 'single'
+                            },
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
                         }
                     ).then(res => {
                         if (!res.ok) {

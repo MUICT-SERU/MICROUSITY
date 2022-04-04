@@ -5,7 +5,7 @@ const readLog = require('./read.js');
 
 const javaExceptionRegex = /\S*Exception/;
 
-let bffPort = Number(process.env.BFF_PORT);
+let bffPort = [Number(process.env.BFF_PORT)];
 let excludedPort = [443, 80];
 let getIfaceLog = (async (iface) => {
   let result = await readLog(path.resolve('../script/zeek/' + iface + '/http.log'), iface);
@@ -13,7 +13,10 @@ let getIfaceLog = (async (iface) => {
 });
 
 function singleIfaceMapping(first) {
+  fs.writeFileSync("aaaa.json", JSON.stringify(first));
   let result = [];
+  let bffRequest = [];
+  let subRequest = [];
   for (let index = 0; index < first.length; index++) {
     const element = first[index];
     if (excludedPort.includes(element["id.resp_p"])) {
@@ -23,15 +26,25 @@ function singleIfaceMapping(first) {
     if (javaException !== null) element["exception"] = javaException[0];
     const requestNo = element["subrequest"];
     const isBffRequest = bffPort.includes(element["id.resp_p"]);
+    console.log(isBffRequest);
     if (isBffRequest) {
-      result.push({
-        "request": element,
-        "subrequest": []
-      });
+      bffRequest.push(element);
     } else {
-      result[requestNo-1]["subrequest"].push(element);
+      if(requestNo > subRequest.length) {
+        subRequest.push([element]);
+      }
+      else {
+        subRequest[requestNo - 1].push(element);
+      }
     }
   }
+  for(let i = 0;i < bffRequest.length;i++) {
+    result.push({
+      'request': bffRequest[i],
+      'subrequest': subRequest[i]
+    })
+  }
+  console.log(bffRequest.length, subRequest.length, result.length);
   return result;
 }
 
@@ -63,11 +76,9 @@ function dualIfaceMapping(main, secondary, primary_iface) {
       )
     }
     else {
-      
       result[merged[i]["subrequest"]]["subrequest"].push(merged[i]);
     }
   }
   return result;
 }
-
 module.exports = { getIfaceLog, singleIfaceMapping, dualIfaceMapping };
