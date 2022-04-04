@@ -38,6 +38,9 @@
         .exception {
             float: right;
         }
+        .id {
+            float: left;
+        }
 
         .count {
             float: right;
@@ -359,8 +362,11 @@
                                                         <%= result.request.status_code %>
                                                     </span>
                                                 </b>
+                                                <br>
+                                                <span class="id">
+                                                    ID: <%= result.request.subrequest %>
+                                                </span>
                                                 <% if(result.request.exception){ %>
-                                                    <br>
                                                     <span class="exception">
                                                     <i> Exception: <%= result.request.exception %></i>
                                                     </span>
@@ -455,9 +461,11 @@
                                                         <%= result.request.status_code %>
                                                     </span>
                                                 </b>
-
+                                                <br>
+                                                <span class="id">
+                                                    ID: <%= result.request.subrequest %>
+                                                </span>
                                                 <% if(result.request.exception){ %>
-                                                    <br>
                                                     <span class="exception">
                                                     <i> Exception: <%= result.request.exception %></i>
                                                     </span>
@@ -528,7 +536,10 @@
                                                 <span class="status">
                                                     <%= result.request.status_code %>
                                                 </span>
-
+                                                <br>
+                                                <span class="id">
+                                                    ID: <%= result.request.subrequest %>
+                                                </span>
                                             </div>
                                         </li>
 
@@ -634,7 +645,10 @@
                                                                     <% } %>
 
                                                 </span>
-
+                                                <br>
+                                                <span class="id">
+                                                    ID: <%= result.request.subrequest %>
+                                                </span>
                                             </div>
                                         </li>
 
