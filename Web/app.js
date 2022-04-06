@@ -395,9 +395,10 @@ events.on("TESTSTARTED", (mode, grammar, dict, settings, token) => {
         });
     }
     else {
-      Promise.resolve(first, second)
-      .then(
-        res => dualIfaceMapping(res[0], res[1], process.env.IFACE)
+      Promise.all([first, second]).then(
+        res => {
+          return dualIfaceMapping(res[0], res[1], process.env.IFACE)
+        }
       )
       .then(
         res => {
@@ -901,3 +902,10 @@ if (key === undefined) {
     console.log('listening w/ https');
   });
 }
+
+app.use((err, req, res, next) => {
+  res.send(err);
+})
+process.on("uncaughtException", (err) => {
+  console.log(err);
+});

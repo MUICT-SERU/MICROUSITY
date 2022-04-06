@@ -82,7 +82,7 @@
         <br><br><br><br><br><br><br>
 
         <div class="row">
-            <form action="/upload" method="post" enctype="multipart/form-data">
+            <form enctype="multipart/form-data">
                 <div class="mb-3">
                     <label class="form-label" for="grammar"><h5>grammar.py</h5></label>
                     <input class="form-control" type="file" name="grammar" id="grammar" accept=".py" required>
@@ -112,34 +112,53 @@
             </div>
             
             <script>
-                function launch() {
-                    btnDictSubmit.prop("disabled", true);
-                    let ref = document.getElementById('status');
-                    ref.style.display = 'none';
-                    fetch(
-                        "/launch",
-                        {
-                            method: 'POST',
+                const status = document.getElementById("status");
+                const form = document.forms[0];
+                form.addEventListener("submit", handleSubmit);
+                function handleSubmit(ev) {
+                    ev.preventDefault();
+                    let data = new FormData(ev.target);
+                    fetch('/upload', {
+                        method: 'POST',
+                        headers: {
+                            'Application-Type': 'multipart/form-data'
+                        },
+                        body: data
+                    }).then(
+                        res => {
+                            if(res.ok) {
+                                status.innerText = "Testing";
+                            }
+                            else {
+                                throw Error(res.statusText);
+                            }
                         }
-                    ).then(res => {
-                        if (!res.ok) {
-                            ref.innerText = "Can't start the test";
-                            ref.style.display = 'flex';
-                        }
-                        else {
-                            poll();
-                        }
+                    ).then(
+                        window.setInterval(poll, 1000)
+                    ).catch(err => {
+                        status.innerText = "Error: " + err;
                     })
                 }
                 function poll() {
-                    setInterval(async () => {
-                        await fetch(
-                            '/test_status'
-                        ).then(res => res.text())
-                            .then(body => {
-                                if (body.localeCompare('UNLOCKED')==0) { window.location.href = '/result'; }
-                            })
-                    }, 14000);
+                    console.log(".");
+                    status.innerText = status.innerText + ".";
+                    if(status.innerText.length > 10) {
+                        status.innerText = status.innerText.substring(0, 7);
+                    }
+                    fetch('/test_status').then(
+                        res => {
+                            if(res.ok) {
+                                return res.body;
+                            }
+                            else {
+                                throw Error(res.statusText);
+                            }
+                        }
+                    ).then(
+                        res => {
+                            if(res === "UNLOCKED") window.location = '/result';
+                        }
+                    )
                 }
             </script>
 

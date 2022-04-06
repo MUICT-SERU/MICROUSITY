@@ -25,7 +25,6 @@ function singleIfaceMapping(first) {
     if (javaException !== null) element["exception"] = javaException[0];
     const requestNo = element["subrequest"];
     const isBffRequest = bffPort.includes(element["id.resp_p"]);
-    console.log(isBffRequest);
     if (isBffRequest) {
       bffRequest.push(element);
     } else {
@@ -43,7 +42,6 @@ function singleIfaceMapping(first) {
       'subrequest': subRequest[i]
     })
   }
-  console.log(bffRequest.length, subRequest.length, result.length);
   return result;
 }
 
