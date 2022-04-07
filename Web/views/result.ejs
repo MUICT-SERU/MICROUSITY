@@ -38,6 +38,9 @@
         .exception {
             float: right;
         }
+        .id {
+            float: left;
+        }
 
         .count {
             float: right;
@@ -353,14 +356,17 @@
                                         
                                             <div class="main">
                                                 <b>
-                                                    <span class="name">Request: <%= result.request.method %>
-                                                            <%= result.request.uri %></span>
+                                                    <span class="name"><u>Request: <%= result.request.method %>
+                                                            <%= result.request.uri %></u></span>
                                                     <span class="status">
                                                         <%= result.request.status_code %>
                                                     </span>
                                                 </b>
+                                                <br>
+                                                <span class="id">
+                                                    ID: <%= result.request.subrequest %>
+                                                </span>
                                                 <% if(result.request.exception){ %>
-                                                    <br>
                                                     <span class="exception">
                                                     <i> Exception: <%= result.request.exception %></i>
                                                     </span>
@@ -449,15 +455,17 @@
                                             <% } %> 
                                             <div class="main">
                                                 <b>
-                                                    <span class="name">Request: <%= result.request.method %>
-                                                            <%= result.request.uri %></span>
+                                                    <span class="name"><u>Request: <%= result.request.method %>
+                                                            <%= result.request.uri %></u></span>
                                                     <span class="status">
                                                         <%= result.request.status_code %>
                                                     </span>
                                                 </b>
-
+                                                <br>
+                                                <span class="id">
+                                                    ID: <%= result.request.subrequest %>
+                                                </span>
                                                 <% if(result.request.exception){ %>
-                                                    <br>
                                                     <span class="exception">
                                                     <i> Exception: <%= result.request.exception %></i>
                                                     </span>
@@ -523,12 +531,15 @@
                                             <% } %> 
                                             <div class="main">
 
-                                                <span class="name">Request: <%= result.request.method %>
-                                                        <%= result.request.uri %></span>
+                                                <span class="name"><u>Request: <%= result.request.method %>
+                                                        <%= result.request.uri %></u></span>
                                                 <span class="status">
                                                     <%= result.request.status_code %>
                                                 </span>
-
+                                                <br>
+                                                <span class="id">
+                                                    ID: <%= result.request.subrequest %>
+                                                </span>
                                             </div>
                                         </li>
 
@@ -615,11 +626,11 @@
                                                 <span class="name">
                                                     <% if(result.request.status_code>= 500 && result.request.status_code
                                                         < 600){ %>
-                                                            <b>Request: <%= result.request.method %>
-                                                                    <%= result.request.uri %></b>
+                                                            <b><u>Request: <%= result.request.method %>
+                                                                    <%= result.request.uri %></u></b>
                                                             <% } else {%>
-                                                                Request: <%= result.request.method %>
-                                                                    <%= result.request.uri %>
+                                                            <u>Request: <%= result.request.method %>
+                                                                    <%= result.request.uri %></u>
                                                                         <% } %>
                                                 </span>
 
@@ -634,7 +645,10 @@
                                                                     <% } %>
 
                                                 </span>
-
+                                                <br>
+                                                <span class="id">
+                                                    ID: <%= result.request.subrequest %>
+                                                </span>
                                             </div>
                                         </li>
 
