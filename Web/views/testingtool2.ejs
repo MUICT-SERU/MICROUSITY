@@ -148,7 +148,7 @@
                     fetch('/test_status').then(
                         res => {
                             if(res.ok) {
-                                return res.body;
+                                return res.text();
                             }
                             else {
                                 throw Error(res.statusText);

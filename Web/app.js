@@ -305,10 +305,14 @@ app.post("/launch", async (req, res) => {
     res.sendStatus(409);
     return;
   }
-  let mode = req.body.mode;
+  let mode = req.query.mode;
 
   if (mode === 'single') {
-    events.emit("TESTSTARTED", 'single', "/Users/pumipat/SP2021-TRITECH/grammar/grammar.py", "/Users/pumipat/SP2021-TRITECH/grammar/dict.json", "/Users/pumipat/SP2021-TRITECH/grammar/restler_user_settings.json");
+    events.emit("TESTSTARTED",
+                'single',
+                path.resolve(__dirname, '../grammar/grammar.py'),
+                path.resolve(__dirname, '../grammar/dict.json'),
+                path.resolve(__dirname, '../grammar/restler_user_settings.json'));
   }
   else if (mode === 'dual') {
     events.emit("TESTSTARTED", "dual");
@@ -895,8 +899,8 @@ app.get("/logout", (req, res) => {
 
 //run
 if (key === undefined) {
-  app.listen(8080, () => {
-    console.log('listening as http at 8080');
+  app.listen(process.env.PORT, () => {
+    console.log('listening as http at ', process.env.PORT);
   });
 } else {
   https.createServer({ key: key, cert: cert, passphrase: '1234' }, app).listen(443, () => {

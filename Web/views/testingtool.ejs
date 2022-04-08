@@ -212,15 +212,15 @@
                     let ref = document.getElementById('status');
                     ref.style.display = 'none';
                     fetch(
-                        "/launch",
+                        "/launch?" + new URLSearchParams({
+                            'mode': 'single'
+                        }),
                         {
                             method: 'POST',
-                            body: {
-                                'mode': 'single'
-                            },
                             headers: {
                                 'Content-Type': 'application/json'
-                            }
+                            },
+                            
                         }
                     ).then(res => {
                         if (!res.ok) {
