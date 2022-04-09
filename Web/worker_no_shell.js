@@ -12,7 +12,7 @@ if (!fs.existsSync(ifacePath)) {
 }
 let zeek_process = spawn(
     "zeek",
-    ["-C", "-i", process.env.IFACE, "../track.zeek", "track::bff_port=" + process.env.BFF_PORT + '/tcp'],
+    ["-C", "-i", process.env.IFACE, "../track.zeek", "track::bff_port=" + 8060 + '/tcp'],
     {
         cwd: ifacePath
     }
