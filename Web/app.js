@@ -118,7 +118,7 @@ function getCertificate(name, date) {
 }
 
 //result render
-function getResult(data, fromFile) {
+function getResultOld(data, fromFile) {
   if (fromFile == true) {
     var resultList = JSON.parse(data);
   } else {
@@ -238,6 +238,126 @@ function getResult(data, fromFile) {
     bothLeakIds: removeDupId(bothLeakId),
   }
 
+}
+
+function getResult(data, fromFile) {
+  if (fromFile == true) {
+    var resultList = JSON.parse(data);
+  } else {
+    var resultList = data.result;
+  }
+  var main5xx = 0;
+  var main4xx = 0;
+  var main3xx = 0;
+  var main2xx = 0;
+  var sub5xx = 0;
+  var sub4xx = 0;
+  var sub3xx = 0;
+  var sub2xx = 0;
+  var countReq = 0;
+
+  var bffLeak = false;
+  var coreLeak = false;
+
+  var trackId = [];
+  var bffLeakId = [];
+  var coreLeakId = [];
+  var bothLeakId = [];
+
+  for (let result of resultList) {
+    if (result.request === null) {
+    } else if (
+      result.request.status_code >= 200 &&
+      result.request.status_code < 300
+    ) {
+      main2xx += 1;
+    } else if (
+      result.request.status_code >= 300 &&
+      result.request.status_code < 400
+    ) {
+      main3xx += 1;
+    } else if (
+      result.request.status_code >= 400 &&
+      result.request.status_code < 500
+    ) {
+      main4xx += 1;
+    } else if (
+      result.request.status_code >= 500 &&
+      result.request.status_code < 600
+    ) {
+      main5xx += 1;
+      trackId.push({ id: result.request.subrequest });
+    }
+    if (result.subrequest){for (let subrequest of result.subrequest) {
+      if (subrequest.request === null) {
+      }
+      else if (subrequest.status_code >= 200 && subrequest.status_code < 300) {
+        sub2xx += 1;
+      }
+      else if (subrequest.status_code >= 300 && subrequest.status_code < 400) {
+        sub3xx += 1;
+      }
+      else if (subrequest.status_code >= 400 && subrequest.status_code < 500) {
+        sub4xx += 1;
+      } else if (
+        subrequest.status_code >= 500 && subrequest.status_code < 600) {
+        sub5xx += 1;
+        //if (result.request.status_code < 500 || result.request.status_code >= 600) {
+        trackId.push({ id: result.request.subrequest });
+        //}
+      }
+    }}
+    countReq++;
+  }
+
+  for (let result of resultList) {
+    if (result.request === null) {
+    } else {
+      
+      bffLeak = false;
+      coreLeak = false;
+      
+      if (result.request === null) {
+      } else if (result.request.exception) {
+        bffLeak = true;
+      }
+      if (result.subrequest === null) {   
+        if (bffLeak == true) {
+          bffLeakId.push({ id: result.request.subrequest });
+        }
+      } else {
+        for (let subrequest of result.subrequest) {
+          if (subrequest.request === null) {
+          }
+          else if (subrequest.exception) {
+            coreLeak = true;
+          }
+        }
+      }
+      if (coreLeak && bffLeak) {
+        bothLeakId.push({ id: result.request.subrequest });
+      } else if (coreLeak && !bffLeak) {
+        coreLeakId.push({ id: result.request.subrequest });
+      } else if (!coreLeak && bffLeak) {
+        bffLeakId.push({ id: result.request.subrequest });
+      }
+    }
+
+  }
+  return {
+    results: resultList,
+    main4xxs: main4xx,
+    main5xxs: main5xx,
+    sub4xxs: sub4xx,
+    sub5xxs: sub5xx,
+    sum3xxs: main3xx + sub3xx,
+    sum2xxs: main2xx + sub2xx,
+    countReqs: countReq,
+    trackIds: removeDupId(trackId),
+    coreLeakIds: removeDupId(coreLeakId),
+    bffLeakIds: removeDupId(bffLeakId),
+    bothLeakIds: removeDupId(bothLeakId),
+  }
 }
 
 //result render
