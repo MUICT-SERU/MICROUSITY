@@ -305,26 +305,21 @@ app.post("/launch", async (req, res) => {
     res.sendStatus(409);
     return;
   }
-  let mode = req.query.mode;
-
   if (mode === 'single') {
     events.emit("TESTSTARTED",
-                'single',
-                path.resolve(__dirname, '../grammar/grammar.py'),
-                path.resolve(__dirname, '../grammar/dict.json'),
-                path.resolve(__dirname, '../grammar/restler_user_settings.json'));
-  }
-  else if (mode === 'dual') {
-    events.emit("TESTSTARTED", "dual");
-  }
-  else {
-    res.status(400).send("invalid mode");
-    return;
+      'single',
+      {
+        'grammar': path.resolve(__dirname, '../grammar/grammar.py'),
+        'dict': path.resolve(__dirname, '../grammar/dict.json'),
+        'settings': path.resolve(__dirname, '../grammar/restler_user_settings.json')
+      });
   }
   res.sendStatus(200);
 });
 
-events.on("TESTSTARTED", (mode, grammar, dict, settings, token) => {
+events.on("TESTSTARTED", (mode,
+  { grammar, dict, settings, token } = {},
+  { email, commit, year, month, day } = {}) => {
   isTesting = true;
   let worker;
   switch (mode) {
@@ -370,33 +365,37 @@ events.on("TESTSTARTED", (mode, grammar, dict, settings, token) => {
     let first = getIfaceLog(process.env.IFACE);
     let second;
     if (mode !== 'single') second = getIfaceLog(process.env.SECOND_IFACE);
-    let trick_email = "pooh99191@gmail.com"
     if (mode === 'single') {
       Promise.resolve(first)
-      .then(
-        // res => dualIfaceMapping(res[0], res[1], process.env.IFACE)
-        res => singleIfaceMapping(res)
-      )
-      .then(
-        res => {
-          let pathTo = path.resolve(__dirname, '../FuzzLean/RestlerResults');
-          let specPath = path.resolve(pathTo, fs.readdirSync(pathTo)[0], 'logs/speccov.json');
-          let coverage = fs.readFileSync(specPath, 'utf-8');
-          var myobj = {
-            email: trick_email,
-            time: moment().format('D MMMM YYYY, h:mm:ss a'),
-            result: res,
-            coverage: JSON.parse(coverage)
-          };
-          collection.find({ email: trick_email }).toArray(function (err, users) {
-            resultCollection.insertOne(myobj, function (err) {
-              if (err) throw err;
-              console.log("1 result inserted");
+        .then(
+          res => singleIfaceMapping(res)
+        )
+        .then(
+          res => {
+            let pathTo = path.resolve(__dirname, '../FuzzLean/RestlerResults');
+            let specPath = path.resolve(pathTo, fs.readdirSync(pathTo)[0], 'logs/speccov.json');
+            let coverage = fs.readFileSync(specPath, 'utf-8');
+            var myobj = {
+              email: email,
+              time: moment().format('D MMMM YYYY, h:mm:ss a'),
+              result: res,
+              coverage: JSON.parse(coverage)
+            };
+            if (commit) {
+              myobj['commit'] = commit,
+                myobj['year'] = year,
+                myobj['month'] = month,
+                myobj['day'] = day
+            }
+            collection.find({ email: email }).toArray(function (err, users) {
+              resultCollection.insertOne(myobj, function (err) {
+                if (err) throw err;
+                console.log("1 result inserted");
+              });
             });
+            fs.writeFileSync("../output/output.json", JSON.stringify(res));
+            console.log("written result");
           });
-          fs.writeFileSync("../output/output.json", JSON.stringify(res));
-          console.log("written result");
-        });
     }
     else {
       Promise.all([first, second]).then(
@@ -404,26 +403,32 @@ events.on("TESTSTARTED", (mode, grammar, dict, settings, token) => {
           return dualIfaceMapping(res[0], res[1], process.env.IFACE)
         }
       )
-      .then(
-        res => {
-          let pathTo = path.resolve(__dirname, '../FuzzLean/RestlerResults');
-          let specPath = path.resolve(pathTo, fs.readdirSync(pathTo)[0], 'logs/speccov.json');
-          let coverage = fs.readFileSync(specPath, 'utf-8');
-          var myobj = {
-            email: trick_email,
-            time: moment().format('D MMMM YYYY, h:mm:ss a'),
-            result: res,
-            coverage: JSON.parse(coverage)
-          };
-          collection.find({ email: trick_email }).toArray(function (err, users) {
-            resultCollection.insertOne(myobj, function (err) {
-              if (err) throw err;
-              console.log("1 result inserted");
+        .then(
+          res => {
+            let pathTo = path.resolve(__dirname, '../FuzzLean/RestlerResults');
+            let specPath = path.resolve(pathTo, fs.readdirSync(pathTo)[0], 'logs/speccov.json');
+            let coverage = fs.readFileSync(specPath, 'utf-8');
+            var myobj = {
+              email: trick_email,
+              time: moment().format('D MMMM YYYY, h:mm:ss a'),
+              result: res,
+              coverage: JSON.parse(coverage)
+            };
+            if (commit) {
+              myobj['commit'] = commit,
+                myobj['year'] = year,
+                myobj['month'] = month,
+                myobj['day'] = day
+            }
+            collection.find({ email: trick_email }).toArray(function (err, users) {
+              resultCollection.insertOne(myobj, function (err) {
+                if (err) throw err;
+                console.log("1 result inserted");
+              });
             });
+            fs.writeFileSync("../output/output.json", JSON.stringify(res));
+            console.log("written result");
           });
-          fs.writeFileSync("../output/output.json", JSON.stringify(res));
-          console.log("written result");
-        });
     }
   })
 });
@@ -581,7 +586,7 @@ app.get("/save", (req, res) => {
   // }
   let user = req.user;
   fs.readFile('../example/output44.json', 'utf8', (err, data) => {
-  //fs.readFile("../output/output.json", "utf8", (err, data) => {
+    //fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
     }
@@ -916,6 +921,6 @@ process.on("uncaughtException", (err) => {
 });
 
 app.get("/test", (req, res) => {
-  
+
   res.render("test");
 });
