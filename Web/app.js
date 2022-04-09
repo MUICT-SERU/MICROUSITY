@@ -166,7 +166,7 @@ function getResult(data, fromFile) {
       main5xx += 1;
       trackId.push({ id: result.request.subrequest });
     }
-    for (let subrequest of result.subrequest) {
+    if(result.subrequest) {for (let subrequest of result.subrequest) {
       if (subrequest.status_code >= 200 && subrequest.status_code < 300) {
         sub2xx += 1;
       }
@@ -182,7 +182,7 @@ function getResult(data, fromFile) {
         trackId.push({ id: result.request.subrequest });
         //}
       }
-    }
+    }}
     countReq++;
   }
 
@@ -305,20 +305,21 @@ app.post("/launch", async (req, res) => {
     res.sendStatus(409);
     return;
   }
-  if (mode === 'single') {
-    events.emit("TESTSTARTED",
+  events.emit("TESTSTARTED",
       'single',
       {
         'grammar': path.resolve(__dirname, '../grammar/grammar.py'),
         'dict': path.resolve(__dirname, '../grammar/dict.json'),
         'settings': path.resolve(__dirname, '../grammar/restler_user_settings.json')
+      },
+      {
+        "email": req.user.email
       });
-  }
   res.sendStatus(200);
 });
 
 events.on("TESTSTARTED", (mode,
-  { grammar, dict, settings, token } = {},
+  { grammar, dict, settings, token, runMode } = {},
   { email, commit, year, month, day } = {}) => {
   isTesting = true;
   let worker;
@@ -337,22 +338,16 @@ events.on("TESTSTARTED", (mode,
       worker = new Worker('./worker.js');
       break;
     case "custom":
-      if (token !== undefined) {
+      {
         worker = new Worker('./worker_custom_script.js', {
           workerData: {
+            runMode,
             grammar,
             dict,
             settings,
             token
           }
         });
-      }
-      else {
-        worker = new Worker('./worker_custom_script.js', {
-          grammar,
-          dict,
-          settings
-        })
       }
       break;
     default:
@@ -368,7 +363,7 @@ events.on("TESTSTARTED", (mode,
     if (mode === 'single') {
       Promise.resolve(first)
         .then(
-          res => singleIfaceMapping(res)
+          res => singleIfaceMapping(res, [8060])
         )
         .then(
           res => {
@@ -409,7 +404,7 @@ events.on("TESTSTARTED", (mode,
             let specPath = path.resolve(pathTo, fs.readdirSync(pathTo)[0], 'logs/speccov.json');
             let coverage = fs.readFileSync(specPath, 'utf-8');
             var myobj = {
-              email: trick_email,
+              email: email,
               time: moment().format('D MMMM YYYY, h:mm:ss a'),
               result: res,
               coverage: JSON.parse(coverage)
@@ -420,7 +415,7 @@ events.on("TESTSTARTED", (mode,
                 myobj['month'] = month,
                 myobj['day'] = day
             }
-            collection.find({ email: trick_email }).toArray(function (err, users) {
+            collection.find({ email: email }).toArray(function (err, users) {
               resultCollection.insertOne(myobj, function (err) {
                 if (err) throw err;
                 console.log("1 result inserted");
@@ -549,6 +544,11 @@ app.post("/upload", (req, res) => {
     var newDictPath = path.resolve(outputPath, 'dict.json');
     var newUserSettingPath = path.resolve(outputPath, 'restler_user_settings.json');
     var newTokenPath = path.resolve(outputPath, 'token');
+    var runMode = fields.runMode;
+    var commit = fields.commit;
+    var year = fields.year;
+    var month = fields.month;
+    var day = fields.day;
     fs.rename(oldGrammarPath, newGrammarPath, function (err) {
       if (err) throw err;
     });
@@ -571,7 +571,10 @@ app.post("/upload", (req, res) => {
     } else {
       console.log('File uploaded and moved!');
       res.redirect('/history');
-      events.emit("TESTSTARTED", "custom", newGrammarPath, newDictPath, newUserSettingPath, newTokenPath);
+      events.emit("TESTSTARTED", "custom",
+      {'grammar':newGrammarPath, 'dict': newDictPath, 'settings': newUserSettingPath, 'token':newTokenPath, runMode},
+      {'email': req.user.email, commit, year, month, day}
+      );
     }
   });
 
@@ -684,7 +687,9 @@ app.get("/result", (req, res) => {
     if (err) {
       return console.log("File read failed:", err);
     }
-    fs.readFile('../example/speccov.json', 'utf8', (err, specCoverage) => {
+    let pathTo = path.resolve(__dirname, '../FuzzLean/RestlerResults');
+    let specPath = path.resolve(pathTo, fs.readdirSync(pathTo)[0], 'logs/speccov.json');
+    fs.readFile(specPath, 'utf8', (err, specCoverage) => {
       if (err) {
         return console.log("File read failed:", err);
       }

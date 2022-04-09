@@ -5,14 +5,13 @@ const readLog = require('./read.js');
 
 const javaExceptionRegex = /\S*Exception/;
 
-let bffPort = [Number(process.env.BFF_PORT)];
 let excludedPort = [443, 10000];
 let getIfaceLog = (async (iface) => {
   let result = await readLog(path.resolve('../script/zeek/' + iface + '/http.log'), iface);
   return result;
 });
 
-function singleIfaceMapping(first) {
+function singleIfaceMapping(first, bffPort) {
   let result = [];
   let bffRequest = [];
   let subRequest = [];
