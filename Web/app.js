@@ -247,18 +247,18 @@ function getSpeccov(data, fromFile) {
   } else {
     var jsonCoverages = data.coverage;
   }
-
+  
   let invalid = 0;
   let valid = 0;
 
-  for (let jsonCoverage in jsonCoverages) {
-    if (jsonCoverages[jsonCoverage].valid == 0) {
-      invalid++;
-    } else {
-      valid++;
+    for(let jsonCoverage in jsonCoverages){
+      if(jsonCoverages[jsonCoverage].valid==0){
+        invalid++;
+      } else {
+        valid++;
+      }
     }
-  }
-
+   
   return {
     speccovs: jsonCoverages,
     valid: valid,
@@ -305,17 +305,12 @@ app.post("/launch", async (req, res) => {
     res.sendStatus(409);
     return;
   }
-  let mode = req.query.mode;
-
-  if (mode === 'single') {
-    events.emit("TESTSTARTED",
-                'single',
-                path.resolve(__dirname, '../grammar/grammar.py'),
-                path.resolve(__dirname, '../grammar/dict.json'),
-                path.resolve(__dirname, '../grammar/restler_user_settings.json'));
+  let mode = req.body.mode;
+  if(mode === 'single') {
+    events.emit("TESTSTARTED",'single');
   }
   else if (mode === 'dual') {
-    events.emit("TESTSTARTED", "dual");
+    events.emit("TESTSTARTED","dual");
   }
   else {
     res.status(400).send("invalid mode");
@@ -328,30 +323,18 @@ events.on("TESTSTARTED", (mode, grammar, dict, settings, token) => {
   isTesting = true;
   let worker;
   switch (mode) {
-    case "single":
-      worker = new Worker('./worker_no_shell.js', {
-        workerData: {
-          grammar,
-          dict,
-          settings,
-          token
-        }
-      })
-      break;
     case "dual":
       worker = new Worker('./worker.js');
       break;
     case "custom":
-      if (token !== undefined) {
-        worker = new Worker('./worker_custom_script.js', {
-          workerData: {
-            grammar,
-            dict,
-            settings,
-            token
-          }
-        });
-      }
+      if(token !== undefined) {
+      worker = new Worker('./worker_custom_script.js', { workerData: {
+        grammar,
+        dict,
+        settings,
+        token
+      }});
+    }
       else {
         worker = new Worker('./worker_custom_script.js', {
           grammar,
@@ -368,64 +351,38 @@ events.on("TESTSTARTED", (mode, grammar, dict, settings, token) => {
   worker.once("exit", () => {
     isTesting = false;
     let first = getIfaceLog(process.env.IFACE);
-    let second;
-    if (mode !== 'single') second = getIfaceLog(process.env.SECOND_IFACE);
+    let second = getIfaceLog(process.env.SECOND_IFACE);
     let trick_email = "pooh99191@gmail.com"
-    if (mode === 'single') {
-      Promise.resolve(first)
+    Promise.all([first, second])
       .then(
-        // res => dualIfaceMapping(res[0], res[1], process.env.IFACE)
-        res => singleIfaceMapping(res)
+        res => dualIfaceMapping(res[0], res[1], process.env.IFACE)
       )
       .then(
         res => {
-          let pathTo = path.resolve(__dirname, '../FuzzLean/RestlerResults');
-          let specPath = path.resolve(pathTo, fs.readdirSync(pathTo)[0], 'logs/speccov.json');
-          let coverage = fs.readFileSync(specPath, 'utf-8');
-          var myobj = {
-            email: trick_email,
-            time: moment().format('D MMMM YYYY, h:mm:ss a'),
-            result: res,
-            coverage: JSON.parse(coverage)
-          };
-          collection.find({ email: trick_email }).toArray(function (err, users) {
-            resultCollection.insertOne(myobj, function (err) {
-              if (err) throw err;
-              console.log("1 result inserted");
+          fs.readFile('../example/speccov.json', 'utf8', (err, coverage) => {
+            if (err) {
+              return console.log("File read failed:", err);
+            }
+            var myobj = {
+              email: trick_email,
+              time: moment().format('D MMMM YYYY, h:mm:ss a'),
+              result: res,
+              coverage: JSON.parse(coverage)
+            };
+            collection.find({ email: trick_email }).toArray(function (err, users) {
+              resultCollection.insertOne(myobj, function (err) {
+                if (err) throw err;
+                console.log("1 result inserted");
+              });
+        
             });
+            
           });
           fs.writeFileSync("../output/output.json", JSON.stringify(res));
           console.log("written result");
-        });
-    }
-    else {
-      Promise.all([first, second]).then(
-        res => {
-          return dualIfaceMapping(res[0], res[1], process.env.IFACE)
         }
       )
-      .then(
-        res => {
-          let pathTo = path.resolve(__dirname, '../FuzzLean/RestlerResults');
-          let specPath = path.resolve(pathTo, fs.readdirSync(pathTo)[0], 'logs/speccov.json');
-          let coverage = fs.readFileSync(specPath, 'utf-8');
-          var myobj = {
-            email: trick_email,
-            time: moment().format('D MMMM YYYY, h:mm:ss a'),
-            result: res,
-            coverage: JSON.parse(coverage)
-          };
-          collection.find({ email: trick_email }).toArray(function (err, users) {
-            resultCollection.insertOne(myobj, function (err) {
-              if (err) throw err;
-              console.log("1 result inserted");
-            });
-          });
-          fs.writeFileSync("../output/output.json", JSON.stringify(res));
-          console.log("written result");
-        });
-    }
-  })
+  });
 });
 
 app.get("/test_status", (req, res) => {
@@ -450,7 +407,7 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   let { username, password, fromUrl } = req.body;
   collection
-    .find({ email: username, password: bcrypt.hash(password, 10) })
+    .find({ email: username, password: bcrypt.hash(password,10) })
     .toArray(function (err, users) {
       if (err || users.length != 1) {
         return res.redirect("/login?invalid=1");
@@ -534,16 +491,16 @@ app.get("/testingtool2", (req, res) => {
 app.post("/upload", (req, res) => {
   var form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
-    var outputPath = path.resolve(__dirname, '../outtest/');
+    var outputPath = path.resolve( __dirname , '../outtest/');
     console.log(outputPath);
     var oldGrammarPath = files.grammar.filepath;
     var oldDictPath = files.dict.filepath;
     var oldUserSettingPath = files.userSetting.filepath;
     var oldTokenPath = files.token.filepath ?? null;
-    var newGrammarPath = path.resolve(outputPath, 'grammar.py');
-    var newDictPath = path.resolve(outputPath, 'dict.json');
-    var newUserSettingPath = path.resolve(outputPath, 'restler_user_settings.json');
-    var newTokenPath = path.resolve(outputPath, 'token');
+    var newGrammarPath = path.resolve(outputPath , 'grammar.py');
+    var newDictPath = path.resolve(outputPath , 'dict.json');
+    var newUserSettingPath = path.resolve(outputPath , 'restler_user_settings.json');
+    var newTokenPath = path.resolve(outputPath , 'token');
     fs.rename(oldGrammarPath, newGrammarPath, function (err) {
       if (err) throw err;
     });
@@ -553,13 +510,13 @@ app.post("/upload", (req, res) => {
     fs.rename(oldUserSettingPath, newUserSettingPath, function (err) {
       if (err) throw err;
     });
-    if (oldTokenPath !== null) {
+    if(oldTokenPath !== null) {
       fs.rename(oldTokenPath, newTokenPath, function (err) {
         if (err) throw err;
       });
       fs.chmod(newTokenPath, 0o744, (err) => {
-        if (err) throw err;
-      });
+         if (err) throw err;
+        });
     }
     if (err) {
       throw err;
@@ -602,9 +559,9 @@ app.get("/save", (req, res) => {
           console.log("1 result inserted");
           res.redirect("/home");
         });
-
+  
       });
-
+      
     });
 
   });
@@ -638,7 +595,7 @@ app.get("/resulthis/:id", (req, res) => {
   let id = req.params['id']
   resultCollection.findOne({ "_id": new ObjectId(id) }, function (err, data) {
     let result = getResult(data, false);
-    let coverage = getSpeccov(data, false)
+    let coverage = getSpeccov(data,false)
     res.render("result", {
       results: result.results,
       main4xxs: result.main4xxs,
@@ -685,7 +642,7 @@ app.get("/result", (req, res) => {
       }
 
       let result = getResult(data, true);
-      let coverage = getSpeccov(specCoverage, true)
+      let coverage = getSpeccov(specCoverage,true)
       res.render("result", {
         results: result.results,
         main4xxs: result.main4xxs,
@@ -706,7 +663,7 @@ app.get("/result", (req, res) => {
         resultid: null
       });
     });
-
+    
     //console.log(removeDupId(coreLeakId));
     //console.log(removeDupId(bffLeakId));
     //console.log(removeDupId(bothLeakId));
@@ -802,12 +759,12 @@ app.get("/graph2/:id/:resultid", (req, res) => {
   let id = req.params['id']
   let resultId = req.params['resultid']
   let error;
-  if (req.query["error"] == 'true') {
+  if(req.query["error"]=='true'){
     error = true;
   } else {
     error = false;
   }
-
+   
   resultCollection.findOne({ "_id": new ObjectId(resultId) }, function (err, data) {
     if (err) {
       return console.log("File read failed:", err);
@@ -847,7 +804,7 @@ app.get("/graph/:id", (req, res) => {
   }
   let id = req.params['id']
   let error;
-  if (req.query["error"] == 'true') {
+  if(req.query["error"]=='true'){
     error = true;
   } else {
     error = false;
@@ -899,8 +856,8 @@ app.get("/logout", (req, res) => {
 
 //run
 if (key === undefined) {
-  app.listen(process.env.PORT, () => {
-    console.log('listening as http at ', process.env.PORT);
+  app.listen(8080, () => {
+    console.log('listening as http at 8080');
   });
 } else {
   https.createServer({ key: key, cert: cert, passphrase: '1234' }, app).listen(443, () => {
@@ -908,12 +865,6 @@ if (key === undefined) {
   });
 }
 
-app.use((err, req, res, next) => {
-  res.send(err);
-})
-process.on("uncaughtException", (err) => {
-  console.log(err);
-});
 
 app.get("/test", (req, res) => {
   
