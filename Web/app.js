@@ -756,8 +756,10 @@ app.get("/resulthis/:id", (req, res) => {
   let id = req.params['id']
   resultCollection.findOne({ "_id": new ObjectId(id) }, function (err, data) {
     let result = getResult(data, false);
-    let coverage = getSpeccov(data,false)
+    let coverage = getSpeccov(data,false);
+    let time = data.time;
     res.render("result", {
+      time: time,
       results: result.results,
       main4xxs: result.main4xxs,
       main5xxs: result.main5xxs,
@@ -808,6 +810,7 @@ app.get("/result", (req, res) => {
       let result = getResult(data, true);
       let coverage = getSpeccov(specCoverage,true)
       res.render("result", {
+        time: null,
         results: result.results,
         main4xxs: result.main4xxs,
         main5xxs: result.main5xxs,
