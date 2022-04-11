@@ -698,8 +698,8 @@ app.get("/save", (req, res) => {
   //   return;
   // }
   let user = req.user;
-  fs.readFile('../example/output44.json', 'utf8', (err, data) => {
-    //fs.readFile("../output/output.json", "utf8", (err, data) => {
+  //fs.readFile('../example/output44.json', 'utf8', (err, data) => {
+    fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
     }

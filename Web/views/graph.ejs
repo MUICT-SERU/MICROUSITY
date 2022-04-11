@@ -427,11 +427,11 @@ div.scroll {
 	<h3>Graph Visualization</h3>
 	<% if(resultId === null){ %>
 	<div>
-		<button type="button" class="btn btn-outline-primary"><a href="/result" class="mb-4">&lt;Go Back</a></button>
+		<a href="/result" class="mb-4"><button type="button" class="btn btn-outline-primary">&lt;Go Back</button></a>
 	</div>
 	<% } else {%> 
 		<div>
-			<button type="button" class="btn btn-outline-primary"><a href="/resulthis/<%= resultId%>" class="mb-4">&lt;Go Back</a></button>
+			<a href="/resulthis/<%= resultId%>" class="mb-4"><button type="button" class="btn btn-outline-primary">&lt;Go Back</button></a>
 		</div>
 		<% } %> 
 	
