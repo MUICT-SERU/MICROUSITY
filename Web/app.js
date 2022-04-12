@@ -702,14 +702,14 @@ app.post("/upload", (req, res) => {
 
 
 //save result history
-app.get("/save", (req, res) => {
+app.post("/save", (req, res) => {
   // if (req.user === null) {
   //   res.redirect("/login");
   //   return;
   // }
   let user = req.user;
-  fs.readFile('../example/output44.json', 'utf8', (err, data) => {
-    //fs.readFile("../output/output.json", "utf8", (err, data) => {
+  fs.readFile('../output/' + req.body.name, 'utf8', (err, data) => {
+    // fs.readFile("../output/output.json", "utf8", (err, data) => {
     if (err) {
       return console.log("File read failed:", err);
     }
@@ -719,26 +719,26 @@ app.get("/save", (req, res) => {
       }
       var resultList = JSON.parse(data);
       var myobj = {
-        email: "pooh99191@gmail.com",
+        email: "result@keeper.com",
         time: moment().format('D MMMM YYYY, h:mm:ss a'),
         result: resultList,
-        coverage: JSON.parse(coverage)
+        coverage: JSON.parse(coverage),
+        filename: req.body.name
       };
-      collection.find({ email: user.email }).toArray(function (err, users) {
+      collection.find({ email: "result@keeper.com" }).toArray(function (err, users) {
         resultCollection.insertOne(myobj, function (err) {
           if (err) throw err;
           console.log("1 result inserted");
           res.redirect("/home");
         });
 
-      });
+     });
 
-    });
+   });
 
-  });
+ });
 
 });
-
 //result history
 app.get("/history", (req, res) => {
   if (req.user === null) {
