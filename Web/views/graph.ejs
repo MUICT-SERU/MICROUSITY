@@ -26,7 +26,6 @@ div.scroll {
 .btn{
 	font-size:  14px !important;
 }
-   
 	</style>
 
 <head>
@@ -428,11 +427,11 @@ div.scroll {
 	<h3>Graph Visualization</h3>
 	<% if(resultId === null){ %>
 	<div>
-		<a href="/result" class="mb-4">&lt;Go Back</a>
+		<a href="/result" class="mb-4"><button type="button" class="btn btn-outline-primary">&lt;Go Back</button></a>
 	</div>
 	<% } else {%> 
 		<div>
-			<a href="/resulthis/<%= resultId%>" class="mb-4">&lt;Go Back</a>
+			<a href="/resulthis/<%= resultId%>" class="mb-4"><button type="button" class="btn btn-outline-primary">&lt;Go Back</button></a>
 		</div>
 		<% } %> 
 	

@@ -119,126 +119,126 @@ function getCertificate(name, date) {
 
 //result render
 function getResultOld(data, fromFile) {
-  if (fromFile == true) {
-    var resultList = JSON.parse(data);
-  } else {
-    var resultList = data.result;
-  }
-  var main5xx = 0;
-  var main4xx = 0;
-  var main3xx = 0;
-  var main2xx = 0;
-  var sub5xx = 0;
-  var sub4xx = 0;
-  var sub3xx = 0;
-  var sub2xx = 0;
-  var countReq = 0;
-
-  var bffLeak = false;
-  var coreLeak = false;
-
-  var trackId = [];
-  var bffLeakId = [];
-  var coreLeakId = [];
-  var bothLeakId = [];
-
-  for (let result of resultList) {
-    if (result.request === null) {
-    } else if (
-      result.request.status_code >= 200 &&
-      result.request.status_code < 300
-    ) {
-      main2xx += 1;
-    } else if (
-      result.request.status_code >= 300 &&
-      result.request.status_code < 400
-    ) {
-      main3xx += 1;
-    } else if (
-      result.request.status_code >= 400 &&
-      result.request.status_code < 500
-    ) {
-      main4xx += 1;
-    } else if (
-      result.request.status_code >= 500 &&
-      result.request.status_code < 600
-    ) {
-      main5xx += 1;
-      trackId.push({ id: result.request.subrequest });
-    }
-    if(result.subrequest) {for (let subrequest of result.subrequest) {
-      if (subrequest.status_code >= 200 && subrequest.status_code < 300) {
-        sub2xx += 1;
-      }
-      if (subrequest.status_code >= 300 && subrequest.status_code < 400) {
-        sub3xx += 1;
-      }
-      if (subrequest.status_code >= 400 && subrequest.status_code < 500) {
-        sub4xx += 1;
-      } else if (
-        subrequest.status_code >= 500 && subrequest.status_code < 600) {
-        sub5xx += 1;
-        //if (result.request.status_code < 500 || result.request.status_code >= 600) {
-        trackId.push({ id: result.request.subrequest });
-        //}
-      }
-    }}
-    countReq++;
-  }
-
-  for (let result of resultList) {
-    if (result.request === null) {
+    if (fromFile == true) {
+      var resultList = JSON.parse(data);
     } else {
-      //for (let id of trackId) {
-      bffLeak = false;
-      coreLeak = false;
-      //if (result.request.subrequest == id.id) {
+      var resultList = data.result;
+    }
+    var main5xx = 0;
+    var main4xx = 0;
+    var main3xx = 0;
+    var main2xx = 0;
+    var sub5xx = 0;
+    var sub4xx = 0;
+    var sub3xx = 0;
+    var sub2xx = 0;
+    var countReq = 0;
+  
+    var bffLeak = false;
+    var coreLeak = false;
+  
+    var trackId = [];
+    var bffLeakId = [];
+    var coreLeakId = [];
+    var bothLeakId = [];
+  
+    for (let result of resultList) {
       if (result.request === null) {
-      } else if (result.request.exception) {
-        bffLeak = true;
-        //console.log(id.id)
-
+      } else if (
+        result.request.status_code >= 200 &&
+        result.request.status_code < 300
+      ) {
+        main2xx += 1;
+      } else if (
+        result.request.status_code >= 300 &&
+        result.request.status_code < 400
+      ) {
+        main3xx += 1;
+      } else if (
+        result.request.status_code >= 400 &&
+        result.request.status_code < 500
+      ) {
+        main4xx += 1;
+      } else if (
+        result.request.status_code >= 500 &&
+        result.request.status_code < 600
+      ) {
+        main5xx += 1;
+        trackId.push({ id: result.request.subrequest });
       }
-      if (result.subrequest.length == 0) {
-        //console.log(result.subrequest.length)
-        if (bffLeak == true) {
-          bffLeakId.push({ id: result.request.subrequest });
+      if(result.subrequest) {for (let subrequest of result.subrequest) {
+        if (subrequest.status_code >= 200 && subrequest.status_code < 300) {
+          sub2xx += 1;
         }
+        if (subrequest.status_code >= 300 && subrequest.status_code < 400) {
+          sub3xx += 1;
+        }
+        if (subrequest.status_code >= 400 && subrequest.status_code < 500) {
+          sub4xx += 1;
+        } else if (
+          subrequest.status_code >= 500 && subrequest.status_code < 600) {
+          sub5xx += 1;
+          //if (result.request.status_code < 500 || result.request.status_code >= 600) {
+          trackId.push({ id: result.request.subrequest });
+          //}
+        }
+      }}
+      countReq++;
+    }
+  
+    for (let result of resultList) {
+      if (result.request === null) {
       } else {
-        for (let subrequest of result.subrequest) {
-          if (subrequest.exception) {
-            coreLeak = true;
+        //for (let id of trackId) {
+        bffLeak = false;
+        coreLeak = false;
+        //if (result.request.subrequest == id.id) {
+        if (result.request === null) {
+        } else if (result.request.exception) {
+          bffLeak = true;
+          //console.log(id.id)
+  
+        }
+        if (result.subrequest.length == 0) {
+          //console.log(result.subrequest.length)
+          if (bffLeak == true) {
+            bffLeakId.push({ id: result.request.subrequest });
+          }
+        } else {
+          for (let subrequest of result.subrequest) {
+            if (subrequest.exception) {
+              coreLeak = true;
+            }
           }
         }
+        if (coreLeak && bffLeak) {
+          bothLeakId.push({ id: result.request.subrequest });
+        } else if (coreLeak && !bffLeak) {
+          coreLeakId.push({ id: result.request.subrequest });
+        } else if (!coreLeak && bffLeak) {
+          bffLeakId.push({ id: result.request.subrequest });
+        }
+        //}
+        //}
       }
-      if (coreLeak && bffLeak) {
-        bothLeakId.push({ id: result.request.subrequest });
-      } else if (coreLeak && !bffLeak) {
-        coreLeakId.push({ id: result.request.subrequest });
-      } else if (!coreLeak && bffLeak) {
-        bffLeakId.push({ id: result.request.subrequest });
-      }
-      //}
-      //}
+  
     }
-
+    return {
+      results: resultList,
+      main4xxs: main4xx,
+      main5xxs: main5xx,
+      sub4xxs: sub4xx,
+      sub5xxs: sub5xx,
+      sum3xxs: main3xx + sub3xx,
+      sum2xxs: main2xx + sub2xx,
+      countReqs: countReq,
+      trackIds: removeDupId(trackId),
+      coreLeakIds: removeDupId(coreLeakId),
+      bffLeakIds: removeDupId(bffLeakId),
+      bothLeakIds: removeDupId(bothLeakId),
+    }
+  
   }
-  return {
-    results: resultList,
-    main4xxs: main4xx,
-    main5xxs: main5xx,
-    sub4xxs: sub4xx,
-    sub5xxs: sub5xx,
-    sum3xxs: main3xx + sub3xx,
-    sum2xxs: main2xx + sub2xx,
-    countReqs: countReq,
-    trackIds: removeDupId(trackId),
-    coreLeakIds: removeDupId(coreLeakId),
-    bffLeakIds: removeDupId(bffLeakId),
-    bothLeakIds: removeDupId(bothLeakId),
-  }
-
-}
 
 function getResult(data, fromFile) {
   if (fromFile == true) {
@@ -288,25 +288,25 @@ function getResult(data, fromFile) {
       main5xx += 1;
       trackId.push({ id: result.request.subrequest });
     }
-    if (result.subrequest){for (let subrequest of result.subrequest) {
-      if (subrequest.request === null) {
-      }
-      else if (subrequest.status_code >= 200 && subrequest.status_code < 300) {
-        sub2xx += 1;
-      }
-      else if (subrequest.status_code >= 300 && subrequest.status_code < 400) {
-        sub3xx += 1;
-      }
-      else if (subrequest.status_code >= 400 && subrequest.status_code < 500) {
-        sub4xx += 1;
-      } else if (
-        subrequest.status_code >= 500 && subrequest.status_code < 600) {
-        sub5xx += 1;
-        //if (result.request.status_code < 500 || result.request.status_code >= 600) {
-        trackId.push({ id: result.request.subrequest });
-        //}
-      }
-    }}
+    if (result.subrequest != null){
+      for (let subrequest of result.subrequest) {
+        if (subrequest.request === null) {
+        }
+        else if (subrequest.status_code >= 200 && subrequest.status_code < 300) {
+          sub2xx += 1;
+        }
+        else if (subrequest.status_code >= 300 && subrequest.status_code < 400) {
+          sub3xx += 1;
+        }
+        else if (subrequest.status_code >= 400 && subrequest.status_code < 500) {
+          sub4xx += 1;
+        } else if (
+          subrequest.status_code >= 500 && subrequest.status_code < 600) {
+          sub5xx += 1;        
+          trackId.push({ id: result.request.subrequest });
+        }
+    }
+  }
     countReq++;
   }
 
@@ -321,11 +321,11 @@ function getResult(data, fromFile) {
       } else if (result.request.exception) {
         bffLeak = true;
       }
-      if (result.subrequest === null) {   
+     if (result.subrequest === null ||result.subrequest == 0) {   
         if (bffLeak == true) {
           bffLeakId.push({ id: result.request.subrequest });
         }
-      } else {
+      } else if(result.subrequest != null) {
         for (let subrequest of result.subrequest) {
           if (subrequest.request === null) {
           }
@@ -367,18 +367,18 @@ function getSpeccov(data, fromFile) {
   } else {
     var jsonCoverages = data.coverage;
   }
-
+  
   let invalid = 0;
   let valid = 0;
 
-  for (let jsonCoverage in jsonCoverages) {
-    if (jsonCoverages[jsonCoverage].valid == 0) {
-      invalid++;
-    } else {
-      valid++;
+    for(let jsonCoverage in jsonCoverages){
+      if(jsonCoverages[jsonCoverage].valid==0){
+        invalid++;
+      } else {
+        valid++;
+      }
     }
-  }
-
+   
   return {
     speccovs: jsonCoverages,
     valid: valid,
@@ -444,16 +444,6 @@ events.on("TESTSTARTED", (mode,
   isTesting = true;
   let worker;
   switch (mode) {
-    case "single":
-      worker = new Worker('./worker_no_shell.js', {
-        workerData: {
-          grammar,
-          dict,
-          settings,
-          token
-        }
-      })
-      break;
     case "dual":
       worker = new Worker('./worker.js');
       break;
@@ -570,7 +560,7 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   let { username, password, fromUrl } = req.body;
   collection
-    .find({ email: username, password: bcrypt.hash(password, 10) })
+    .find({ email: username, password: bcrypt.hash(password,10) })
     .toArray(function (err, users) {
       if (err || users.length != 1) {
         return res.redirect("/login?invalid=1");
@@ -654,7 +644,7 @@ app.get("/testingtool2", (req, res) => {
 app.post("/upload", (req, res) => {
   var form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
-    var outputPath = path.resolve(__dirname, '../outtest/');
+    var outputPath = path.resolve( __dirname , '../outtest/');
     console.log(outputPath);
     var oldGrammarPath = files.grammar.filepath;
     var oldDictPath = files.dict.filepath;
@@ -678,13 +668,13 @@ app.post("/upload", (req, res) => {
     fs.rename(oldUserSettingPath, newUserSettingPath, function (err) {
       if (err) throw err;
     });
-    if (oldTokenPath !== null) {
+    if(oldTokenPath !== null) {
       fs.rename(oldTokenPath, newTokenPath, function (err) {
         if (err) throw err;
       });
       fs.chmod(newTokenPath, 0o744, (err) => {
-        if (err) throw err;
-      });
+         if (err) throw err;
+        });
     }
     if (err) {
       throw err;
@@ -766,8 +756,10 @@ app.get("/resulthis/:id", (req, res) => {
   let id = req.params['id']
   resultCollection.findOne({ "_id": new ObjectId(id) }, function (err, data) {
     let result = getResult(data, false);
-    let coverage = getSpeccov(data, false)
+    let coverage = getSpeccov(data,false);
+    let time = data.time;
     res.render("result", {
+      time: time,
       results: result.results,
       main4xxs: result.main4xxs,
       main5xxs: result.main5xxs,
@@ -801,7 +793,7 @@ app.get("/result", (req, res) => {
     res.redirect('/login');
     return;
   }
-  //fs.readFile('../example/header.json', 'utf8', (err, data) => {
+  //fs.readFile('../example/output_last_request_ded.json', 'utf8', (err, data) => {
   fs.readFile("../output/output.json", "utf8", (err, data) => {
 
     if (err) {
@@ -810,13 +802,15 @@ app.get("/result", (req, res) => {
     let pathTo = path.resolve(__dirname, '../FuzzLean/RestlerResults');
     let specPath = path.resolve(pathTo, fs.readdirSync(pathTo)[0], 'logs/speccov.json');
     fs.readFile(specPath, 'utf8', (err, specCoverage) => {
+    //fs.readFile('../example/speccov.json', 'utf8', (err, specCoverage) => {
       if (err) {
         return console.log("File read failed:", err);
       }
 
       let result = getResult(data, true);
-      let coverage = getSpeccov(specCoverage, true)
+      let coverage = getSpeccov(specCoverage,true)
       res.render("result", {
+        time: null,
         results: result.results,
         main4xxs: result.main4xxs,
         main5xxs: result.main5xxs,
@@ -836,7 +830,7 @@ app.get("/result", (req, res) => {
         resultid: null
       });
     });
-
+    
     //console.log(removeDupId(coreLeakId));
     //console.log(removeDupId(bffLeakId));
     //console.log(removeDupId(bothLeakId));
@@ -932,12 +926,12 @@ app.get("/graph2/:id/:resultid", (req, res) => {
   let id = req.params['id']
   let resultId = req.params['resultid']
   let error;
-  if (req.query["error"] == 'true') {
+  if(req.query["error"]=='true'){
     error = true;
   } else {
     error = false;
   }
-
+   
   resultCollection.findOne({ "_id": new ObjectId(resultId) }, function (err, data) {
     if (err) {
       return console.log("File read failed:", err);
@@ -977,7 +971,7 @@ app.get("/graph/:id", (req, res) => {
   }
   let id = req.params['id']
   let error;
-  if (req.query["error"] == 'true') {
+  if(req.query["error"]=='true'){
     error = true;
   } else {
     error = false;
@@ -1029,8 +1023,8 @@ app.get("/logout", (req, res) => {
 
 //run
 if (key === undefined) {
-  app.listen(process.env.PORT, () => {
-    console.log('listening as http at ', process.env.PORT);
+  app.listen(8080, () => {
+    console.log('listening as http at 8080');
   });
 } else {
   https.createServer({ key: key, cert: cert, passphrase: '1234' }, app).listen(443, () => {
@@ -1038,12 +1032,6 @@ if (key === undefined) {
   });
 }
 
-app.use((err, req, res, next) => {
-  res.send(err);
-})
-process.on("uncaughtException", (err) => {
-  console.log(err);
-});
 
 app.get("/test", (req, res) => {
 

@@ -31,6 +31,10 @@
             color: rgb(255, 30, 0);
         }
 
+        .time {
+            color: black;
+        }
+
         .status {
             float: right;
         }
@@ -188,6 +192,13 @@
             </div>
         </div> -->
 
+        <!-- Title -->
+        <% if(time === null){ %>
+            <h3>Test Result</h3>
+        <% } else {%> 
+            <h3>Test Result: <i class="time"><%=time %></i></h3>
+            <% } %> 
+        <br>
         <!--Total count-->
 
         <div class="row">
@@ -651,7 +662,7 @@
                                                 </span>
                                             </div>
                                         </li>
-
+                                        <!-- <% if(result.subrequest != null){ %> -->
                                         <% for(let subrequest of result.subrequest){ %>
                                             <li class="list-group-item">
                                                 <div class="sub">
@@ -689,6 +700,7 @@
                                                     <% } %>
                                                         <% } %>
                                                         <% } %> 
+                                                        <!-- <% } %> -->
                         </ul>
                     </div>
                 </div>
