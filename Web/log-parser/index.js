@@ -13,8 +13,8 @@ let getIfaceLog = (async (iface) => {
 
 function singleIfaceMapping(first, bffPort) {
   let result = [];
-  let bffRequest = [];
-  let subRequest = [];
+  let bffRequest = new Map();
+  let subRequest = new Map();
   for (let index = 0; index < first.length; index++) {
     const element = first[index];
     if (excludedPort.includes(element["id.resp_p"])) {
@@ -25,20 +25,25 @@ function singleIfaceMapping(first, bffPort) {
     const requestNo = element["subrequest"];
     const isBffRequest = bffPort.includes(element["id.resp_p"]);
     if (isBffRequest) {
-      bffRequest.push(element);
+      bffRequest.set(requestNo, element);
     } else {
-      if(requestNo > subRequest.length) {
-        subRequest.push([element]);
+      if(subRequest.has(requestNo)) {
+        subRequest.get(requestNo).push(element);
       }
       else {
-        subRequest[requestNo - 1].push(element);
+        subRequest.set(requestNo, [element]);
       }
     }
   }
-  for(let i = 0;i < bffRequest.length;i++) {
+  let keys = [...bffRequest.keys()];
+  keys.sort(
+    function compareNumbers(a, b) {
+    return a - b;
+  });
+  for(key of keys) {
     result.push({
-      'request': bffRequest[i],
-      'subrequest': subRequest[i]
+      "request": bffRequest.get(key),
+      "subrequest": subRequest.get(key) ?? []
     })
   }
   return result;

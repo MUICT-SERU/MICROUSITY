@@ -469,7 +469,7 @@ events.on("TESTSTARTED", (mode,
     isTesting = false;
     let first = getIfaceLog(process.env.IFACE);
     let second;
-    if (mode !== 'single') second = getIfaceLog(process.env.SECOND_IFACE);
+    if (mode !== 'single' && runMode === 'dual') second = getIfaceLog(process.env.SECOND_IFACE);
     if (mode === 'single') {
       Promise.resolve(first)
         .then(
@@ -503,7 +503,7 @@ events.on("TESTSTARTED", (mode,
           });
     }
     else {
-      Promise.all([first, second]).then(
+      if(runMode === 'dual') {Promise.all([first, second]).then(
         res => {
           return dualIfaceMapping(res[0], res[1], process.env.IFACE)
         }
@@ -533,7 +533,42 @@ events.on("TESTSTARTED", (mode,
             });
             fs.writeFileSync("../output/output.json", JSON.stringify(res));
             console.log("written result");
+          });}
+      else {
+        Promise.resolve(first)
+        .then(
+          res => {
+            return singleIfaceMapping(res, [Number(process.env.BFF_PORT)])}
+        )
+        .then(
+          res => {
+            console.log(res);
+            let pathTo = path.resolve(__dirname, '../FuzzLean/RestlerResults');
+            let specPath = path.resolve(pathTo, fs.readdirSync(pathTo)[0], 'logs/speccov.json');
+            let coverage = fs.readFileSync(specPath, 'utf-8');
+            var myobj = {
+              email: email,
+              time: moment().format('D MMMM YYYY, h:mm:ss a'),
+              result: res,
+              coverage: JSON.parse(coverage)
+            };
+            if (commit) {
+              myobj['commit'] = commit,
+                myobj['year'] = year,
+                myobj['month'] = month,
+                myobj['day'] = day
+            }
+            collection.find({ email: email }).toArray(function (err, users) {
+              resultCollection.insertOne(myobj, function (err) {
+                if (err) throw err;
+                console.log("1 result inserted");
+              });
+            });
+            if(commit) fs.writeFileSync("../output/output"+ year + "-" + month + "-" + day + ".json", JSON.stringify(res));
+            else fs.writeFileSync("../output/output.json", JSON.stringify(res));
+            console.log("written result");
           });
+      }
     }
   })
 });
@@ -653,7 +688,7 @@ app.post("/upload", (req, res) => {
     var newGrammarPath = path.resolve(outputPath, 'grammar.py');
     var newDictPath = path.resolve(outputPath, 'dict.json');
     var newUserSettingPath = path.resolve(outputPath, 'restler_user_settings.json');
-    var newTokenPath = path.resolve(outputPath, 'token');
+    var newTokenPath = path.resolve(outputPath, 'token.py');
     var runMode = fields.runMode;
     var commit = fields.commit;
     var year = fields.year;
@@ -1023,8 +1058,8 @@ app.get("/logout", (req, res) => {
 
 //run
 if (key === undefined) {
-  app.listen(8080, () => {
-    console.log('listening as http at 8080');
+  app.listen(process.env.PORT, () => {
+    console.log('listening as http at', process.env.PORT);
   });
 } else {
   https.createServer({ key: key, cert: cert, passphrase: '1234' }, app).listen(443, () => {

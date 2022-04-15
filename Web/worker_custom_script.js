@@ -31,6 +31,12 @@ if(runMode === "dual") {
     }
     )
 }
+zeek_process.stdout.on("data", (data) => {
+    console.log(new TextDecoder().decode(data));
+})
+zeek_process.stderr.on("data", (data) => {
+    console.log(new TextDecoder().decode(data));
+})
 let restler_cmd = "dotnet"
 let restler_argv = [
     "bin/restler/restler.dll", "fuzz-lean",
@@ -54,9 +60,6 @@ setTimeout(
                 cwd: path.resolve(__dirname, "..")
             }
         );
-        zeek_process.stdout.on("data", (data) => {
-            console.log(new TextDecoder().decode(data));
-        })
         if(zeek_process_two) {
             zeek_process_two.stdout.on("data", (data) => {
                 console.log(new TextDecoder().decode(data));
@@ -76,6 +79,6 @@ setTimeout(
             process.exit();
         });
     },
-    10000
+    30000
 )
 
