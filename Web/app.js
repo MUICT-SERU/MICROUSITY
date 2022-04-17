@@ -1061,6 +1061,9 @@ if (key === undefined) {
   app.listen(process.env.PORT, () => {
     console.log('listening as http at', process.env.PORT);
   });
+  // app.listen(8080, () => {
+  //   console.log('listening as http at', 8080);
+  // });
 } else {
   https.createServer({ key: key, cert: cert, passphrase: '1234' }, app).listen(443, () => {
     console.log('listening w/ https');
