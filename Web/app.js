@@ -542,7 +542,6 @@ events.on("TESTSTARTED", (mode,
         )
         .then(
           res => {
-            console.log(res);
             let pathTo = path.resolve(__dirname, '../FuzzLean/RestlerResults');
             let specPath = path.resolve(pathTo, fs.readdirSync(pathTo)[0], 'logs/speccov.json');
             let coverage = fs.readFileSync(specPath, 'utf-8');
@@ -677,6 +676,10 @@ app.get("/testingtool2", (req, res) => {
 
 //testing tool page
 app.post("/upload", (req, res) => {
+  if(req.user == null) {
+    res.sendStatus(403);
+    return;
+  }
   var form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
     var outputPath = path.resolve( __dirname , '../outtest/');
@@ -772,7 +775,8 @@ app.get("/history", (req, res) => {
   }
   let user = req.user;
 
-  resultCollection.find({ email: user.email }).toArray(function (err, data) {
+  resultCollection.find({ email: user.email }).project({time: 1}).toArray(function (err, data) {
+    console.log(data[0]);
     res.render("history", {
       data: data
     });
