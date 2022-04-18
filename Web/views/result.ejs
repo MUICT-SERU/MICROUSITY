@@ -200,6 +200,10 @@
             <% } %> 
         <br>
 
+<% if(valid+invalid==0){ %>
+    <h4>Test Fail </h4>
+    <% } elese { %>
+       
 <!--Invalid list-->
 <div id="accordion5">
     <div class="card">
@@ -717,6 +721,7 @@
     </div>
 
     </div>
+    <% }%>
 </body>
 
 </html>
