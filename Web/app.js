@@ -863,8 +863,8 @@ app.get("/result", (req, res) => {
         bffLeakIds: result.bffLeakIds,
         bothLeakIds: result.bothLeakIds,
         speccovs: coverage.speccovs,
-        valid: 0,
-        invalid: 0,
+        valid: coverage.valid,
+        invalid: coverage.invalid,
         user: req.user,
         resultid: null
       });
