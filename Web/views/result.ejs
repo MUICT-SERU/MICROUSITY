@@ -199,6 +199,70 @@
             <h3>Test Result: <i class="time"><%=time %></i></h3>
             <% } %> 
         <br>
+
+<% if(valid+invalid==0){ %>
+    <h4>Test Fail </h4>
+    <% } else { %>
+       
+<!--Invalid list-->
+<div id="accordion5">
+    <div class="card">
+        <div class="card-header" id="headingFive">
+            <h4 class="mb-0">
+                <span>
+                    <button class="btn btn-link3" data-toggle="collapse" data-target="#collapseFive"
+                        aria-expanded="true" aria-controls="collapseFive">
+                        <h5>API Coverage</h5>
+                    </button>
+                </span>
+                <span class="count">
+                    <%= valid %>/<%= valid+invalid %>
+                </span>
+            </h4>
+        </div>
+
+        <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion5">
+            <div class="card-body">
+                <ul class="list-group">
+
+                    <% for(let speccov in speccovs){ %>
+                        <% if(speccovs[speccov].valid==0){ %>
+                        <li class="list-group-item list-group-item-action list-group-item-danger">
+                                    <div class="main">
+                                        <b>
+                                            <span class="name"><%= speccovs[speccov].verb_endpoint %>
+                                                   </span>
+                                            <span class="status">
+                                                INVALID
+                                            </span>
+                                        </b>
+
+                                    </div>
+                        </li> 
+                        <br>
+                        <% } else { %>  
+                            <li class="list-group-item list-group-item-action list-group-item-success">
+                                <div class="main">
+                                    <b>
+                                        <span class="name"><%= speccovs[speccov].verb_endpoint %>
+                                               </span>
+                                        <span class="status">
+                                            VALID
+                                        </span>
+                                    </b>
+
+                                </div>
+                    </li> 
+                    <br>
+                            <% } %>  
+                    <% } %>  
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
         <!--Total count-->
 
         <div class="row">
@@ -235,64 +299,7 @@
         </div>
 
         <br>
-        <!--Invalid list-->
-        <div id="accordion5">
-            <div class="card">
-                <div class="card-header" id="headingFive">
-                    <h4 class="mb-0">
-                        <span>
-                            <button class="btn btn-link3" data-toggle="collapse" data-target="#collapseFive"
-                                aria-expanded="true" aria-controls="collapseFive">
-                                <h5>API Coverage</h5>
-                            </button>
-                        </span>
-                        <span class="count">
-                            <%= valid %>/<%= valid+invalid %>
-                        </span>
-                    </h4>
-                </div>
-
-                <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion5">
-                    <div class="card-body">
-                        <ul class="list-group">
-
-                            <% for(let speccov in speccovs){ %>
-                                <% if(speccovs[speccov].valid==0){ %>
-                                <li class="list-group-item list-group-item-action list-group-item-danger">
-                                            <div class="main">
-                                                <b>
-                                                    <span class="name"><%= speccovs[speccov].verb_endpoint %>
-                                                           </span>
-                                                    <span class="status">
-                                                        INVALID
-                                                    </span>
-                                                </b>
-
-                                            </div>
-                                </li> 
-                                <br>
-                                <% } else { %>  
-                                    <li class="list-group-item list-group-item-action list-group-item-success">
-                                        <div class="main">
-                                            <b>
-                                                <span class="name"><%= speccovs[speccov].verb_endpoint %>
-                                                       </span>
-                                                <span class="status">
-                                                    VALID
-                                                </span>
-                                            </b>
-
-                                        </div>
-                            </li> 
-                            <br>
-                                    <% } %>  
-                            <% } %>  
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
+        
 
         <h4>Issues found</h4>
         <br>
@@ -700,7 +707,7 @@
                                                     <% } %>
                                                         <% } %>
                                                         <% } %> 
-                                                        <!-- <% } %> -->
+                                                        <% } %>
                         </ul>
                     </div>
                 </div>
@@ -714,6 +721,7 @@
     </div>
 
     </div>
+    <% }%>
 </body>
 
 </html>

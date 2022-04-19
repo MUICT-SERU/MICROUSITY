@@ -166,7 +166,7 @@ function getResultOld(data, fromFile) {
         main5xx += 1;
         trackId.push({ id: result.request.subrequest });
       }
-      if(result.subrequest) {for (let subrequest of result.subrequest) {
+      for (let subrequest of result.subrequest) {
         if (subrequest.status_code >= 200 && subrequest.status_code < 300) {
           sub2xx += 1;
         }
@@ -182,7 +182,7 @@ function getResultOld(data, fromFile) {
           trackId.push({ id: result.request.subrequest });
           //}
         }
-      }}
+      }
       countReq++;
     }
   
@@ -818,7 +818,7 @@ app.get("/resulthis/:id", (req, res) => {
 
   let id = req.params['id']
   resultCollection.findOne({ "_id": new ObjectId(id) }, function (err, data) {
-    let result = getResult(data, false);
+    let result = getResultOld(data, false);
     let coverage = getSpeccov(data,false);
     let time = data.time;
     res.render("result", {
@@ -870,7 +870,7 @@ app.get("/result", (req, res) => {
         return console.log("File read failed:", err);
       }
 
-      let result = getResult(data, true);
+      let result = getResultOld(data, true);
       let coverage = getSpeccov(specCoverage,true)
       res.render("result", {
         time: null,
@@ -1089,6 +1089,9 @@ if (key === undefined) {
   app.listen(process.env.PORT, () => {
     console.log('listening as http at', process.env.PORT);
   });
+  // app.listen(8080, () => {
+  //   console.log('listening as http at', 8080);
+  // });
 } else {
   https.createServer({ key: key, cert: cert, passphrase: '1234' }, app).listen(443, () => {
     console.log('listening w/ https');
