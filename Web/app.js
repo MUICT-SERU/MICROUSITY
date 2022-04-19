@@ -444,8 +444,12 @@ events.on("TESTSTARTED", (mode,
   isTesting = true;
   let worker;
   switch (mode) {
-    case "dual":
-      worker = new Worker('./worker.js');
+    case "single":
+      worker = new Worker('./worker_no_shell.js', {workerData: {
+        grammar,
+        dict,
+        settings
+      }});
       break;
     case "custom":
       {
@@ -500,6 +504,13 @@ events.on("TESTSTARTED", (mode,
             });
             fs.writeFileSync("../output/output.json", JSON.stringify(res));
             console.log("written result");
+            fs.rm(
+              path.resolve(__dirname, "../zeek/", process.env.IFACE),
+              { recursive: true },
+              (err) => {
+                if(err) console.log(err);
+              }
+            )
           });
     }
     else {
@@ -566,6 +577,20 @@ events.on("TESTSTARTED", (mode,
             if(commit) fs.writeFileSync("../output/output"+ year + "-" + month + "-" + day + ".json", JSON.stringify(res));
             else fs.writeFileSync("../output/output.json", JSON.stringify(res));
             console.log("written result");
+            fs.rm(
+              path.resolve(__dirname, "../zeek/", process.env.IFACE),
+              { recursive: true },
+              (err) => {
+                if(err) console.log(err);
+              }
+            );
+            fs.rm(
+              path.resolve(__dirname, "../zeek/", process.env.SECOND_IFACE),
+              { recursive: true },
+              (err) => {
+                if(err) console.log(err);
+              }
+            )
           });
       }
     }
@@ -776,7 +801,6 @@ app.get("/history", (req, res) => {
   let user = req.user;
 
   resultCollection.find({ email: user.email }).project({time: 1}).toArray(function (err, data) {
-    console.log(data[0]);
     res.render("history", {
       data: data
     });
