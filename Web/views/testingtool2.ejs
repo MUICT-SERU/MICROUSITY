@@ -79,9 +79,14 @@
         </header>
         <!-- ***** Header Area End ***** -->
 
-        <br><br><br><br><br><br><br>
+        <br><br><br><br><br>
+        
+        <h3>Testing Tool</h3>
+        <br>
+        
 
         <div class="row">
+           
             <form enctype="multipart/form-data">
                 <div class="mb-3">
                     <label class="form-label" for="grammar"><h5>grammar.py</h5></label>
@@ -96,11 +101,12 @@
                     <input class="form-control" type="file" name="userSetting" id="userSetting" accept=".json" required>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="userSetting"><h5>token script</h5></label>
-                    <input class="form-control" type="file" name="token" id="token">
+                    <label class="form-label" for="userSetting"><h5>token.py</h5></label>
+                    <input class="form-control" type="file" name="token" id="token" accept=".py">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="runMode"><h5>run mode</h5></label>
+                    <label class="form-label" for="runMode"><h5>Run mode</h5></label>
+                    &nbsp;&nbsp;  
                     <input type="radio" name="runMode" id="single" value="single" checked>
                     <label for="single">Single Interface</label>
                     <input type="radio" name="runMode" id="dual" value="dual">
