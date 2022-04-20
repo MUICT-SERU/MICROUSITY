@@ -19,7 +19,7 @@ let zeek_process = spawn(
 )
 let restler_cmd = "dotnet"
 let restler_argv = [
-    "bin/restler/restler.dll", "fuzz-lean",
+    "bin/restler/Restler.dll", "fuzz-lean",
     "--grammar_file", grammar,
     "--dictionary_file", dict,
     "--settings", settings,
