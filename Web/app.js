@@ -505,7 +505,7 @@ events.on("TESTSTARTED", (mode,
             fs.writeFileSync("../output/output.json", JSON.stringify(res));
             console.log("written result");
             fs.rm(
-              path.resolve(__dirname, "../zeek/", process.env.IFACE),
+              path.resolve(__dirname, "../zeek/", process.env.IFACE + ".log"),
               { recursive: true },
               (err) => {
                 if(err) console.log(err);
@@ -578,14 +578,14 @@ events.on("TESTSTARTED", (mode,
             else fs.writeFileSync("../output/output.json", JSON.stringify(res));
             console.log("written result");
             fs.rm(
-              path.resolve(__dirname, "../zeek/", process.env.IFACE),
+              path.resolve(__dirname, "../script/zeek/", process.env.IFACE),
               { recursive: true },
               (err) => {
                 if(err) console.log(err);
               }
             );
             fs.rm(
-              path.resolve(__dirname, "../zeek/", process.env.SECOND_IFACE),
+              path.resolve(__dirname, "../script/zeek/", process.env.SECOND_IFACE),
               { recursive: true },
               (err) => {
                 if(err) console.log(err);
