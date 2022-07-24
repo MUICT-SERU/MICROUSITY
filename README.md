@@ -16,6 +16,9 @@ The working prototype of Microusity can be found here: [https://achillestool.com
 ## Video Demo
 The demo video on how Microusity works can be found here: [https://youtu.be/EGF3ODzgcpY](https://youtu.be/EGF3ODzgcpY).
 
+## User Manual
+Please access the manual of the program here : [https://drive.google.com/file/d/1nORxioaSFE1XBbuM9ALaLJP-1YdlaQjx/view?usp=sharing]
+
 ## License Agreement
 
 This software is a work developed by. Miss. Chansida Makaranond, Mr. Pattarakrit Rattanukul and Mr. Pumipat Watanakulcharus from Mahidol University
