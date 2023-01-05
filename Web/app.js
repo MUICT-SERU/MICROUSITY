@@ -28,11 +28,8 @@ catch (err) {
 }
 
 const tlsServer = tls.createServer({key, cert, passphrase: '1234'});
-fs.watch(process.env.CERT).on('change', () => {
-  key = fs.readFileSync(process.env.KEY);
-  cert = fs.readFileSync(process.env.CERT);
-  tlsServer.setSecureContext({key, cert});
-})
+fs.watch(process.env.CERT).on('change', refreshCert);
+fs.watch(process.env.CERT).on('change', refreshCert);
 
 let events = new EventEmitter();
 
@@ -75,6 +72,12 @@ client.connect((err) => {
 app.set("view engine", "ejs");
 app.set("views", "./views");
 
+function refreshCert() {
+    key = fs.readFileSync(process.env.KEY);
+    cert = fs.readFileSync(process.env.CERT);
+    tlsServer.setSecureContext({ key, cert });
+}
+;
 //Set user function
 function setUser(req, user) {
   req.session[SESSION_AUTH_USER] = user;
