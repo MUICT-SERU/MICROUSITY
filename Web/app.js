@@ -49,7 +49,7 @@ const { MongoClient, ObjectId } = require("mongodb");
 const path = require("path");
 const { get } = require('http');
 const uri =
-  "mongodb+srv://micro1:micro1@cluster0.u4edv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+  "mongodb://localhost:27017";
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -1085,6 +1085,7 @@ app.get("/logout", (req, res) => {
 });
 
 //run
+let server;
 if (key === undefined) {
   app.listen(process.env.PORT, () => {
     console.log('listening as http at', process.env.PORT);
@@ -1093,11 +1094,17 @@ if (key === undefined) {
   //   console.log('listening as http at', 8080);
   // });
 } else {
-  https.createServer({ key: key, cert: cert, passphrase: '1234' }, app).listen(443, () => {
+  server = https.createServer({ key: key, cert: cert, passphrase: '1234'}, app).listen(443, () => {
     console.log('listening w/ https');
   });
 }
-
+if(server !== undefined) {
+  fs.watch(process.env.KEY).on('change', () => {
+    key = fs.readFileSync(process.env.KEY);
+    cert = fs.readFileSync(process.env.CERT);
+    server.setSecureContext({key, cert});
+  });
+}
 
 app.get("/test", (req, res) => {
 
