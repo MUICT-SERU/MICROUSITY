@@ -7,6 +7,7 @@ const session = require("express-session");
 const bcrypt = require("bcrypt");
 const EventEmitter = require("events");
 const { Worker } = require("worker_threads");
+const tls = require('tls');
 const https = require('https');
 const cytoscape = require('cytoscape');
 const dagre = require('cytoscape-dagre');
@@ -25,6 +26,14 @@ try {
 catch (err) {
   console.log('Cert not found, will run as http');
 }
+
+const tlsServer = tls.createServer({key, cert, passphrase: '1234'});
+fs.watch(process.env.CERT).on('change', () => {
+  key = fs.readFileSync(process.env.KEY);
+  cert = fs.readFileSync(process.env.CERT);
+  tlsServer.setSecureContext({key, cert});
+})
+
 let events = new EventEmitter();
 
 //setting
@@ -1094,15 +1103,8 @@ if (key === undefined) {
   //   console.log('listening as http at', 8080);
   // });
 } else {
-  server = https.createServer({ key: key, cert: cert, passphrase: '1234'}, app).listen(443, () => {
+  server = https.createServer(tlsServer, app).listen(443, () => {
     console.log('listening w/ https');
-  });
-}
-if(server !== undefined) {
-  fs.watch(process.env.KEY).on('change', () => {
-    key = fs.readFileSync(process.env.KEY);
-    cert = fs.readFileSync(process.env.CERT);
-    server.setSecureContext({key, cert});
   });
 }
 
