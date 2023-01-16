@@ -27,9 +27,7 @@ catch (err) {
   console.log('Cert not found, will run as http');
 }
 
-const tlsServer = tls.createServer({key, cert, passphrase: '1234'});
-fs.watch(process.env.CERT).on('change', refreshCert);
-fs.watch(process.env.CERT).on('change', refreshCert);
+
 
 let events = new EventEmitter();
 
@@ -72,11 +70,7 @@ client.connect((err) => {
 app.set("view engine", "ejs");
 app.set("views", "./views");
 
-function refreshCert() {
-    key = fs.readFileSync(process.env.KEY);
-    cert = fs.readFileSync(process.env.CERT);
-    tlsServer.setSecureContext({ key, cert });
-}
+
 ;
 //Set user function
 function setUser(req, user) {
@@ -131,126 +125,126 @@ function getCertificate(name, date) {
 
 //result render
 function getResultOld(data, fromFile) {
-    if (fromFile == true) {
-      var resultList = JSON.parse(data);
-    } else {
-      var resultList = data.result;
+  if (fromFile == true) {
+    var resultList = JSON.parse(data);
+  } else {
+    var resultList = data.result;
+  }
+  var main5xx = 0;
+  var main4xx = 0;
+  var main3xx = 0;
+  var main2xx = 0;
+  var sub5xx = 0;
+  var sub4xx = 0;
+  var sub3xx = 0;
+  var sub2xx = 0;
+  var countReq = 0;
+
+  var bffLeak = false;
+  var coreLeak = false;
+
+  var trackId = [];
+  var bffLeakId = [];
+  var coreLeakId = [];
+  var bothLeakId = [];
+
+  for (let result of resultList) {
+    if (result.request === null) {
+    } else if (
+      result.request.status_code >= 200 &&
+      result.request.status_code < 300
+    ) {
+      main2xx += 1;
+    } else if (
+      result.request.status_code >= 300 &&
+      result.request.status_code < 400
+    ) {
+      main3xx += 1;
+    } else if (
+      result.request.status_code >= 400 &&
+      result.request.status_code < 500
+    ) {
+      main4xx += 1;
+    } else if (
+      result.request.status_code >= 500 &&
+      result.request.status_code < 600
+    ) {
+      main5xx += 1;
+      trackId.push({ id: result.request.subrequest });
     }
-    var main5xx = 0;
-    var main4xx = 0;
-    var main3xx = 0;
-    var main2xx = 0;
-    var sub5xx = 0;
-    var sub4xx = 0;
-    var sub3xx = 0;
-    var sub2xx = 0;
-    var countReq = 0;
-  
-    var bffLeak = false;
-    var coreLeak = false;
-  
-    var trackId = [];
-    var bffLeakId = [];
-    var coreLeakId = [];
-    var bothLeakId = [];
-  
-    for (let result of resultList) {
-      if (result.request === null) {
+    for (let subrequest of result.subrequest) {
+      if (subrequest.status_code >= 200 && subrequest.status_code < 300) {
+        sub2xx += 1;
+      }
+      if (subrequest.status_code >= 300 && subrequest.status_code < 400) {
+        sub3xx += 1;
+      }
+      if (subrequest.status_code >= 400 && subrequest.status_code < 500) {
+        sub4xx += 1;
       } else if (
-        result.request.status_code >= 200 &&
-        result.request.status_code < 300
-      ) {
-        main2xx += 1;
-      } else if (
-        result.request.status_code >= 300 &&
-        result.request.status_code < 400
-      ) {
-        main3xx += 1;
-      } else if (
-        result.request.status_code >= 400 &&
-        result.request.status_code < 500
-      ) {
-        main4xx += 1;
-      } else if (
-        result.request.status_code >= 500 &&
-        result.request.status_code < 600
-      ) {
-        main5xx += 1;
+        subrequest.status_code >= 500 && subrequest.status_code < 600) {
+        sub5xx += 1;
+        //if (result.request.status_code < 500 || result.request.status_code >= 600) {
         trackId.push({ id: result.request.subrequest });
+        //}
       }
-      for (let subrequest of result.subrequest) {
-        if (subrequest.status_code >= 200 && subrequest.status_code < 300) {
-          sub2xx += 1;
-        }
-        if (subrequest.status_code >= 300 && subrequest.status_code < 400) {
-          sub3xx += 1;
-        }
-        if (subrequest.status_code >= 400 && subrequest.status_code < 500) {
-          sub4xx += 1;
-        } else if (
-          subrequest.status_code >= 500 && subrequest.status_code < 600) {
-          sub5xx += 1;
-          //if (result.request.status_code < 500 || result.request.status_code >= 600) {
-          trackId.push({ id: result.request.subrequest });
-          //}
-        }
-      }
-      countReq++;
     }
-  
-    for (let result of resultList) {
+    countReq++;
+  }
+
+  for (let result of resultList) {
+    if (result.request === null) {
+    } else {
+      //for (let id of trackId) {
+      bffLeak = false;
+      coreLeak = false;
+      //if (result.request.subrequest == id.id) {
       if (result.request === null) {
-      } else {
-        //for (let id of trackId) {
-        bffLeak = false;
-        coreLeak = false;
-        //if (result.request.subrequest == id.id) {
-        if (result.request === null) {
-        } else if (result.request.exception) {
-          bffLeak = true;
-          //console.log(id.id)
-  
-        }
-        if (result.subrequest.length == 0) {
-          //console.log(result.subrequest.length)
-          if (bffLeak == true) {
-            bffLeakId.push({ id: result.request.subrequest });
-          }
-        } else {
-          for (let subrequest of result.subrequest) {
-            if (subrequest.exception) {
-              coreLeak = true;
-            }
-          }
-        }
-        if (coreLeak && bffLeak) {
-          bothLeakId.push({ id: result.request.subrequest });
-        } else if (coreLeak && !bffLeak) {
-          coreLeakId.push({ id: result.request.subrequest });
-        } else if (!coreLeak && bffLeak) {
+      } else if (result.request.exception) {
+        bffLeak = true;
+        //console.log(id.id)
+
+      }
+      if (result.subrequest.length == 0) {
+        //console.log(result.subrequest.length)
+        if (bffLeak == true) {
           bffLeakId.push({ id: result.request.subrequest });
         }
-        //}
-        //}
+      } else {
+        for (let subrequest of result.subrequest) {
+          if (subrequest.exception) {
+            coreLeak = true;
+          }
+        }
       }
-  
+      if (coreLeak && bffLeak) {
+        bothLeakId.push({ id: result.request.subrequest });
+      } else if (coreLeak && !bffLeak) {
+        coreLeakId.push({ id: result.request.subrequest });
+      } else if (!coreLeak && bffLeak) {
+        bffLeakId.push({ id: result.request.subrequest });
+      }
+      //}
+      //}
     }
-    return {
-      results: resultList,
-      main4xxs: main4xx,
-      main5xxs: main5xx,
-      sub4xxs: sub4xx,
-      sub5xxs: sub5xx,
-      sum3xxs: main3xx + sub3xx,
-      sum2xxs: main2xx + sub2xx,
-      countReqs: countReq,
-      trackIds: removeDupId(trackId),
-      coreLeakIds: removeDupId(coreLeakId),
-      bffLeakIds: removeDupId(bffLeakId),
-      bothLeakIds: removeDupId(bothLeakId),
-    }
-  
+
   }
+  return {
+    results: resultList,
+    main4xxs: main4xx,
+    main5xxs: main5xx,
+    sub4xxs: sub4xx,
+    sub5xxs: sub5xx,
+    sum3xxs: main3xx + sub3xx,
+    sum2xxs: main2xx + sub2xx,
+    countReqs: countReq,
+    trackIds: removeDupId(trackId),
+    coreLeakIds: removeDupId(coreLeakId),
+    bffLeakIds: removeDupId(bffLeakId),
+    bothLeakIds: removeDupId(bothLeakId),
+  }
+
+}
 
 function getResult(data, fromFile) {
   if (fromFile == true) {
@@ -300,7 +294,7 @@ function getResult(data, fromFile) {
       main5xx += 1;
       trackId.push({ id: result.request.subrequest });
     }
-    if (result.subrequest != null){
+    if (result.subrequest != null) {
       for (let subrequest of result.subrequest) {
         if (subrequest.request === null) {
         }
@@ -314,30 +308,30 @@ function getResult(data, fromFile) {
           sub4xx += 1;
         } else if (
           subrequest.status_code >= 500 && subrequest.status_code < 600) {
-          sub5xx += 1;        
+          sub5xx += 1;
           trackId.push({ id: result.request.subrequest });
         }
+      }
     }
-  }
     countReq++;
   }
 
   for (let result of resultList) {
     if (result.request === null) {
     } else {
-      
+
       bffLeak = false;
       coreLeak = false;
-      
+
       if (result.request === null) {
       } else if (result.request.exception) {
         bffLeak = true;
       }
-     if (result.subrequest === null ||result.subrequest == 0) {   
+      if (result.subrequest === null || result.subrequest == 0) {
         if (bffLeak == true) {
           bffLeakId.push({ id: result.request.subrequest });
         }
-      } else if(result.subrequest != null) {
+      } else if (result.subrequest != null) {
         for (let subrequest of result.subrequest) {
           if (subrequest.request === null) {
           }
@@ -379,18 +373,18 @@ function getSpeccov(data, fromFile) {
   } else {
     var jsonCoverages = data.coverage;
   }
-  
+
   let invalid = 0;
   let valid = 0;
 
-    for(let jsonCoverage in jsonCoverages){
-      if(jsonCoverages[jsonCoverage].valid==0){
-        invalid++;
-      } else {
-        valid++;
-      }
+  for (let jsonCoverage in jsonCoverages) {
+    if (jsonCoverages[jsonCoverage].valid == 0) {
+      invalid++;
+    } else {
+      valid++;
     }
-   
+  }
+
   return {
     speccovs: jsonCoverages,
     valid: valid,
@@ -438,15 +432,15 @@ app.post("/launch", async (req, res) => {
     return;
   }
   events.emit("TESTSTARTED",
-      'single',
-      {
-        'grammar': path.resolve(__dirname, '../grammar/grammar.py'),
-        'dict': path.resolve(__dirname, '../grammar/dict.json'),
-        'settings': path.resolve(__dirname, '../grammar/restler_user_settings.json')
-      },
-      {
-        "email": req.user.email
-      });
+    'single',
+    {
+      'grammar': path.resolve(__dirname, '../grammar/grammar.py'),
+      'dict': path.resolve(__dirname, '../grammar/dict.json'),
+      'settings': path.resolve(__dirname, '../grammar/restler_user_settings.json')
+    },
+    {
+      "email": req.user.email
+    });
   res.sendStatus(200);
 });
 
@@ -457,11 +451,13 @@ events.on("TESTSTARTED", (mode,
   let worker;
   switch (mode) {
     case "single":
-      worker = new Worker('./worker_no_shell.js', {workerData: {
-        grammar,
-        dict,
-        settings
-      }});
+      worker = new Worker('./worker_no_shell.js', {
+        workerData: {
+          grammar,
+          dict,
+          settings
+        }
+      });
       break;
     case "custom":
       {
@@ -520,17 +516,18 @@ events.on("TESTSTARTED", (mode,
               path.resolve(__dirname, "../zeek/", process.env.IFACE + ".log"),
               { recursive: true },
               (err) => {
-                if(err) console.log(err);
+                if (err) console.log(err);
               }
             )
           });
     }
     else {
-      if(runMode === 'dual') {Promise.all([first, second]).then(
-        res => {
-          return dualIfaceMapping(res[0], res[1], process.env.IFACE)
-        }
-      )
+      if (runMode === 'dual') {
+        Promise.all([first, second]).then(
+          res => {
+            return dualIfaceMapping(res[0], res[1], process.env.IFACE)
+          }
+        )
         .then(
           res => {
             let pathTo = path.resolve(__dirname, '../FuzzLean/RestlerResults');
@@ -556,54 +553,56 @@ events.on("TESTSTARTED", (mode,
             });
             fs.writeFileSync("../output/output.json", JSON.stringify(res));
             console.log("written result");
-          });}
+          });
+      }
       else {
         Promise.resolve(first)
-        .then(
-          res => {
-            return singleIfaceMapping(res, [Number(process.env.BFF_PORT)])}
-        )
-        .then(
-          res => {
-            let pathTo = path.resolve(__dirname, '../FuzzLean/RestlerResults');
-            let specPath = path.resolve(pathTo, fs.readdirSync(pathTo)[0], 'logs/speccov.json');
-            let coverage = fs.readFileSync(specPath, 'utf-8');
-            var myobj = {
-              email: email,
-              time: moment().format('D MMMM YYYY, h:mm:ss a'),
-              result: res,
-              coverage: JSON.parse(coverage)
-            };
-            if (commit) {
-              myobj['commit'] = commit,
-                myobj['year'] = year,
-                myobj['month'] = month,
-                myobj['day'] = day
+          .then(
+            res => {
+              return singleIfaceMapping(res, [Number(process.env.BFF_PORT)])
             }
-            collection.find({ email: email }).toArray(function (err, users) {
-              resultCollection.insertOne(myobj, function (err) {
-                if (err) throw err;
-                console.log("1 result inserted");
+          )
+          .then(
+            res => {
+              let pathTo = path.resolve(__dirname, '../FuzzLean/RestlerResults');
+              let specPath = path.resolve(pathTo, fs.readdirSync(pathTo)[0], 'logs/speccov.json');
+              let coverage = fs.readFileSync(specPath, 'utf-8');
+              var myobj = {
+                email: email,
+                time: moment().format('D MMMM YYYY, h:mm:ss a'),
+                result: res,
+                coverage: JSON.parse(coverage)
+              };
+              if (commit) {
+                myobj['commit'] = commit,
+                  myobj['year'] = year,
+                  myobj['month'] = month,
+                  myobj['day'] = day
+              }
+              collection.find({ email: email }).toArray(function (err, users) {
+                resultCollection.insertOne(myobj, function (err) {
+                  if (err) throw err;
+                  console.log("1 result inserted");
+                });
               });
+              if (commit) fs.writeFileSync("../output/output" + year + "-" + month + "-" + day + ".json", JSON.stringify(res));
+              else fs.writeFileSync("../output/output.json", JSON.stringify(res));
+              console.log("written result");
+              fs.rm(
+                path.resolve(__dirname, "../script/zeek/", process.env.IFACE),
+                { recursive: true },
+                (err) => {
+                  if (err) console.log(err);
+                }
+              );
+              fs.rm(
+                path.resolve(__dirname, "../script/zeek/", process.env.SECOND_IFACE),
+                { recursive: true },
+                (err) => {
+                  if (err) console.log(err);
+                }
+              )
             });
-            if(commit) fs.writeFileSync("../output/output"+ year + "-" + month + "-" + day + ".json", JSON.stringify(res));
-            else fs.writeFileSync("../output/output.json", JSON.stringify(res));
-            console.log("written result");
-            fs.rm(
-              path.resolve(__dirname, "../script/zeek/", process.env.IFACE),
-              { recursive: true },
-              (err) => {
-                if(err) console.log(err);
-              }
-            );
-            fs.rm(
-              path.resolve(__dirname, "../script/zeek/", process.env.SECOND_IFACE),
-              { recursive: true },
-              (err) => {
-                if(err) console.log(err);
-              }
-            )
-          });
       }
     }
   })
@@ -631,7 +630,7 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   let { username, password, fromUrl } = req.body;
   collection
-    .find({ email: username, password: bcrypt.hash(password,10) })
+    .find({ email: username, password: bcrypt.hash(password, 10) })
     .toArray(function (err, users) {
       if (err || users.length != 1) {
         return res.redirect("/login?invalid=1");
@@ -713,13 +712,13 @@ app.get("/testingtool2", (req, res) => {
 
 //testing tool page
 app.post("/upload", (req, res) => {
-  if(req.user == null) {
+  if (req.user == null) {
     res.sendStatus(403);
     return;
   }
   var form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
-    var outputPath = path.resolve( __dirname , '../outtest/');
+    var outputPath = path.resolve(__dirname, '../outtest/');
     console.log(outputPath);
     var oldGrammarPath = files.grammar.filepath;
     var oldDictPath = files.dict.filepath;
@@ -743,13 +742,13 @@ app.post("/upload", (req, res) => {
     fs.rename(oldUserSettingPath, newUserSettingPath, function (err) {
       if (err) throw err;
     });
-    if(oldTokenPath !== null) {
+    if (oldTokenPath !== null) {
       fs.rename(oldTokenPath, newTokenPath, function (err) {
         if (err) throw err;
       });
       fs.chmod(newTokenPath, 0o744, (err) => {
-         if (err) throw err;
-        });
+        if (err) throw err;
+      });
     }
     if (err) {
       throw err;
@@ -757,8 +756,8 @@ app.post("/upload", (req, res) => {
       console.log('File uploaded and moved!');
       res.redirect('/history');
       events.emit("TESTSTARTED", "custom",
-      {'grammar':newGrammarPath, 'dict': newDictPath, 'settings': newUserSettingPath, 'token':newTokenPath, runMode},
-      {'email': req.user.email, commit, year, month, day}
+        { 'grammar': newGrammarPath, 'dict': newDictPath, 'settings': newUserSettingPath, 'token': newTokenPath, runMode },
+        { 'email': req.user.email, commit, year, month, day }
       );
     }
   });
@@ -797,11 +796,11 @@ app.post("/save", (req, res) => {
           res.redirect("/home");
         });
 
-     });
+      });
 
-   });
+    });
 
- });
+  });
 
 });
 //result history
@@ -812,7 +811,7 @@ app.get("/history", (req, res) => {
   }
   let user = req.user;
 
-  resultCollection.find({ email: user.email }).project({time: 1}).toArray(function (err, data) {
+  resultCollection.find({ email: user.email }).project({ time: 1 }).toArray(function (err, data) {
     res.render("history", {
       data: data
     });
@@ -831,7 +830,7 @@ app.get("/resulthis/:id", (req, res) => {
   let id = req.params['id']
   resultCollection.findOne({ "_id": new ObjectId(id) }, function (err, data) {
     let result = getResultOld(data, false);
-    let coverage = getSpeccov(data,false);
+    let coverage = getSpeccov(data, false);
     let time = data.time;
     res.render("result", {
       time: time,
@@ -877,13 +876,13 @@ app.get("/result", (req, res) => {
     let pathTo = path.resolve(__dirname, '../FuzzLean/RestlerResults');
     let specPath = path.resolve(pathTo, fs.readdirSync(pathTo)[0], 'logs/speccov.json');
     fs.readFile(specPath, 'utf8', (err, specCoverage) => {
-    //fs.readFile('../example/speccov.json', 'utf8', (err, specCoverage) => {
+      //fs.readFile('../example/speccov.json', 'utf8', (err, specCoverage) => {
       if (err) {
         return console.log("File read failed:", err);
       }
 
       let result = getResultOld(data, true);
-      let coverage = getSpeccov(specCoverage,true)
+      let coverage = getSpeccov(specCoverage, true)
       res.render("result", {
         time: null,
         results: result.results,
@@ -905,7 +904,7 @@ app.get("/result", (req, res) => {
         resultid: null
       });
     });
-    
+
     //console.log(removeDupId(coreLeakId));
     //console.log(removeDupId(bffLeakId));
     //console.log(removeDupId(bothLeakId));
@@ -1001,12 +1000,12 @@ app.get("/graph2/:id/:resultid", (req, res) => {
   let id = req.params['id']
   let resultId = req.params['resultid']
   let error;
-  if(req.query["error"]=='true'){
+  if (req.query["error"] == 'true') {
     error = true;
   } else {
     error = false;
   }
-   
+
   resultCollection.findOne({ "_id": new ObjectId(resultId) }, function (err, data) {
     if (err) {
       return console.log("File read failed:", err);
@@ -1046,7 +1045,7 @@ app.get("/graph/:id", (req, res) => {
   }
   let id = req.params['id']
   let error;
-  if(req.query["error"]=='true'){
+  if (req.query["error"] == 'true') {
     error = true;
   } else {
     error = false;
@@ -1106,11 +1105,19 @@ if (key === undefined) {
   //   console.log('listening as http at', 8080);
   // });
 } else {
-  server = https.createServer(tlsServer, app).listen(443, () => {
+  server = https.createServer({ key, cert, passphrase: '1234' }, app).listen(443, () => {
     console.log('listening w/ https');
   });
 }
-
+fs.watch(process.env.CERT).on('change', refreshCert);
+fs.watch(process.env.CERT).on('change', refreshCert);
+function refreshCert() {
+  setTimeout(() => {
+    key = fs.readFileSync(process.env.KEY);
+    cert = fs.readFileSync(process.env.CERT);
+    server.setSecureContext({ key, cert, passpharse: '1234' });
+  }, 2000);
+}
 app.get("/test", (req, res) => {
 
   res.render("test");
